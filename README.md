@@ -25,7 +25,6 @@ avaa python-ympäristösi
 
 ### PDO-purkaja
 
-Tekee logitiedostojen riveillä olevasta datasta luettavaa
-Laittaa tiedon decoded.out-tiedostoon
+Tekee logitiedostojen riveillä olevasta datasta luettavaa ja laittaa tiedon decoded.out-tiedostoon
 
 `python decodelog.py <logitiedosto>`
