@@ -34,3 +34,12 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Python
+__pycache__/
+
+# VS Code
+.vscode/
+
+# OS X
+.DS_Store
