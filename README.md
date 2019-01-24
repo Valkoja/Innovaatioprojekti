@@ -18,3 +18,9 @@ avaa python-ympäristösi
 * IP saattaa näyttää väärää
 * Tick rate vaihdetaan hardkoodaamalla
 * Unityn vastaanotto lapsenkengissään ja defaulttaa localhostiin
+
+### PDO-purkaja
+
+Tekee logitiedostojen riveillä olevasta datasta luettavaa
+
+`python decodelog.py <logitiedosto>`
