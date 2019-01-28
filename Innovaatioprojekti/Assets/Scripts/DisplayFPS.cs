@@ -32,4 +32,9 @@ public class DisplayFPS : MonoBehaviour
         }
         else fpsText.text = "";
     }
+
+    public void ToggleFPSVisibility(bool setValue)
+    {
+        displayFPS = setValue;
+    }
 }
