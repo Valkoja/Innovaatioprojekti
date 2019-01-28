@@ -22,10 +22,16 @@ public class UITextEdit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    void OnGUI()
+    {
         SetTextWith(xValue, yValue);
     }
 
     void SetTextWith(double x, double y) {
+
         xText.text = "X: "+x.ToString();
         yText.text = "Y: "+y.ToString();
     }
