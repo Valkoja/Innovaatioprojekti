@@ -15,10 +15,10 @@ class PDODecoder():
 
     #PDO: id+message, in bytes
     def decode_pdo(self, id, data):
-        if not isinstance(id, bytes) or not isinstance(data, bytes):
+        if not isinstance(id, int) or not isinstance(data, bytes):
             raise TypeError
         padding = 4
-        _id = f"{int.from_bytes(id, byteorder='big'):#0{padding}x}"
+        _id = f"{id:#0{padding}x}"
         if _id in self._pdo_map:
             format = self._pdo_map[_id]
             msg = format[1]._make(unpack(format[0], data))
