@@ -28,7 +28,7 @@ public class DisplayFPS : MonoBehaviour
         float fps = 1.0f / deltaTime;
         if (displayFPS)
         {
-            fpsText.text = fps.ToString().Substring(0, 4) + " FPS";
+            fpsText.text = ((int)fps).ToString() + " FPS";
         }
         else fpsText.text = "";
     }
