@@ -8,18 +8,16 @@ public class ChangeTabHandler : MonoBehaviour
 
     public GameObject generalPanel;
     public GameObject renderPanel;
-
-    //public Button generalButton;
-    //public Button renderButton;
+    public GameObject connectionPanel;
 
     public Image generalImage;
     public Image renderImage;
+    public Image connectionImage;
 
     bool generalPanelVisibility;
     bool renderPanelVisibility;
-
-    //ColorBlock activeButtonColorBlock;
-    //ColorBlock inactiveButtonColorBlock;
+    bool connectionPanelVisibility;
+    
 
     Color32 activeButtonColor; // 137x3 + 34
     Color32 inactiveButtonColor; // 255x3 + 34
@@ -29,16 +27,15 @@ public class ChangeTabHandler : MonoBehaviour
     {
         generalPanelVisibility = true;
         renderPanelVisibility = false;
+        connectionPanelVisibility = false;
         activeButtonColor = new Color32(0x89, 0x89, 0x89, 0x22);
         inactiveButtonColor = new Color32(0xFF, 0xFF, 0xFF, 0x22);
         generalImage.color = activeButtonColor;
         renderImage.color = inactiveButtonColor;
-        //activeButtonColorBlock = generalButton.colors;
-        //inactiveButtonColorBlock = renderButton.colors;
-        //activeButtonColorBlock.normalColor = activeButtonColor;
-        //inactiveButtonColorBlock.normalColor = inactiveButtonColor;
+        connectionImage.color = inactiveButtonColor;
         generalPanel.SetActive(generalPanelVisibility);
         renderPanel.SetActive(renderPanelVisibility);
+        connectionPanel.SetActive(connectionPanelVisibility);
     }
 
     // Update is called once per frame
@@ -51,23 +48,38 @@ public class ChangeTabHandler : MonoBehaviour
     {
         generalPanelVisibility = true;
         renderPanelVisibility = false;
+        connectionPanelVisibility = false;
         generalPanel.SetActive(generalPanelVisibility);
         renderPanel.SetActive(renderPanelVisibility);
+        connectionPanel.SetActive(connectionPanelVisibility);
         generalImage.color = activeButtonColor;
         renderImage.color = inactiveButtonColor;
-        //generalButton.colors = activeButtonColorBlock;
-        //renderButton.colors = inactiveButtonColorBlock;
+        connectionImage.color = inactiveButtonColor;
     }
 
     public void SetCurrentPanelToRender()
     {
-        renderPanelVisibility = true;
         generalPanelVisibility = false;
+        renderPanelVisibility = true;
+        connectionPanelVisibility = false;
         renderPanel.SetActive(renderPanelVisibility);
         generalPanel.SetActive(generalPanelVisibility);
+        connectionPanel.SetActive(connectionPanelVisibility);
         generalImage.color = inactiveButtonColor;
         renderImage.color = activeButtonColor;
-        //generalButton.colors = inactiveButtonColorBlock;
-        //renderButton.colors = activeButtonColorBlock;
+        connectionImage.color = inactiveButtonColor;
+    }
+
+    public void SetCurrentPanelToConnection()
+    {
+        renderPanelVisibility = false;
+        generalPanelVisibility = false;
+        connectionPanelVisibility = true;
+        renderPanel.SetActive(renderPanelVisibility);
+        generalPanel.SetActive(generalPanelVisibility);
+        connectionPanel.SetActive(connectionPanelVisibility);
+        generalImage.color = inactiveButtonColor;
+        renderImage.color = inactiveButtonColor;
+        connectionImage.color = activeButtonColor;
     }
 }
