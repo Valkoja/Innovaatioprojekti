@@ -7,16 +7,18 @@ public class UITextEdit : MonoBehaviour
 {
     public double xValue;
     public double yValue;
+    public double zValue;
 
     public Text xText;
     public Text yText;
+    public Text zText;
 
     // Start is called before the first frame update
     void Start()
     {
         xValue = 0.0;
         yValue = 0.0;
-        SetTextWith(xValue, yValue);
+        zValue = 0.0;
     }
 
     // Update is called once per frame
@@ -27,12 +29,24 @@ public class UITextEdit : MonoBehaviour
 
     void OnGUI()
     {
-        SetTextWith(xValue, yValue);
+        if (xValue == 0.0 && yValue == 0.0 && zValue == 0.0)
+        {
+            SetTextNoData();
+        }
+        else SetTextWith(xValue, yValue, zValue);
     }
 
-    void SetTextWith(double x, double y) {
+    void SetTextNoData()
+    {
+        xText.text = "No Data";
+        yText.text = " ";
+        zText.text = " ";
+    }
 
-        xText.text = "X: "+x.ToString();
-        yText.text = "Y: "+y.ToString();
+    void SetTextWith(double x, double y, double z) {
+
+        xText.text = "X: " + x.ToString();
+        yText.text = "Y: " + y.ToString();
+        zText.text = "Z: " + z.ToString();
     }
 }
