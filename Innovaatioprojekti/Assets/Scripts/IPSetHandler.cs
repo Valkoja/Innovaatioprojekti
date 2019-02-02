@@ -30,7 +30,7 @@ public class IPSetHandler : MonoBehaviour
 
     public void OnPressCancel()
     {
-        currentHostIPText.text = "Not connected";
+        // tanne jtn?
     }
 
     bool IsInputIPCorrect(string input)
