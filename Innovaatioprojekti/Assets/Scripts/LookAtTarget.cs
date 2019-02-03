@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LookAtTarget : MonoBehaviour
 {
@@ -8,15 +9,17 @@ public class LookAtTarget : MonoBehaviour
     bool spinCamera;
     public Transform cameraItem;
     float cameraHeight;
-    float cameraCenterHeight;
-
+    public Slider cameraZoomSlider;
+    //float cameraCenterHeight;
+    //float cameraZoom;
 	
     // Start is called before the first frame update
     void Start()
     {
         spinCamera = true;
         cameraHeight = 0.5f;
-        cameraCenterHeight = 0.3f;
+        //cameraCenterHeight = 0.3f;
+        //cameraZoom = 3.0f;
     }
 
     // Update is called once per frame
@@ -26,14 +29,13 @@ public class LookAtTarget : MonoBehaviour
         {
             cameraSpinAction();
         }
-        target.position = new Vector3(target.position.x, cameraCenterHeight, target.position.z);
-        cameraItem.position = new Vector3(cameraItem.position.x, cameraHeight, cameraItem.position.z);
-        //target.position.y = cameraCenterHeight;
+        
+        
+        transform.LookAt(target.transform);
     }
 
     void cameraSpinAction()
     {
-        transform.LookAt(target.transform);
         transform.Translate(Vector3.right * Time.deltaTime);
     }
 
@@ -45,10 +47,20 @@ public class LookAtTarget : MonoBehaviour
     public void setCameraHeight(float f)
     {
         cameraHeight = f;
+        cameraItem.position = new Vector3(cameraItem.position.x, cameraHeight, cameraItem.position.z);
     }
 
     public void setCameraCenterHeight(float f)
     {
-        cameraCenterHeight = f;
+        target.position = new Vector3(target.position.x, f, target.position.z);
+    }
+
+    public void setCameraZoom(float f)
+    {
+        float distance = 0.0f;
+        f = -(f - (cameraZoomSlider.maxValue + cameraZoomSlider.minValue));
+        distance = Vector3.Distance(new Vector3(target.position.x,0f,target.position.z), new Vector3(cameraItem.position.x,0f,cameraItem.position.z));
+        cameraItem.Translate(Vector3.forward * (distance-f));
+        cameraItem.position = new Vector3(cameraItem.position.x, cameraHeight, cameraItem.position.z);
     }
 }
