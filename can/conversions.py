@@ -4,7 +4,7 @@ from struct import unpack
 class PDODecoder():
     def __init__(self):
         self._pdo_map = dict([
-            ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward propery overload'))),
+            ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward property overload'))),
             ('0x184', ('<2f', namedtuple('zero_level_1', 'height_from_zero distance_to_zero'))),
             ('0x185', ('<f', namedtuple('zero_level_2', 'height_to_slope_from_zero'))),
             ('0x188', ('<4h', namedtuple('angles_1', 'main_boom digging_arm bucket heading'))),
