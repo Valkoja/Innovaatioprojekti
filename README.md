@@ -12,7 +12,7 @@ Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikk
 
 ### Unity-konsolin käyttö
 
-####Tyyppi 0: Data; näyttää tiedon koko ajan näytön alareunassa (esim. FPS)
+**Tyyppi 0: Data; näyttää tiedon koko ajan näytön alareunassa (esim. FPS)**
 
 1. Luo ListItem luokan juuressa
 
@@ -26,7 +26,7 @@ Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikk
 
 `item.SetData("asd");`
 
-####Tyyppi 1: Viesti; näyttää tiedon ruudulla, kunnes Data tai uudempi tieto syrjäyttää sen
+**Tyyppi 1: Viesti; näyttää tiedon ruudulla, kunnes Data tai uudempi tieto syrjäyttää sen**
 
 1. Luo ListItem dynaamisesti ja siirrä se konsoliin
 
