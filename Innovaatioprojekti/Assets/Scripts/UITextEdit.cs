@@ -8,7 +8,6 @@ public class UITextEdit : MonoBehaviour
     public double xValue;
     public double yValue;
     public double zValue;
-
     public Text xText;
     public Text yText;
     public Text zText;
@@ -23,11 +22,6 @@ public class UITextEdit : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
-
-    void OnGUI()
     {
         if (xValue == 0.0 && yValue == 0.0 && zValue == 0.0)
         {
