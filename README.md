@@ -10,13 +10,13 @@ https://trello.com/b/2GZE3upU/
 Tekee python-skriptin (log_to_csv.py) kanssa samassa kansiossa olevasta logfile.log-tiedostosta logfile.csv-version, missä järkevät taulukoinnit
 Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikkäs ei näin
 
-### Cubeserver-ajo
+### Server/GUI-ajo
 
-avaa python-ympäristösi
+avaa python3-ympäristösi
 
 `pip install -r requirements.txt`
 
-`python CubeServer.py`
+`cd Python/Server && python Server.py`
 
 #### Ominaisuuksia
 * IP saattaa näyttää väärää
