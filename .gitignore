@@ -46,3 +46,6 @@ __pycache__/
 
 # QML
 *.qmlc
+
+# Log files
+*.log
