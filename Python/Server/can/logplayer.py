@@ -6,10 +6,21 @@ from can.conversions import PDODecoder
 
 # Play busmaster logs
 class LogPlayer():
-    def processFile(self, file, reactor, callback, ignoreFailed=True):
+    def __init__(self):
+        self._messagesProcessed = 0
+
+    def messagesProcessed(self):
+        return self._messagesProcessed
+
+    def processFile(self, file, reactor, callback, finished, ignoreFailed=True):
         recorded_start_time = None
+        last_timestamp = 0
         decoder = PDODecoder()
         file_in = Path(file)
+
+        def cbAndTrack(message):
+            self._messagesProcessed += 1
+            callback(message)
 
         with open(file_in, 'r') as input:
             for line in input:
@@ -26,9 +37,13 @@ class LogPlayer():
                     recorded_start_time = timestamp
                 remaining_gap = timestamp - recorded_start_time
 
+                last_timestamp = timestamp
+
                 id = fields[3][2:]
                 data = ''.join(fields[6:-1])
                 message = decoder.decode_pdo(int(id, 16), bytes.fromhex(data))
 
                 if message:
-                    reactor.callLater(remaining_gap, callback, message)
+                    reactor.callLater(remaining_gap, cbAndTrack, message)
+
+            reactor.callLater(last_timestamp - recorded_start_time, finished, True)
