@@ -40,13 +40,11 @@ REQUIRED = [
 ]
 
 if sys.platform == "win32":
-    windows = [
+    REQUIRED.extend([
         "Twisted @ https://download.lfd.uci.edu/pythonlibs/r5uhg2lo/Twisted-18.9.0-cp37-cp37m-win_amd64.whl",
         "pywin32",
         "wincertstore",
-        ]
-    REQUIRED.append()
-    REQUIRED.append()
+        ])
 else:
     REQUIRED.append("Twisted")
 
