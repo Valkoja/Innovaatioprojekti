@@ -32,14 +32,13 @@ Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikk
 
 `ConsoleHandler.Instance.AddItemToConsole(new ListItem("asd",1));`
 
+### Server/GUI-ajo
 
-### Cubeserver-ajo
-
-avaa python-ympäristösi
+avaa python3-ympäristösi
 
 `pip install -r requirements.txt`
 
-`python CubeServer.py`
+`cd Python/Server && python Server.py`
 
 #### Ominaisuuksia
 * IP saattaa näyttää väärää
