@@ -53,6 +53,7 @@ ColumnLayout {
         FileDialog {
             id: fdImport
             title: qsTr("File name")
+            nameFilters: [ "Busmaster log files (*.log)" ]
             onAccepted: {
                 let file = fdImport.fileUrl
                 fileName.text = file.toString().split('/').pop()
