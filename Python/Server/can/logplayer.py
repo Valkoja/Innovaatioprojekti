@@ -31,7 +31,7 @@ class LogPlayer():
                 # Do maths to get proper times for replay
                 timestring = fields[0]
                 # Busmaster timestamp format 16:21:32:6459
-                timestamp = datetime.datetime.strptime(timestring, '%H:%M:%S:%f').timestamp()
+                timestamp = datetime.datetime.strptime(timestring, '%H:%M:%S:%f')
 
                 if recorded_start_time is None:
                     recorded_start_time = timestamp
@@ -44,6 +44,7 @@ class LogPlayer():
                 message = decoder.decode_pdo(int(id, 16), bytes.fromhex(data))
 
                 if message:
-                    reactor.callLater(remaining_gap, cbAndTrack, message)
+                    reactor.callLater(remaining_gap.total_seconds(), cbAndTrack, message)
 
-            reactor.callLater(last_timestamp - recorded_start_time, finished, True)
+            finished_gap = last_timestamp - recorded_start_time
+            reactor.callLater(finished_gap.total_seconds(), finished, True)
