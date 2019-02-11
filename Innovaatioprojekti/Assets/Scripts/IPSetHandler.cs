@@ -7,6 +7,7 @@ public class IPSetHandler : MonoBehaviour
 {
     public Text inputFieldText;
     public Text currentHostIPText;
+    string inputText = "";
 
     // Start is called before the first frame update
     void Start()
@@ -22,9 +23,11 @@ public class IPSetHandler : MonoBehaviour
 
     public void OnPressConfirm()
     {
-        if (IsInputIPCorrect(inputFieldText.text))
+        inputText = inputFieldText.text;
+        if (IsInputIPCorrect(inputText))
         {
-            currentHostIPText.text = inputFieldText.text;
+            currentHostIPText.text = inputText;
+            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting to "+inputText+"...",1));
         }
     }
 

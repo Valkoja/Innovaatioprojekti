@@ -6,33 +6,34 @@ using UnityEngine.UI;
 public class DisplayFPS : MonoBehaviour
 {
     public bool displayFPS;
-    public Text fpsText;
-
+    string fpsText;
     float deltaTime = 0.0f;
+    ListItem fpsItem;
+    float msec;
+    float fps;
 
     // Start is called before the first frame update
     void Start()
     {
-        displayFPS = true;  
+        displayFPS = true;
+        fpsItem = new ListItem(0);
+        fpsItem.SetData("0 FPS");
+        ConsoleHandler.Instance.AddItemToConsole(fpsItem);
     }
 
     // Update is called once per frame
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-    }
-
-    void OnGUI()
-    {
-        float msec = deltaTime * 1000.0f;
-        float fps = 1.0f / deltaTime;
         if (displayFPS)
         {
-            fpsText.text = ((int)fps).ToString() + " FPS";
+            float msec = deltaTime * 1000.0f;
+            float fps = 1.0f / deltaTime;
+            fpsText = ((int)fps).ToString() + " FPS";
+            fpsItem.SetData(fpsText);
         }
-        else fpsText.text = "";
     }
-
+    
     public void ToggleFPSVisibility(bool setValue)
     {
         displayFPS = setValue;

@@ -1,4 +1,4 @@
-from conversions import PDODecoder
+from can.conversions import PDODecoder
 from pathlib import Path
 from string import Template
 import sys

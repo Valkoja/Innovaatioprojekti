@@ -4,7 +4,7 @@ from struct import unpack
 class PDODecoder():
     def __init__(self):
         self._pdo_map = dict([
-            ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward propery overload'))),
+            ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward property overload'))),
             ('0x184', ('<2f', namedtuple('zero_level_1', 'height_from_zero distance_to_zero'))),
             ('0x185', ('<f', namedtuple('zero_level_2', 'height_to_slope_from_zero'))),
             ('0x188', ('<4h', namedtuple('angles_1', 'main_boom digging_arm bucket heading'))),
@@ -15,10 +15,10 @@ class PDODecoder():
 
     #PDO: id+message, in bytes
     def decode_pdo(self, id, data):
-        if not isinstance(id, bytes) or not isinstance(data, bytes):
+        if not isinstance(id, int) or not isinstance(data, bytes):
             raise TypeError
         padding = 4
-        _id = f"{int.from_bytes(id, byteorder='big'):#0{padding}x}"
+        _id = f"{id:#0{padding}x}"
         if _id in self._pdo_map:
             format = self._pdo_map[_id]
             msg = format[1]._make(unpack(format[0], data))
