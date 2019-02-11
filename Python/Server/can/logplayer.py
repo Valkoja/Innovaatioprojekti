@@ -3,6 +3,7 @@ import datetime
 from pathlib import Path
 import sys
 from can.conversions import PDODecoder
+from sys import platform
 
 # Play busmaster logs
 class LogPlayer():
@@ -17,6 +18,8 @@ class LogPlayer():
         last_timestamp = 0
         decoder = PDODecoder()
         file_in = Path(file)
+        if platform == 'win32':
+            file_in = str(file_in)[1:]
 
         def cbAndTrack(message):
             self._messagesProcessed += 1
