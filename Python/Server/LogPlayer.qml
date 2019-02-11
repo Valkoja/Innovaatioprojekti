@@ -53,7 +53,6 @@ ColumnLayout {
         FileDialog {
             id: fdImport
             title: qsTr("File name")
-            folder: shortcuts.home
             onAccepted: {
                 let file = fdImport.fileUrl
                 fileName.text = file.toString().split('/').pop()
