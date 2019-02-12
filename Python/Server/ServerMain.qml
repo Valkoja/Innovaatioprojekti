@@ -22,13 +22,25 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: margin
 
-        Rectangle {
-            width: 250
-            Layout.fillHeight: true
-            border.width: 1
-            border.color: "black"
-            LogPlayer {
-                id: log
+        ColumnLayout {
+            Rectangle {
+                width: 250
+                Layout.fillHeight: true
+                border.width: 1
+                border.color: "black"
+                LogPlayer {
+                    id: log
+                }
+            }
+
+            Rectangle {
+                width: 250
+                Layout.fillHeight: true
+                border.width: 1
+                border.color: "black"
+                CanBus {
+                    id: bus
+                }
             }
         }
 

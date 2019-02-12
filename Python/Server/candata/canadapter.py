@@ -5,8 +5,8 @@ import sys
 
 from sys import platform
 
-import can
-from can.conversions import PDODecoder
+import can as pycan
+from candata.conversions import PDODecoder
 
 # Play busmaster logs
 class CanAdapter():
@@ -25,11 +25,11 @@ class CanAdapter():
             print(message)
             self._messagesProcessed += 1
             callback(message)
-
+        bus = 0
         if platform == 'linux' and bus == 'vcan0':
             canbus = pycan.Bus('vcan0', bustype='socketcan')
         else:
-            canbus = pycan.Bus('can0', bustype='kvaser', bitrate=250000)
+            canbus = pycan.Bus(0, bustype='kvaser', bitrate=250000)
         
         # NMT
         canopen_nmt_start = pycan.Message(arbitration_id=0x00, data=[0x01, 0x00])

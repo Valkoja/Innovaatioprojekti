@@ -6,20 +6,22 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
 from twisted.python import log
-from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory, CubeOrientation
+from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
 from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
     listenWS
 
-from can.logplayer import LogPlayer
-from can.MachineState import MachineState
-from can.conversions import PDODecoder
+from candata.logplayer import LogPlayer
+from candata.MachineState import MachineState
+from candata.conversions import PDODecoder
+from candata.canadapter import CanAdapter
 
 from gui.PiirtoQML import PiirtoQML
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelBridge import ModelBridge
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
+from gui.CanBusHandler import CanBusHandler
 
 if __name__ == '__main__':
     # Force material theme
@@ -45,6 +47,13 @@ if __name__ == '__main__':
     # Init gui handler for logs
     logPlayerHandler = LogPlayerHandler(player, reactor, state.consumeMessage)
     engine.rootContext().setContextProperty('logPlayerHandler', logPlayerHandler)
+
+    # Init can adapter
+    adapter = CanAdapter()
+
+    # Init gui handler for logs
+    canBusHandler = CanBusHandler(adapter, reactor, state.consumeMessage)
+    engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init handler for visualization
     modelBridge = ModelBridge(state)
