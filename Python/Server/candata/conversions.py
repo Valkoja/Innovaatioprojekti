@@ -15,7 +15,9 @@ class PDODecoder():
 
     #PDO: id+message, in bytes
     def decode_pdo(self, id, data):
-        if not isinstance(id, int) or not isinstance(data, bytes):
+        if not isinstance(id, int):
+            raise TypeError
+        if not (isinstance(data, bytes) or isinstance(data, bytearray)):
             raise TypeError
         padding = 4
         _id = f"{id:#0{padding}x}"
