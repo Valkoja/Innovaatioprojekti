@@ -5,7 +5,7 @@ import sys
 
 from sys import platform
 
-import can as pycan
+import candata as pycan
 from candata.conversions import PDODecoder
 
 # Play busmaster logs
