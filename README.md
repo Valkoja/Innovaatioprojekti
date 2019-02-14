@@ -50,3 +50,15 @@ avaa python3-ympäristösi
 Tekee logitiedostojen riveillä olevasta datasta luettavaa ja laittaa tiedon decoded.out-tiedostoon
 
 `python decodelog.py <logitiedosto>`
+
+### Conda ympäristö palvelimen ajamiseen windows alustalla
+
+`conda create -n [NIMI] python=3.7`
+
+`conda activate [NIMI]`
+
+`pip install https://download.lfd.uci.edu/pythonlibs/r5uhg2lo/Twisted-18.9.0-cp37-cp37m-win_amd64.whl`
+
+`pip install autobahn dataclasses dataclasses_json qt5reactor`
+
+`conda install pyqt pywin32`
