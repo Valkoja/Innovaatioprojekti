@@ -22,6 +22,7 @@ from gui.ModelBridge import ModelBridge
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
 from gui.CanBusHandler import CanBusHandler
+from gui.Visualization import Visualization
 
 if __name__ == '__main__':
     # Force material theme
