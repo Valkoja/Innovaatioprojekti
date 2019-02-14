@@ -24,11 +24,11 @@ Rectangle {
             interval: 5
             running: serverApp.running
             repeat: true
-            onTriggered: diggerCanvas.requestPaint()
+            onTriggered: visualizationCanvas.requestPaint()
         }
 
 		Canvas {
-			id: diggerCanvas
+			id: visualizationCanvas
 			width: 600
 			height: 800
 			onPaint: VisualizationFunctions.updateCanvas()

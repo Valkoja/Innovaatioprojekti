@@ -45,7 +45,7 @@ ApplicationWindow {
         }
 
         Visualization {
-            id: visual
+            id: visuals
         }
 
         ClientList {
