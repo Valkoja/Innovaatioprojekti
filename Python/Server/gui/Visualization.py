@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QWidget, QApplication
-from PyQt5.QtGui import QPainter, QPen, QRegion
-from PyQt5.QtCore import Qt, QPoint, QSize, pyqtSlot, QObject
-
+from PyQt5.QtCore import QObject
 
 class Visualization(QObject):
-    def __init__(self, parent=None):
-        #QQuickPaintedItem.__init__(self, parent)
+    def __init__(self):
         super().__init__()
