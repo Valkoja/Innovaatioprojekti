@@ -2,7 +2,7 @@ import time
 import datetime
 from pathlib import Path
 import sys
-from can.conversions import PDODecoder
+from candata.conversions import PDODecoder
 from sys import platform
 
 # Play busmaster logs
