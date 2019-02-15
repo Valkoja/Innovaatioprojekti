@@ -23,13 +23,15 @@ function updateCanvas() {
     var angleB = modelBridge.getDiggingArmAngle();
     var angleC = modelBridge.getBucketAngle();
 
-    // Kontekstiolio, viivanleveys
-    var context = getContext("2d");
-        context.lineWidth = 5;
+    // Kontekstiolio, viivanleveys, nollataan tilanne
+    var context = visualizationCanvas.getContext('2d');
+        context.lineWidth = 2;
+        context.reset();
 
     // Alkupiste oikealle alas
     var p1 = {'x': 550, 'y': 475};
 
+    context.beginPath();
     context.moveTo(p1.x, p1.y);
 
     // Puomi
@@ -49,4 +51,5 @@ function updateCanvas() {
 
     context.strokeStyle = '#0000ff';
     context.lineTo(p4.x, p4.y);
+    context.stroke();
 }
