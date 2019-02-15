@@ -25,7 +25,6 @@ class CanAdapter():
             print(message)
             self._messagesProcessed += 1
             callback(message)
-        bus = 0
         if platform == 'linux' and bus == 'vcan0':
             canbus = pycan.Bus('vcan0', bustype='socketcan')
         else:
