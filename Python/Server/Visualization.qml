@@ -2,7 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.3
-import Piirto 1.0
+
+import "Visualization.js" as VisualizationFunctions
 
 Rectangle {
     width: 600
@@ -23,13 +24,14 @@ Rectangle {
             interval: 5
             running: serverApp.running
             repeat: true
-            onTriggered: piirto.setAngles(modelBridge.getBoomAngle(), modelBridge.getDiggingArmAngle(), modelBridge.getBucketAngle())
+            onTriggered: visualizationCanvas.requestPaint()
         }
 
-        Piirto {
-            id: piirto
-            Layout.preferredWidth: 600
-            Layout.preferredHeight: 800
-        }
+		Canvas {
+			id: visualizationCanvas
+			width: 600
+			height: 800
+			onPaint: VisualizationFunctions.updateCanvas()
+		}
     }
 }
