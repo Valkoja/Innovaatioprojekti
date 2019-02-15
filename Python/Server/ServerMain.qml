@@ -57,7 +57,8 @@ ApplicationWindow {
             border.color: "black"
 
             Visualization {
-            id: visuals
+                id: visuals
+            }
         }
 
         Rectangle {
