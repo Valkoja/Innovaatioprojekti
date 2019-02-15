@@ -9,10 +9,10 @@ import QtQuick.Dialogs 1.2
 ColumnLayout {
     //property string bus: "vcan0"
         RowLayout {
-            Layout.margins: 8
-            Text {
-                text: "Open CAN bus"
-                Layout.fillWidth: true
+            width: 250
+            Header {
+                title: "CAN Bus"
+                headerWidth: 250
             }
         }
 
