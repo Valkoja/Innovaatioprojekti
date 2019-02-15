@@ -19,19 +19,17 @@ Rectangle {
             }
         }
 
-        Timer {
-            id: updateModelTimer
-            interval: 5
-            running: serverApp.running
-            repeat: true
-            onTriggered: visualizationCanvas.requestPaint()
-        }
-
 		Canvas {
-			id: visualizationCanvas
+			id: visualizationCanvas 
+            renderStrategy: Canvas.Threaded
 			width: 600
 			height: 800
-			onPaint: VisualizationFunctions.updateCanvas()
+            onPaint: {
+                visualizationCanvas.requestAnimationFrame(VisualizationFunctions.updateCanvas)
+            }
+            onPainted: {
+                visualizationCanvas.requestPaint()
+            }
 		}
     }
 }

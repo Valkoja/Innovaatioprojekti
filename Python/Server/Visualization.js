@@ -19,9 +19,9 @@ function calculateY(angle, length) {
 }
 
 function updateCanvas() {
-    var angleA = modelBridge.getBoomAngle();
-    var angleB = modelBridge.getDiggingArmAngle();
-    var angleC = modelBridge.getBucketAngle();
+    var angleA = modelWrapper.mainBoomAngle;
+    var angleB = modelWrapper.diggingArmAngle;
+    var angleC = modelWrapper.bucketAngle;
 
     // Kontekstiolio, viivanleveys, nollataan tilanne
     var context = visualizationCanvas.getContext('2d');

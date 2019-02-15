@@ -18,7 +18,7 @@ from candata.canadapter import CanAdapter
 
 from gui.PiirtoQML import PiirtoQML
 from gui.LogPlayerHandler import LogPlayerHandler
-from gui.ModelBridge import ModelBridge
+from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
 from gui.CanBusHandler import CanBusHandler
@@ -56,13 +56,9 @@ if __name__ == '__main__':
     canBusHandler = CanBusHandler(adapter, reactor, state.consumeMessage)
     engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
-    # Init handler for visualization
-    modelBridge = ModelBridge(state)
-    engine.rootContext().setContextProperty('modelBridge', modelBridge)
-
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
-    #modelWrapper = ModelWrapper(state)
-    #engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
+    modelWrapper = ModelWrapper(state)
+    engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers
     clients = [
