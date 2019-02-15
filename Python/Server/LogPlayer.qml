@@ -1,17 +1,16 @@
 import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.0
+import QtQuick.Controls 2.5
+import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.3
 
 
-
 ColumnLayout {
         RowLayout {
-            Layout.margins: 8
-            Text {
-                text: "Play a CAN log"
-                Layout.fillWidth: true
+            width: 250
+            Header {
+                title: "Play a CAN log"
+                headerWidth: 250
             }
         }
 
@@ -47,6 +46,7 @@ ColumnLayout {
                     logPlayerHandler.handlePlayLogClicked()
                     serverApp.running = true
                 }
+                enabled: logPlayerHandler.hasFile ? true : false
             }
         }
 
