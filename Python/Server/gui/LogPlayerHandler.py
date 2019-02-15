@@ -18,6 +18,12 @@ class LogPlayerHandler(QObject):
     def _processed(self):
         return self._player.messagesProcessed()
 
+    def _hasFile(self):
+        if self._file:
+            return True
+        else:
+            return False
+
     def update(self, message):
         self._callback(message)
         self.processedChanged.emit()
@@ -26,15 +32,11 @@ class LogPlayerHandler(QObject):
         self.finished = state
         self.stateChanged.emit()
 
-    stateChanged = pyqtSignal()
-    state = pyqtProperty(bool, _finished, notify=stateChanged)
-    processedChanged = pyqtSignal()
-    processed = pyqtProperty(int, _processed, notify=processedChanged)
-
     @pyqtSlot(str)
     def handleLogFileSelected(self, file):
         self._file = urlparse(file).path
         print(Template('Log set to $file').substitute(file=self._file))
+        self.hasFileChanged.emit()
 
     @pyqtSlot()
     def handlePlayLogClicked(self):
@@ -45,3 +47,10 @@ class LogPlayerHandler(QObject):
             self.stateChanged.emit()
         else:
             print('No log selected')
+
+    stateChanged = pyqtSignal()
+    state = pyqtProperty(bool, _finished, notify=stateChanged)
+    processedChanged = pyqtSignal()
+    processed = pyqtProperty(int, _processed, notify=processedChanged)
+    hasFileChanged = pyqtSignal()
+    hasFile = pyqtProperty(bool, _hasFile, notify=hasFileChanged)
