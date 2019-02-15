@@ -6,6 +6,7 @@ class MachineState():
         self._properties['limitWarnings'] = dict()
         self._properties['zeroLevel'] = dict()
         self._properties['angles'] = dict()
+        self._modelUpdated = None
 
     def consumeMessage(self, message):
         if type(message).__name__ == 'limit_warnings':
@@ -19,6 +20,13 @@ class MachineState():
                 self._properties['angles'][name] = value
         else:
             print('Unknown message')
+            
+        # If we have a cb, call it now
+        if self._modelUpdated:
+            self._modelUpdated()
+
+    def setUpdateCallback(self, cb):
+        self._modelUpdated = cb
     
     def getState(self):
         return self._properties

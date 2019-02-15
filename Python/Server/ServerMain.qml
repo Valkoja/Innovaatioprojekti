@@ -1,6 +1,6 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.4
+import QtQuick 2.9
+import QtQuick.Controls 2.2
+import QtQuick.Controls.Material 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.12
 
@@ -27,13 +27,25 @@ ApplicationWindow {
         anchors.margins: margin
         spacing: 8
 
-        Rectangle {
-            width: 250
-            Layout.fillHeight: true
-            border.width: 1
-            border.color: "black"
-            LogPlayer {
-                id: log
+        ColumnLayout {
+            Rectangle {
+                width: 250
+                Layout.fillHeight: true
+                border.width: 1
+                border.color: "black"
+                LogPlayer {
+                    id: log
+                }
+            }
+
+            Rectangle {
+                width: 250
+                Layout.fillHeight: true
+                border.width: 1
+                border.color: "black"
+                CanBus {
+                    id: bus
+                }
             }
         }
 
@@ -44,9 +56,8 @@ ApplicationWindow {
             border.width: 1
             border.color: "black"
 
-            Information {
-                id: info
-            }
+            Visualization {
+            id: visuals
         }
 
         Rectangle {

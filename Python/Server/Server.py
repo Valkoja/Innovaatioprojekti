@@ -6,20 +6,23 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
 from twisted.python import log
-from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory, CubeOrientation
+from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
 from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
     listenWS
 
-from can.logplayer import LogPlayer
-from can.MachineState import MachineState
-from can.conversions import PDODecoder
+from candata.logplayer import LogPlayer
+from candata.MachineState import MachineState
+from candata.conversions import PDODecoder
+from candata.canadapter import CanAdapter
 
 from gui.PiirtoQML import PiirtoQML
 from gui.LogPlayerHandler import LogPlayerHandler
-from gui.ModelBridge import ModelBridge
+from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
+from gui.CanBusHandler import CanBusHandler
+from gui.Visualization import Visualization
 
 if __name__ == '__main__':
     # Force material theme
@@ -46,13 +49,16 @@ if __name__ == '__main__':
     logPlayerHandler = LogPlayerHandler(player, reactor, state.consumeMessage)
     engine.rootContext().setContextProperty('logPlayerHandler', logPlayerHandler)
 
-    # Init handler for visualization
-    modelBridge = ModelBridge(state)
-    engine.rootContext().setContextProperty('modelBridge', modelBridge)
+    # Init can adapter
+    adapter = CanAdapter()
+
+    # Init gui handler for logs
+    canBusHandler = CanBusHandler(adapter, reactor, state.consumeMessage)
+    engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
-    #modelWrapper = ModelWrapper(state)
-    #engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
+    modelWrapper = ModelWrapper(state)
+    engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers
     clients = [
