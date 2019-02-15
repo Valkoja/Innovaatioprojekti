@@ -73,10 +73,10 @@ if __name__ == '__main__':
     log.startLogging(sys.stdout)
     
     # Disable server until we rework the protocol
-    #ServerFactory = BroadcastServerFactory
-    #factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: CubeOrientation(x, y, z), lambda client: listModel.addThing(ThingWrapper(Client(client.peer))))
-    #factory.protocol = BroadcastServerProtocol
-    #listenWS(factory)
+    ServerFactory = BroadcastServerFactory
+    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: listModel.addThing(ThingWrapper(Client(client.peer))))
+    factory.protocol = BroadcastServerProtocol
+    listenWS(factory)
 
     # Load main QML file
     engine.load(QUrl.fromLocalFile('ServerMain.qml'))

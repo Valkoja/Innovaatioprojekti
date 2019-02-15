@@ -10,16 +10,6 @@ from autobahn.twisted.websocket import WebSocketServerFactory, \
 
 import json
 
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
-
-@dataclass_json
-@dataclass
-class CubeOrientation():
-    x: float
-    y: float
-    z: float
-
 
 class BroadcastServerProtocol(WebSocketServerProtocol):
 
@@ -55,7 +45,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
     def tick(self):
         self.tickcount += 1
         #self.broadcast("tick %d from server" % self.tickcount)
-        self.broadcast(self.getValues().to_json())
+        self.broadcast(json.dumps(self.getValues()))
         print(self.getValues())
         self.reactor.callLater(0.005, self.tick)
 
