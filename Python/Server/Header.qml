@@ -7,6 +7,7 @@ Item {
     property string title
     property int headerWidth
     Layout.fillWidth: true
+    height: 30
     Rectangle {
         color: "black"
         width: headerWidth
