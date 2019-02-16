@@ -49,3 +49,6 @@ __pycache__/
 
 # Log files
 *.log
+
+# QML Compiled JS
+*.jsc
