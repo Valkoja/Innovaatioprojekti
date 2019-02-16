@@ -1,4 +1,4 @@
-from can.conversions import PDODecoder
+from conversions import PDODecoder
 from pathlib import Path
 from string import Template
 import sys
@@ -21,7 +21,7 @@ def main():
                 output.write(fields[0])
                 id = '0' + fields[3][2:]
                 data = ''.join(fields[6:-1])
-                message = decoder.decode_pdo(bytes.fromhex(id), bytes.fromhex(data))
+                message = decoder.decode_pdo(int(id, 16), bytes.fromhex(data))
                 if message:
                     output.write(' ')
                     output.write(str(message))
