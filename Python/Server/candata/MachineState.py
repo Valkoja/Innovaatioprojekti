@@ -1,4 +1,5 @@
 from string import Template
+import re
 
 class MachineState():
     def __init__(self):
@@ -6,23 +7,32 @@ class MachineState():
         self._properties['limitWarnings'] = dict()
         self._properties['zeroLevel'] = dict()
         self._properties['angles'] = dict()
+        self._properties['quarternions'] = dict()
         self._modelUpdated = None
 
     def consumeMessage(self, message):
-        if type(message).__name__ == 'limit_warnings':
+        messagetype = type(message).__name__ 
+        if messagetype == 'limit_warnings':
             for name, value in message._asdict().items():
                 self._properties['limitWarnings'][name] = value
-        elif type(message).__name__.startswith('zero_level'):
+        elif messagetype.startswith('zero_level'):
             for name, value in message._asdict().items():
                 self._properties['zeroLevel'][name] = value
-        elif type(message).__name__.startswith('angles'):
+        elif messagetype.startswith('angles'):
             for name, value in message._asdict().items():
                 self._properties['angles'][name] = value
+        elif messagetype.endswith('quarternion'):
+            kind = re.sub(r'\_quarternion$', '', messagetype)
+            self._properties['quarternions'][re.sub(r'\_quarternion$', '', kind)] = dict()
+            for name, value in message._asdict().items():
+                self._properties['quarternions'][kind][re.sub(r'\_orientation$', '', name)] = value
+                
         else:
             print('Unknown message')
             
         # If we have a cb, call it now
         if self._modelUpdated:
+            print(self.getState())
             self._modelUpdated()
 
     def setUpdateCallback(self, cb):
