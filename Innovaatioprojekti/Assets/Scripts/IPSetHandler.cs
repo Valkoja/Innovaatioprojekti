@@ -24,13 +24,14 @@ public class IPSetHandler : MonoBehaviour
         
     }
 
-    public void OnPressConfirm()
+    async public void OnPressConfirm()
     {
         inputText = inputFieldText.text;
         if (IsInputIPCorrect(inputText))
         {
             currentHostIPText.text = inputText;
             ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting to "+inputText+"...",1));
+            await Network.ConnectToServer(inputText);
         }
         else {
             ConsoleHandler.Instance.AddItemToConsole(new ListItem("Invalid address",1));

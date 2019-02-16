@@ -72,19 +72,19 @@ public class Network : MonoBehaviour
     private const bool verbose = true;
     private static readonly TimeSpan delay = TimeSpan.FromMilliseconds(1000);
     public static MachineState state = MachineState.CreateFromJSON("");
+    private static string address;
 
-    async void Start()
+    void Start()
     {
-        Debug.Log("asd");
-        await Connect("ws://localhost:9000");
+        Debug.Log("Init network");
     }
 
     // Update is called once per frame
     async void Update()
     {
         if(webSocket.State == WebSocketState.Closed) {
-            Debug.Log("Reconnecting....");
-            await Connect("ws://localhost:9000");
+            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Reconnecting...",1));
+            await Connect("ws://" + address + ":9000");
         }
         Debug.Log(state);
         
@@ -98,6 +98,12 @@ public class Network : MonoBehaviour
         }
         Debug.Log("");
         Debug.Log("WebSocket disposed.");
+    }
+
+    public static async Task ConnectToServer(string ip) {
+        address = ip;
+        ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting...",1));
+        await Connect("ws://" + address + ":9000");
     }
 
     public static async Task Connect(string uri)
