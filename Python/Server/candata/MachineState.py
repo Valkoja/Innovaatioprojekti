@@ -7,7 +7,7 @@ class MachineState():
         self._properties['limitWarnings'] = dict()
         self._properties['zeroLevel'] = dict()
         self._properties['angles'] = dict()
-        self._properties['quarternions'] = dict()
+        self._properties['quaternions'] = dict()
         self._modelUpdated = None
 
     def consumeMessage(self, message):
@@ -21,11 +21,11 @@ class MachineState():
         elif messagetype.startswith('angles'):
             for name, value in message._asdict().items():
                 self._properties['angles'][name] = value
-        elif messagetype.endswith('quarternion'):
-            kind = re.sub(r'\_quarternion$', '', messagetype)
-            self._properties['quarternions'][re.sub(r'\_quarternion$', '', kind)] = dict()
+        elif messagetype.endswith('quaternion'):
+            kind = re.sub(r'\_quaternion$', '', messagetype)
+            self._properties['quaternions'][re.sub(r'\_quaternion$', '', kind)] = dict()
             for name, value in message._asdict().items():
-                self._properties['quarternions'][kind][re.sub(r'\_orientation$', '', name)] = value
+                self._properties['quaternions'][kind][re.sub(r'\_orientation$', '', name)] = value
                 
         else:
             print('Unknown message')
