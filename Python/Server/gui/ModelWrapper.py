@@ -1,26 +1,39 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
-
+from PyQt5.QtGui import QQuaternion
 
 class ModelWrapper(QObject):
-    def __init__(self, stateObject):
+    def __init__(self, stateObject, useQuarternions=True):
         super().__init__()
         self.stateObject = stateObject
         self.stateObject.setUpdateCallback(self.update)
+        self.useQuarternions = useQuarternions
 
     def _main_boom(self):
-        if 'main_boom' in self.stateObject.getState()['angles']:
+        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
+            components = self.stateObject.getState()['quaternions']['main_boom_orientation']
+            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return quart.x()
+        elif not self.useQuarternions and 'main_boom' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['main_boom'] / 10
         else:
             return 60
 
     def _digging_arm(self):
-        if 'digging_arm' in self.stateObject.getState()['angles']:
+        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
+            components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
+            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return quart.x()
+        elif 'digging_arm' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['digging_arm'] / 10
         else:
             return 40
 
     def _bucket(self):
-        if 'bucket' in self.stateObject.getState()['angles']:
+        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
+            components = self.stateObject.getState()['quaternions']['bucket_orientation']
+            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return quart.x()
+        elif 'bucket' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['bucket'] / 10
         else:
             return 20
