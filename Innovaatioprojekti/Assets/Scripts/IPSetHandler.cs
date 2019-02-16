@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class IPSetHandler : MonoBehaviour
 {
+    const string IPv4 = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
     public Text inputFieldText;
     public Text currentHostIPText;
     string inputText = "";
@@ -29,6 +32,9 @@ public class IPSetHandler : MonoBehaviour
             currentHostIPText.text = inputText;
             ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting to "+inputText+"...",1));
         }
+        else {
+            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Invalid address",1));
+        }
     }
 
     public void OnPressCancel()
@@ -38,10 +44,12 @@ public class IPSetHandler : MonoBehaviour
 
     bool IsInputIPCorrect(string input)
     {
-        if (input != "")
-        {
-            return true;
+        try {
+            return Regex.IsMatch(input, IPv4, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
         }
-        else return false;
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
     }
 }
