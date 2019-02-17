@@ -20,6 +20,8 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
         boomAngle: modelWrapper.mainBoomAngle
+        armAngle: modelWrapper.diggingArmAngle
+        bucketAngle: modelWrapper.bucketAngle
 
 /*
         renderStrategy: Canvas.Threaded

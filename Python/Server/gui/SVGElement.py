@@ -57,23 +57,34 @@ class SVGElement(QQuickPaintedItem):
         armX = boomX + self.calculateX(self._boomAngle, 385)
         armY = boomY + self.calculateY(self._boomAngle, 385)
 
+        print(armX)
+        print(armY)
+
         armSVG = self._armSVG
         armSVG.rotate(self._armAngle, 500, 500)
         armSVG.move(armX - 500, armY - 500)
+        # armSVG.move(-200, -200)
 
         # Kauha
-        bucketX = armX + self.calculateX(self._boomAngle + self._armAngle, 176)
-        bucketY = armY + self.calculateY(self._boomAngle + self._armAngle, 176)
+        bucketX = armX + self.calculateX((self._boomAngle + self._armAngle), 176)
+        bucketY = armY + self.calculateY((self._boomAngle + self._armAngle), 176)
+
+        print(bucketX)
+        print(bucketY)
 
         bucketSVG = self._bucketSVG
         bucketSVG.rotate(self._bucketAngle, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
+        # bucketSVG.move(-500, -500)
 
         # Yhdistetään
-        compose = svgutils.compose.Figure('1000px', '1000px', boomSVG)
+        compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
         svg = QSvgRenderer(compose.scale(1).tostr())
         svg.render(painter)
 
+        print(self._boomAngle)
+        print(self._armAngle)
+        print(self._bucketAngle)
 
 
     '''
