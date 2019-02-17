@@ -2,18 +2,15 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.3
 
 
-GridLayout {
-    RowLayout {
-        width: 250
-        Header {
-            title: "Clients"
-            headerWidth: 250
-        }
+ColumnLayout {
+    width: 250
+    Header {
+        title: "Clients"
     }
 
     ListView {
         id: pythonList
-
+        
 
         clip: true
 
