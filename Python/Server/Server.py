@@ -16,7 +16,7 @@ from candata.MachineState import MachineState
 from candata.conversions import PDODecoder
 from candata.canadapter import CanAdapter
 
-from gui.PiirtoQML import PiirtoQML
+#from gui.PiirtoQML import PiirtoQML
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking

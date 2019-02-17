@@ -30,16 +30,19 @@ class SVGView(QQuickPaintedItem):
         
         return y
 
+    def resizeEvent(self, event):
+        self.update()
+
 
     def paint(self, painter):
         qp = painter
 
         newBoom = self.orgBoom
-        newBoom.rotate(30, 500, 500)
-        #newBoom.move(200, 300)
+        newBoom.rotate(60, 500, 500)
+        newBoom.move(500, 500)
 
         compose = svgutils.compose.Figure(1000, 1000, newBoom)
-        svg = QSvgRenderer(compose.tostr())
+        svg = QSvgRenderer(compose.scale(1).tostr())
         svg.render(qp)
 
     '''
