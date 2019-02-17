@@ -6,19 +6,16 @@ import QtQuick.Layouts 1.3
 import "Visualization.js" as VisualizationFunctions
 
 ColumnLayout {
-    RowLayout {
-        width: 600
-        Header {
-            title: "Information"
-            headerWidth: 600
-        }
+    Header {
+        title: "Information"
+        width: parent.parent.width
     }
 
     Canvas {
         id: visualizationCanvas 
         renderStrategy: Canvas.Threaded
-        width: 600
-        height: 800
+        Layout.preferredWidth: 700
+        Layout.preferredHeight: 700
         onPaint: {
             visualizationCanvas.requestAnimationFrame(VisualizationFunctions.updateCanvas)
         }
