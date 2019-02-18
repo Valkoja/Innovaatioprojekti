@@ -9,61 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-[System.Serializable]
-public class MachineState {
-    public LimitWarnings limitWarnings;
-    public ZeroLevel zeroLevel;
-    public Angles angles;
-
-    public static MachineState CreateFromJSON(string jsonString)
-    {
-        return JsonUtility.FromJson<MachineState>(jsonString);
-    }
-}
-
-[System.Serializable]
-public class LimitWarnings {
-    public Boolean left = false;
-    public Boolean right = false;
-    public Boolean upper = false;
-    public Boolean lower = false;
-    public Boolean forward = false;
-    public Boolean property = false;
-    public Boolean overload = false;
-
-    public static LimitWarnings CreateFromJSON(string jsonString)
-    {
-        return JsonUtility.FromJson<LimitWarnings>(jsonString);
-    }
-}
-
-[System.Serializable]
-public class ZeroLevel {
-    public float height_from_zero = 0.0f;
-    public float distance_to_zero = 0.0f;
-    public float height_to_slope_from_zero = 0.0f;
-
-    public static ZeroLevel CreateFromJSON(string jsonString)
-    {
-        return JsonUtility.FromJson<ZeroLevel>(jsonString);
-    }
-}
-
-[System.Serializable]
-public class Angles {
-    public int main_boom = 0;
-    public int digging_arm = 0;
-    public int bucket = 0;
-    public int heading = 0;
-    public int frame_pitch = 0;
-    public int frame_roll = 0;
-
-    public static Angles CreateFromJSON(string jsonString)
-    {
-        return JsonUtility.FromJson<Angles>(jsonString);
-    }
-}
-
 public class Network : MonoBehaviour
 {
     static ClientWebSocket webSocket = new ClientWebSocket();
@@ -71,25 +16,20 @@ public class Network : MonoBehaviour
     private const int receiveChunkSize = 64;
     private const bool verbose = true;
     private static readonly TimeSpan delay = TimeSpan.FromMilliseconds(1000);
-    public static MachineState state = MachineState.CreateFromJSON("");
     private static string address;
+    private static GameObject stateObject;
+    const int maxConnectionAttempts = 5;
+    private static int connectionAttempts = 0;
 
     void Start()
     {
         Debug.Log("Init network");
+        stateObject = GameObject.Find("MachineState");
     }
 
-    // Update is called once per frame
-    async void Update()
+    void Update()
     {
-        
-        if (webSocket.State == WebSocketState.Closed) {
-            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Reconnecting...",1));
-            await Connect("ws://" + address + ":9000");
-        }
-        Debug.Log(state);
-        
-        
+
     }
 
     void OnDestroy()
@@ -98,63 +38,68 @@ public class Network : MonoBehaviour
             webSocket.Abort();
             webSocket.Dispose();
         }
-        Debug.Log("");
         Debug.Log("WebSocket disposed.");
     }
 
     public static async Task ConnectToServer(string ip) {
         address = ip;
         ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting...",1));
+        webSocket = new ClientWebSocket();
         await Connect("ws://" + address + ":9000");
+    }
+
+    private static async Task Reconnect() {
+        ConsoleHandler.Instance.AddItemToConsole(new ListItem("Lost connection, reconnecting in 5...",1));
+        connectionAttempts += 1;
+        await Task.Delay(TimeSpan.FromSeconds(5));
+        await ConnectToServer(address);
     }
 
     public static async Task Connect(string uri)
     {
         try
         {
-            webSocket = new ClientWebSocket();
             await webSocket.ConnectAsync(new Uri(uri), CancellationToken.None);
-            await Task.WhenAll(ReadRotation(webSocket));
+            ConsoleHandler.Instance.AddItemToConsole(new ListItem($"Connected to {address}",1));
+            connectionAttempts += 1;
+            await Task.WhenAll(ReceiveState(webSocket));
         }
         catch (Exception ex)
         {
             Debug.Log($"Exception: {ex.Message}");
+            Debug.Log(webSocket.State);
         }
         finally
         {
-            if (webSocket != null)
-                webSocket.Dispose();
-            Debug.Log("");
-            Debug.Log("WebSocket closed.");
+            if(webSocket != null) {
+                if(webSocket.State != WebSocketState.Closed) {
+                    // Do something???
+                }
+                if(webSocket.State == WebSocketState.Closed && address != null && connectionAttempts < maxConnectionAttempts) {
+                    await Reconnect();
+                }
+            }
+            else if(connectionAttempts == maxConnectionAttempts) {
+                ConsoleHandler.Instance.AddItemToConsole(new ListItem("Host unavailable",1));
+            }
         }
     }
 
-    private static async Task Echo(ClientWebSocket webSocket)
-    {
-        while (webSocket.State == WebSocketState.Open)
-        {                
-            var result = await ReceiveStringAsync();
-            LogStatus(true, result);
-            await SendStringAsync("ping");
-            LogStatus(false, "ping");
-            await Task.Delay(delay);
-        }
-        if(webSocket.State == WebSocketState.Closed) {
-            Debug.Log("WebSocket closed.");
-        }
-    }
-
-    private static async Task ReadRotation(ClientWebSocket webSocket)
+    private static async Task ReceiveState(ClientWebSocket webSocket)
     {
         while (webSocket.State == WebSocketState.Open)
         {
             var result = await ReceiveStringAsync();
-            Debug.Log(result);
-            var tempstate = JsonUtility.FromJson<MachineState>(result);
-            state = tempstate;
+            var message = JsonUtility.FromJson<MachineStateMessage>(result);
+            if(stateObject) {
+                stateObject.GetComponent<MachineState>().consumeMessage(message);
+            }
+            else {
+                Debug.Log("No state available");
+            }
         }
         if(webSocket.State == WebSocketState.Closed) {
-            Debug.Log("WebSocket closed.");
+            await Reconnect();
         }
     }
 
@@ -192,11 +137,5 @@ public class Network : MonoBehaviour
                 return await reader.ReadToEndAsync();
             }
         }
-    }
-
-    private static void LogStatus(bool receiving, string message)
-    {
-        Debug.Log($"{(receiving ? "Received" : "Sent")} bytes... ");
-        Debug.Log(message);
     }
 }
