@@ -32,6 +32,8 @@ public class DisplayFPS : MonoBehaviour
             fpsText = ((int)fps).ToString() + " FPS";
             fpsItem.SetData(fpsText);
         }
+        else
+            fpsItem.SetData("");
     }
     
     public void ToggleFPSVisibility(bool setValue)

@@ -28,8 +28,11 @@ function updateCanvas() {
         context.lineWidth = 2;
         context.reset();
 
+    context.canvas.height = visualizationCanvas.parent.parent.height;
+    context.canvas.width = visualizationCanvas.parent.parent.width;
+
     // Alkupiste oikealle alas
-    var p1 = {'x': 550, 'y': 475};
+    var p1 = {'x': context.canvas.width - 150, 'y': context.canvas.height - 150};
 
     context.beginPath();
     context.moveTo(p1.x, p1.y);

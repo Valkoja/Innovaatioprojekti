@@ -7,13 +7,11 @@ import QtQuick.Dialogs 1.2
 
 
 ColumnLayout {
+    width: 250
     //property string bus: "vcan0"
-        RowLayout {
-            width: 250
-            Header {
-                title: "CAN Bus"
-                headerWidth: 250
-            }
+        Header {
+            title: "CAN Bus"
+            Layout.fillWidth: true
         }
 
         Text {
@@ -47,7 +45,6 @@ ColumnLayout {
                 text: "Open bus"
                 onClicked: {
                     canBusHandler.handleOpenBusClicked()
-                    //serverApp.running = true
                 }
             }
         }
