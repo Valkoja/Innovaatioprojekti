@@ -27,7 +27,7 @@ class LogPlayer():
 
         with open(file_in, 'r') as input:
             for line in input:
-                if line.startswith('***'):
+                if line.startswith('***') or line == '\n':
                     continue
                 fields = line.split(' ')
 

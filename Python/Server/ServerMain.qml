@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 import QtQuick.Layouts 1.3
-//import QtGraphicalEffects 1.12
+
 
 ApplicationWindow {
     id: serverApp
@@ -50,20 +50,21 @@ ApplicationWindow {
         }
 
         Rectangle {
-            width: 600
-            Layout.minimumHeight: 600
+            Layout.minimumHeight: 700
+            Layout.minimumWidth: 700
             Layout.fillHeight: true
+            Layout.fillWidth: true
             border.width: 1
             border.color: "black"
 
-            Visualization {
-                id: visuals
+            Visuals {
+                id: svgContainer
             }
         }
 
         Rectangle {
-            width: 250
             Layout.fillHeight: true
+            Layout.minimumWidth: 250
             border.width: 1
             border.color: "black"
 

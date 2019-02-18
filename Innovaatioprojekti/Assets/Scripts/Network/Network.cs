@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class Network : MonoBehaviour
 {
-    static ClientWebSocket webSocket = null;
+    static ClientWebSocket webSocket = new ClientWebSocket();
     private const int sendChunkSize = 256;
     private const int receiveChunkSize = 64;
     private const bool verbose = true;

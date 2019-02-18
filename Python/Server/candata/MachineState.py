@@ -32,7 +32,7 @@ class MachineState():
             
         # If we have a cb, call it now
         if self._modelUpdated:
-            print(self.getState())
+            #print(self.getState())
             self._modelUpdated()
 
     def setUpdateCallback(self, cb):

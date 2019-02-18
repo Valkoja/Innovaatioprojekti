@@ -6,12 +6,9 @@ import QtQuick.Dialogs 1.2
 
 
 ColumnLayout {
-        RowLayout {
-            width: 250
-            Header {
-                title: "Play a CAN log"
-                headerWidth: 250
-            }
+    width: 250
+        Header {
+            title: "Play a CAN log"
         }
 
         Text {
