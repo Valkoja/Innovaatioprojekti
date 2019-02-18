@@ -46,7 +46,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
         self.tickcount += 1
         #self.broadcast("tick %d from server" % self.tickcount)
         self.broadcast(json.dumps(self.getValues()))
-        print(self.getValues())
+        #print(self.getValues())
         self.reactor.callLater(0.005, self.tick)
 
     def register(self, client):
@@ -61,7 +61,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
             self.clients.remove(client)
 
     def broadcast(self, msg):
-        print("broadcasting message '{}' ..".format(msg))
+        #print("broadcasting message '{}' ..".format(msg))
         for c in self.clients:
             c.sendMessage(msg.encode('utf8'))
             #print("message sent to {}".format(c.peer))
