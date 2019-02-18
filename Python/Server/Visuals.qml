@@ -9,7 +9,7 @@ ColumnLayout {
     anchors.fill: parent
 
     Header {
-        title: "Information"
+        title: "Visualization"
         width: parent.parent.width
     }
 
