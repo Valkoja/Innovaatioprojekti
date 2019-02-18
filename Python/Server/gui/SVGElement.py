@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QObject, pyqtProperty
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
 from PyQt5.QtQuick import QQuickPaintedItem
 from PyQt5.QtSvg import QSvgRenderer
 
-import math, svgutils
+import math, svgutils, copy
 
 class SVGElement(QQuickPaintedItem):
     def __init__(self, parent = None):
@@ -38,18 +38,15 @@ class SVGElement(QQuickPaintedItem):
         return y
 
 
-    def resizeEvent(self, event):
-        self.update()
-
-
     def paint(self, painter):
-        # qp = painter
+        boomSVG = copy.deepcopy(self._boomSVG)
+        armSVG = copy.deepcopy(self._armSVG)
+        bucketSVG = copy.deepcopy(self._bucketSVG)
 
-        # Puomin alkupisteen koordinaatit
+        # Puomi
         boomX = 900
         boomY = 900
 
-        boomSVG = self._boomSVG
         boomSVG.rotate(self._boomAngle, 500, 500)
         boomSVG.move(boomX - 500, boomY - 500)
 
@@ -57,7 +54,6 @@ class SVGElement(QQuickPaintedItem):
         armX = boomX + self.calculateX(self._boomAngle, 385)
         armY = boomY + self.calculateY(self._boomAngle, 385)
 
-        armSVG = self._armSVG
         armSVG.rotate(self._boomAngle + self._armAngle, 500, 500)
         armSVG.move(armX - 500, armY - 500)
 
@@ -65,7 +61,6 @@ class SVGElement(QQuickPaintedItem):
         bucketX = armX + self.calculateX(self._boomAngle + self._armAngle, 176)
         bucketY = armY + self.calculateY(self._boomAngle + self._armAngle, 176)
 
-        bucketSVG = self._bucketSVG
         bucketSVG.rotate(self._boomAngle + self._armAngle + self._bucketAngle, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
@@ -74,12 +69,13 @@ class SVGElement(QQuickPaintedItem):
         svg = QSvgRenderer(compose.move(-200, -200).scale(1.2).tostr())
         svg.render(painter)
 
+
+    '''
+        # Debug
         print(self._boomAngle)
         print(self._armAngle)
         print(self._bucketAngle)
 
-
-    '''
         # Vanhoja?
         self.setOpaquePainting(False)
         self.setTextureSize = QSize(600, 600)
@@ -89,26 +85,37 @@ class SVGElement(QQuickPaintedItem):
         print(str(self.height()))
     '''
 
+
     @pyqtProperty(int)
     def boomAngle(self):
         return self._boomAngle
+
 
     @boomAngle.setter
     def boomAngle(self, boomAngle):
         self._boomAngle = boomAngle
 
+
     @pyqtProperty(int)
     def armAngle(self):
         return self._armAngle
+
 
     @armAngle.setter
     def armAngle(self, armAngle):
         self._armAngle = armAngle
 
+
     @pyqtProperty(int)
     def bucketAngle(self):
         return self._bucketAngle
 
+
     @bucketAngle.setter
     def bucketAngle(self, bucketAngle):
         self._bucketAngle = bucketAngle
+
+
+    @pyqtSlot()
+    def reDraw(self):
+        self.update()

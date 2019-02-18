@@ -23,6 +23,9 @@ ColumnLayout {
         armAngle: modelWrapper.diggingArmAngle
         bucketAngle: modelWrapper.bucketAngle
 
+        Component.onCompleted: {
+            modelWrapper.changed.connect(reDraw)
+        }
 /*
         renderStrategy: Canvas.Threaded
 
