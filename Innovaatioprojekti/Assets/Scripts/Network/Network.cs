@@ -66,7 +66,7 @@ public class Angles {
 
 public class Network : MonoBehaviour
 {
-    static ClientWebSocket webSocket = null;
+    static ClientWebSocket webSocket = new ClientWebSocket();
     private const int sendChunkSize = 256;
     private const int receiveChunkSize = 64;
     private const bool verbose = true;
@@ -82,13 +82,13 @@ public class Network : MonoBehaviour
     // Update is called once per frame
     async void Update()
     {
-        /*
+        
         if (webSocket.State == WebSocketState.Closed) {
             ConsoleHandler.Instance.AddItemToConsole(new ListItem("Reconnecting...",1));
             await Connect("ws://" + address + ":9000");
         }
         Debug.Log(state);
-        */
+        
         
     }
 
