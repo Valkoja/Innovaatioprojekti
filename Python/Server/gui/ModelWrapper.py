@@ -19,21 +19,21 @@ class ModelWrapper(QObject):
             return 60
 
     def _digging_arm(self):
-        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
+        if self.useQuarternions and 'digging_arm_orientatation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
-        elif 'digging_arm' in self.stateObject.getState()['angles']:
+        elif not self.useQuarternions 'digging_arm' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['digging_arm'] / 10
         else:
             return 40
 
     def _bucket(self):
-        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
+        if self.useQuarternions and 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
-        elif 'bucket' in self.stateObject.getState()['angles']:
+        elif not self.useQuarternions 'bucket' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['bucket'] / 10
         else:
             return 20
