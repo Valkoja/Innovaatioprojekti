@@ -57,7 +57,7 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
-    modelWrapper = ModelWrapper(state)
+    modelWrapper = ModelWrapper(state, useQuarternions = False)
     engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers

@@ -69,7 +69,6 @@ class SVGElement(QQuickPaintedItem):
         svg = QSvgRenderer(compose.move(-200, -200).scale(1.2).tostr())
         svg.render(painter)
 
-
     '''
         # Debug
         print(self._boomAngle)
