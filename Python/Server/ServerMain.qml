@@ -62,14 +62,27 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
-            Layout.fillHeight: true
-            Layout.minimumWidth: 250
-            border.width: 1
-            border.color: "black"
+        ColumnLayout {
+            Rectangle {
+                Layout.fillHeight: true
+                Layout.minimumWidth: 250
+                border.width: 1
+                border.color: "black"
 
-            ClientList {
-                id: clients
+                ClientList {
+                    id: clients
+                }
+            }
+
+            Rectangle {
+                Layout.fillHeight: true
+                Layout.minimumWidth: 250
+                border.width: 1
+                border.color: "black"
+
+                Information {
+                    id: info
+                }
             }
         }
     }
