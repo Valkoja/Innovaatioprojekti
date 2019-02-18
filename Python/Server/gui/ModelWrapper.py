@@ -23,7 +23,7 @@ class ModelWrapper(QObject):
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
-        elif not self.useQuarternions 'digging_arm' in self.stateObject.getState()['angles']:
+        elif not self.useQuarternions and 'digging_arm' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['digging_arm'] / 10
         else:
             return -100
@@ -33,7 +33,7 @@ class ModelWrapper(QObject):
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
-        elif not self.useQuarternions 'bucket' in self.stateObject.getState()['angles']:
+        elif not self.useQuarternions and 'bucket' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['bucket'] / 10
         else:
             return -90
