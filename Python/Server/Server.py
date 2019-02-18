@@ -16,13 +16,13 @@ from candata.MachineState import MachineState
 from candata.conversions import PDODecoder
 from candata.canadapter import CanAdapter
 
-from gui.PiirtoQML import PiirtoQML
+#from gui.PiirtoQML import PiirtoQML
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
 from gui.CanBusHandler import CanBusHandler
-from gui.Visualization import Visualization
+from gui.SVGElement import SVGElement
 
 if __name__ == '__main__':
     # Force material theme
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Init PyQt5
     app = QGuiApplication(sys.argv)
-    qmlRegisterType(PiirtoQML, 'Piirto', 1, 0, 'Piirto')
+    qmlRegisterType(SVGElement, 'SVGElement', 1, 0, 'SVGElement')
     import qt5reactor
     qt5reactor.install()
     from twisted.internet import reactor
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
-    modelWrapper = ModelWrapper(state)
+    modelWrapper = ModelWrapper(state, useQuarternions = False)
     engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers

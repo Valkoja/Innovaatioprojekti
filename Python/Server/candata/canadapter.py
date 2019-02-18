@@ -22,7 +22,7 @@ class CanAdapter():
 
     def openBus(self, bus, reactor, callback):
         def cbAndTrack(message):
-            print(message)
+            # print(message)
             self._messagesProcessed += 1
             callback(message)
         #f platform == 'linux' and bus == 'vcan0':
