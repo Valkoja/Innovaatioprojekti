@@ -57,8 +57,8 @@ ApplicationWindow {
             border.width: 1
             border.color: "black"
 
-            Visualization {
-                id: visuals
+            Visuals {
+                id: svgContainer
             }
         }
 
