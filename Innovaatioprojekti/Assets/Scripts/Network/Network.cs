@@ -82,11 +82,13 @@ public class Network : MonoBehaviour
     // Update is called once per frame
     async void Update()
     {
-        if(webSocket.State == WebSocketState.Closed) {
+        /*
+        if (webSocket.State == WebSocketState.Closed) {
             ConsoleHandler.Instance.AddItemToConsole(new ListItem("Reconnecting...",1));
             await Connect("ws://" + address + ":9000");
         }
         Debug.Log(state);
+        */
         
     }
 
