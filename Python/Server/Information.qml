@@ -4,9 +4,9 @@ import QtQuick.Layouts 1.3
 
 
 ColumnLayout {
-    width: 250
+    width: 275
         function round(x) {
-            return Number.parseFloat(x).toPrecision(5);
+            return parseFloat(x).toPrecision(5);
         }
 
         Header {
