@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 
 
 ColumnLayout {
-    width: 250
+    width: 275
     Header {
         title: "Clients"
     }
