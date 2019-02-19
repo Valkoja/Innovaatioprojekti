@@ -65,7 +65,7 @@ ApplicationWindow {
         ColumnLayout {
             Rectangle {
                 Layout.fillHeight: true
-                Layout.minimumWidth: 250
+                Layout.minimumWidth: 275
                 border.width: 1
                 border.color: "black"
 
@@ -75,8 +75,9 @@ ApplicationWindow {
             }
 
             Rectangle {
-                Layout.fillHeight: true
-                Layout.minimumWidth: 250
+                //Layout.fillHeight: true
+                height: 400
+                Layout.minimumWidth: 275
                 border.width: 1
                 border.color: "black"
 
