@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QRect, QSize, QPointF
 from PyQt5.QtQuick import QQuickPaintedItem
 from PyQt5.QtSvg import QSvgRenderer
 
 import math, svgutils, copy
+
 
 class SVGElement(QQuickPaintedItem):
     def __init__(self, parent = None):
@@ -19,7 +20,6 @@ class SVGElement(QQuickPaintedItem):
         self._bucketSVG = svgutils.compose.SVG('./gui/svg/bucket.svg')
         self._bucketAngle = 0
 
-
     def calculateX(self, angle, length):
         x = math.floor(math.fabs(math.cos(math.radians(angle)) * length))
 
@@ -28,7 +28,6 @@ class SVGElement(QQuickPaintedItem):
         
         return x
 
-
     def calculateY(self, angle, length):
         y = math.floor(math.fabs(math.sin(math.radians(angle)) * length))
         
@@ -36,7 +35,6 @@ class SVGElement(QQuickPaintedItem):
             y = y * -1
         
         return y
-
 
     def paint(self, painter):
         boomSVG = copy.deepcopy(self._boomSVG)
@@ -66,7 +64,14 @@ class SVGElement(QQuickPaintedItem):
 
         # Yhdistetään
         compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
-        svg = QSvgRenderer(compose.move(-200, -200).scale(1.2).tostr())
+        image = compose.move(-200, -200).scale(1.2).tostr()
+
+        # Hacky wacky to make Qt not crash and burn about encoding
+        imagestring = image.decode('utf-8')
+        imagestring = imagestring.replace("encoding='ASCII'", "encoding='UTF-8'")
+        imagestring = imagestring.encode('utf-8')
+
+        svg = QSvgRenderer(imagestring)
         svg.render(painter)
 
     '''
