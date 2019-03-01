@@ -64,7 +64,15 @@ class SVGElement(QQuickPaintedItem):
 
         # Yhdistetään
         compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
-        image = compose.move(-200, -200).scale(1.2).tostr()
+
+        # Set scale based on system we're running on due to DPI weirdness
+        import platform
+        if platform.system() == 'Darwin':
+            scale = 0.6
+        else:
+            scale = 1.2
+
+        image = compose.move(-200, -200).scale(scale).tostr()
 
         # Hacky wacky to make Qt not crash and burn about encoding
         imagestring = image.decode('utf-8')
