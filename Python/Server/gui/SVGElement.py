@@ -67,15 +67,15 @@ class SVGElement(QQuickPaintedItem):
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
             scale = 0.6
-            offsetX = 0
-            offsetY = 0
+            moveX = 0
+            moveY = 0
         else:
             scale = 1.2
-            offsetX = -200
-            offsetY = -200
+            moveX = -200
+            moveY = -200
 
         # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
-        image = compose.move(offsetX, offsetY).scale(scale).tostr()
+        image = compose.move(moveX, moveY).scale(scale).tostr()
 
         # Hacky wacky to make Qt not crash and burn about encoding
         imageStr = image.decode('utf-8')

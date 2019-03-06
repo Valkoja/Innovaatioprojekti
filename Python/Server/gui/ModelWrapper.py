@@ -44,7 +44,7 @@ class ModelWrapper(QObject):
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
         else:
-            return 0
+            return 40
 
     def _digging_armQuaternion(self):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
@@ -52,7 +52,7 @@ class ModelWrapper(QObject):
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
         else:
-            return 0
+            return -60
 
     def _bucketQuaternion(self):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
@@ -60,7 +60,7 @@ class ModelWrapper(QObject):
             quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
             return quart.x()
         else:
-            return 0
+            return -150
 
     def _limitLeft(self):
         if 'left' in self.stateObject.getState()['limitWarnings']:
