@@ -5,8 +5,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QRect, QSize, QPointF
 from PyQt5.QtQuick import QQuickPaintedItem
 from PyQt5.QtSvg import QSvgRenderer
 
-import math, svgutils, copy
-
+import math, svgutils, copy, platform
 
 class SVGElement(QQuickPaintedItem):
     def __init__(self, parent = None):
@@ -62,19 +61,16 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.rotate(self._bucketAngle, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
-        # Combine
+        # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
-        import platform
-
-        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
-
         if platform.system() == 'Darwin':
             scale = 0.6
         else:
             scale = 1.2
 
+        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
         image = compose.move(-200, -200).scale(scale).tostr()
 
         # Hacky wacky to make Qt not crash and burn about encoding
@@ -84,21 +80,6 @@ class SVGElement(QQuickPaintedItem):
 
         svg = QSvgRenderer(imagestring)
         svg.render(painter)
-
-    '''
-        # Debug
-        print(self._boomAngle)
-        print(self._armAngle)
-        print(self._bucketAngle)
-
-        # Vanhoja?
-        self.setOpaquePainting(False)
-        self.setTextureSize = QSize(600, 600)
-
-        # Elementin koko
-        print(str(self.width()))
-        print(str(self.height()))
-    '''
 
 
     @pyqtProperty(int)
