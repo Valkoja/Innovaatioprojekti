@@ -41,32 +41,35 @@ class SVGElement(QQuickPaintedItem):
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
 
-        # Puomi
+        # Boom
         boomX = 900
         boomY = 900
 
         boomSVG.rotate(self._boomAngle, 500, 500)
         boomSVG.move(boomX - 500, boomY - 500)
 
-        # Toinen puomi
+        # Digging arm
         armX = boomX + self.calculateX(self._boomAngle, 385)
         armY = boomY + self.calculateY(self._boomAngle, 385)
 
-        armSVG.rotate(self._boomAngle + self._armAngle, 500, 500)
+        armSVG.rotate(self._armAngle, 500, 500)
         armSVG.move(armX - 500, armY - 500)
 
-        # Kauha
-        bucketX = armX + self.calculateX(self._boomAngle + self._armAngle, 176)
-        bucketY = armY + self.calculateY(self._boomAngle + self._armAngle, 176)
+        # Bucket
+        bucketX = armX + self.calculateX(self._armAngle, 176)
+        bucketY = armY + self.calculateY(self._armAngle, 176)
 
-        bucketSVG.rotate(self._boomAngle + self._armAngle + self._bucketAngle, 500, 500)
+        bucketSVG.rotate(self._bucketAngle, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
-        # Yhdistetään
+        # Combine
         compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
         import platform
+
+        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
+
         if platform.system() == 'Darwin':
             scale = 0.6
         else:
