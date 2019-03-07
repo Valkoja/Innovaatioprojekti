@@ -7,7 +7,7 @@ import QtQuick.Dialogs 1.2
 
 
 ColumnLayout {
-    width: 250
+    width: 180
     //property string bus: "vcan0"
         Header {
             title: "CAN Bus"
@@ -30,7 +30,7 @@ ColumnLayout {
             text: "Messages processed " + canBusHandler.processed
         }
 
-        RowLayout {
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.margins: 8
             Button {
