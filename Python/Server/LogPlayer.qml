@@ -26,7 +26,7 @@ ColumnLayout {
             text: "Messages processed " + logPlayerHandler.processed
         }
 
-        RowLayout {
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.margins: 8
             Button {
@@ -45,7 +45,17 @@ ColumnLayout {
                 }
                 enabled: logPlayerHandler.hasFile ? true : false
             }
+            Button {
+                id: stopLog
+                Layout.fillWidth: true
+                text: "Stop log"
+                onClicked: {
+                    logPlayerHandler.handleStopLogClicked()
+                }
+                enabled: !logPlayerHandler.state && logPlayerHandler.hasFile ? true : false
+            }
         }
+
 
         FileDialog {
             id: fdImport

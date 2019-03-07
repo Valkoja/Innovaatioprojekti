@@ -48,6 +48,12 @@ class LogPlayerHandler(QObject):
         else:
             print('No log selected')
 
+    @pyqtSlot()
+    def handleStopLogClicked(self):
+        if not self.finished:
+            self._player.stop()
+            print(Template('Stopped log $file').substitute(file=self._file))
+
     stateChanged = pyqtSignal()
     state = pyqtProperty(bool, _finished, notify=stateChanged)
     processedChanged = pyqtSignal()

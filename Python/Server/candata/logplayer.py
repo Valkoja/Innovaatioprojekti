@@ -9,9 +9,15 @@ from sys import platform
 class LogPlayer():
     def __init__(self):
         self._messagesProcessed = 0
+        self._callIDs = [];
 
     def messagesProcessed(self):
         return self._messagesProcessed
+
+    def stop(self):
+        for callID in self._callIDs:
+            callID.cancel()
+        self._callIDs.clear()
 
     def processFile(self, file, reactor, callback, finished, ignoreFailed=True):
         recorded_start_time = None
@@ -23,6 +29,7 @@ class LogPlayer():
 
         def cbAndTrack(message):
             self._messagesProcessed += 1
+            self._callIDs.pop(0)
             callback(message)
 
         with open(file_in, 'r') as input:
@@ -47,7 +54,7 @@ class LogPlayer():
                 message = decoder.decode_pdo(int(id, 16), bytes.fromhex(data))
 
                 if message:
-                    reactor.callLater(remaining_gap.total_seconds(), cbAndTrack, message)
+                    self._callIDs.append(reactor.callLater(remaining_gap.total_seconds(), cbAndTrack, message))
 
             finished_gap = last_timestamp - recorded_start_time
-            reactor.callLater(finished_gap.total_seconds(), finished, True)
+            self._callIDs.append(reactor.callLater(finished_gap.total_seconds(), finished, True))
