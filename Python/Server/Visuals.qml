@@ -15,13 +15,24 @@ ColumnLayout {
 
     SVGElement {
         id: svgViewport 
-        // Layout.preferredWidth: 600
-        // Layout.preferredHeight: 600
+
+        /*
+        Layout.preferredWidth: 600
+        Layout.preferredHeight: 600
+        */
+
         Layout.fillWidth: true
         Layout.fillHeight: true
+
+        /*
         boomAngle: modelWrapper.mainBoomAngle
         armAngle: modelWrapper.diggingArmAngle
         bucketAngle: modelWrapper.bucketAngle
+        */
+
+        boomAngle: modelWrapper.mainBoomAngleQuaternion
+        armAngle: modelWrapper.diggingArmAngleQuaternion
+        bucketAngle: modelWrapper.bucketAngleQuaternion
 
         Component.onCompleted: {
             modelWrapper.changed.connect(reDraw)

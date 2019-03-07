@@ -5,8 +5,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QRect, QSize, QPointF
 from PyQt5.QtQuick import QQuickPaintedItem
 from PyQt5.QtSvg import QSvgRenderer
 
-import math, svgutils, copy
-
+import math, svgutils, copy, platform
 
 class SVGElement(QQuickPaintedItem):
     def __init__(self, parent = None):
@@ -41,61 +40,51 @@ class SVGElement(QQuickPaintedItem):
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
 
-        # Puomi
+        # Boom
         boomX = 900
         boomY = 900
 
         boomSVG.rotate(self._boomAngle, 500, 500)
         boomSVG.move(boomX - 500, boomY - 500)
 
-        # Toinen puomi
+        # Digging arm
         armX = boomX + self.calculateX(self._boomAngle, 385)
         armY = boomY + self.calculateY(self._boomAngle, 385)
 
-        armSVG.rotate(self._boomAngle + self._armAngle, 500, 500)
+        armSVG.rotate(self._armAngle, 500, 500)
         armSVG.move(armX - 500, armY - 500)
 
-        # Kauha
-        bucketX = armX + self.calculateX(self._boomAngle + self._armAngle, 176)
-        bucketY = armY + self.calculateY(self._boomAngle + self._armAngle, 176)
+        # Bucket
+        bucketX = armX + self.calculateX(self._armAngle, 176)
+        bucketY = armY + self.calculateY(self._armAngle, 176)
 
-        bucketSVG.rotate(self._boomAngle + self._armAngle + self._bucketAngle, 500, 500)
+        bucketSVG.rotate(self._bucketAngle, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
-        # Yhdistetään
+        # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
-        import platform
         if platform.system() == 'Darwin':
             scale = 0.6
+            # For some reason, these values have to be the same as in win/linux, requires further investigation
+            moveX = -200
+            moveY = -200
         else:
             scale = 1.2
+            moveX = -200
+            moveY = -200
 
-        image = compose.move(-200, -200).scale(scale).tostr()
+        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
+        image = compose.move(moveX, moveY).scale(scale).tostr()
 
         # Hacky wacky to make Qt not crash and burn about encoding
-        imagestring = image.decode('utf-8')
-        imagestring = imagestring.replace("encoding='ASCII'", "encoding='UTF-8'")
-        imagestring = imagestring.encode('utf-8')
+        imageStr = image.decode('utf-8')
+        imageStr = imageStr.replace("encoding='ASCII'", "encoding='UTF-8'")
+        imageStr = imageStr.encode('utf-8')
 
-        svg = QSvgRenderer(imagestring)
+        svg = QSvgRenderer(imageStr)
         svg.render(painter)
-
-    '''
-        # Debug
-        print(self._boomAngle)
-        print(self._armAngle)
-        print(self._bucketAngle)
-
-        # Vanhoja?
-        self.setOpaquePainting(False)
-        self.setTextureSize = QSize(600, 600)
-
-        # Elementin koko
-        print(str(self.width()))
-        print(str(self.height()))
-    '''
 
 
     @pyqtProperty(int)
