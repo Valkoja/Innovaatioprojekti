@@ -39,7 +39,7 @@ ApplicationWindow {
             }
 
             Rectangle {
-                width: 250
+                width: 180
                 Layout.fillHeight: true
                 border.width: 1
                 border.color: "black"
