@@ -1,39 +1,27 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 from PyQt5.QtGui import QQuaternion
+import math
 
 class ModelWrapper(QObject):
-    def __init__(self, stateObject, useQuarternions=True):
+    def __init__(self, stateObject):
         super().__init__()
         self.stateObject = stateObject
         self.stateObject.setUpdateCallback(self.update)
-        self.useQuarternions = useQuarternions
 
     def _main_boom(self):
-        if self.useQuarternions and 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
-            components = self.stateObject.getState()['quaternions']['main_boom_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
-        elif not self.useQuarternions and 'main_boom' in self.stateObject.getState()['angles']:
+        if 'main_boom' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['main_boom'] / 10
         else:
             return 40
 
     def _digging_arm(self):
-        if self.useQuarternions and 'digging_arm_orientatation' in self.stateObject.getState()['quaternions']:
-            components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
-        elif not self.useQuarternions and 'digging_arm' in self.stateObject.getState()['angles']:
+        if 'digging_arm' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['digging_arm'] / 10
         else:
             return -100
 
     def _bucket(self):
-        if self.useQuarternions and 'bucket_orientation' in self.stateObject.getState()['quaternions']:
-            components = self.stateObject.getState()['quaternions']['bucket_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
-        elif not self.useQuarternions and 'bucket' in self.stateObject.getState()['angles']:
+        if 'bucket' in self.stateObject.getState()['angles']:
             return self.stateObject.getState()['angles']['bucket'] / 10
         else:
             return -90
@@ -41,24 +29,24 @@ class ModelWrapper(QObject):
     def _main_boomQuaternion(self):
         if 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['main_boom_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
+            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
         else:
             return 40
 
     def _digging_armQuaternion(self):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
+            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
         else:
             return -60
 
     def _bucketQuaternion(self):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
-            quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return quart.x()
+            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
+            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
         else:
             return -150
 
@@ -122,7 +110,6 @@ class ModelWrapper(QObject):
         else:
             return 0
 
-
     def update(self):
         self.changed.emit()
 
@@ -143,3 +130,10 @@ class ModelWrapper(QObject):
     heightFromZero = pyqtProperty(float, _heightFromZero, notify=changed)
     distanceToZero = pyqtProperty(float, _distanceToZero, notify=changed)
     heightToSlopeFromZero = pyqtProperty(float, _heightToSlopeFromZero, notify=changed)
+
+    def toEulerXAngle(self, w, x, y, z):
+        # roll (x-axis rotation)
+        sinr_cosp = +2.0 * w * x + y * z
+        cosr_cosp = +1.0 - 2.0 * x * x + y * y
+        roll = math.atan2(sinr_cosp, cosr_cosp)
+        return math.degrees(roll)
