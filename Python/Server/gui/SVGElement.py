@@ -67,8 +67,9 @@ class SVGElement(QQuickPaintedItem):
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
             scale = 0.6
-            moveX = 0
-            moveY = 0
+            # For some reason, these values have to be the same as in win/linux, requires further investigation
+            moveX = -200
+            moveY = -200
         else:
             scale = 1.2
             moveX = -200
