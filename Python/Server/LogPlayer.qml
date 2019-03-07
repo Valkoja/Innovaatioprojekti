@@ -35,6 +35,15 @@ ColumnLayout {
                 text: "Open log"
                 onClicked: fdImport.open();
             }
+            CheckBox {
+                id: loopLog
+                text: "Loop"
+                checked: false
+                enabled: logPlayerHandler.hasFile ? true : false
+                onClicked: {
+                    logPlayerHandler.handleLoopLogClicked(checked)
+                }
+            }
             Button {
                 id: playLog
                 Layout.fillWidth: true
