@@ -42,11 +42,10 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('networking', networking)
     
     # Init logs, state object
-    player = LogPlayer()
     state = MachineState()
 
     # Init gui handler for logs
-    logPlayerHandler = LogPlayerHandler(player, reactor, state.consumeMessage)
+    logPlayerHandler = LogPlayerHandler(reactor, state.consumeMessage)
     engine.rootContext().setContextProperty('logPlayerHandler', logPlayerHandler)
 
     # Init can adapter
