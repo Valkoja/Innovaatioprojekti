@@ -59,6 +59,6 @@ Tekee logitiedostojen riveillä olevasta datasta luettavaa ja laittaa tiedon dec
 
 `pip install https://download.lfd.uci.edu/pythonlibs/r5uhg2lo/Twisted-18.9.0-cp37-cp37m-win_amd64.whl`
 
-`pip install autobahn dataclasses dataclasses_json qt5reactor python-can`
+`pip install autobahn qt5reactor python-can`
 
 `conda install pyqt pywin32`
