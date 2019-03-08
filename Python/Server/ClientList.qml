@@ -1,42 +1,30 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.2
 
 
 ColumnLayout {
-    width: 275
+    spacing: 0
     Header {
         title: "Clients"
     }
-
     ListView {
-        id: pythonList
-        
-
+        Layout.minimumHeight: 250
+        Layout.minimumWidth: 275
+        pixelAligned: true
+        id: clientList
         clip: true
-
-        model: pythonListModel
-
-        delegate: Component {
-            Rectangle {
-                width: pythonList.width
-                height: 40
-                color: ((index % 2 == 0)?"#222":"#111")
-                Text {
-                    id: title
-                    elide: Text.ElideRight
-                    text: model.thing.peer
-                    color: "white"
-                    font.bold: true
-                    anchors.leftMargin: 10
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
+        model: clientListModel
+        delegate: ItemDelegate {
+            contentItem: 
+                Item {
+                    Text {
+                        text: model.client.peer
+                    }
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: { controller.thingSelected(model.thing) }
-                }
-            }
+            width: parent.width
+            onClicked: { controller.clientKicked(model.client) }
         }
+        ScrollIndicator.vertical: ScrollIndicator { }
     }
 }
-
