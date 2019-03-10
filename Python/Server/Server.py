@@ -21,7 +21,7 @@ from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
 from gui.ClientList import Controller, ListManager, Client, ThingWrapper
-from gui.CanBusHandler import CanBusHandler
+from gui.CanBusHandler import CanBusHandler, CanBusWrapper
 from gui.SVGElement import SVGElement
 
 if __name__ == '__main__':
@@ -32,6 +32,7 @@ if __name__ == '__main__':
     # Init PyQt5
     app = QGuiApplication(sys.argv)
     qmlRegisterType(SVGElement, 'SVGElement', 1, 0, 'SVGElement')
+    qmlRegisterType(CanBusWrapper, 'CanBusWrapper', 1, 0, 'CanBusWrapper')
     import qt5reactor
     qt5reactor.install()
     from twisted.internet import reactor
