@@ -5,7 +5,7 @@ from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
-from twisted.python import log
+from twisted.logger import Logger, globalLogBeginner, LimitedHistoryLogObserver, textFileLogObserver
 from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
 from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
@@ -69,7 +69,9 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('pythonListModel', listModel)
 
     # Init Twisted logging
-    log.startLogging(sys.stdout)
+    observers = [textFileLogObserver(sys.stdout)]
+    log = Logger()
+    globalLogBeginner.beginLoggingTo(observers)
     
     # Disable server until we rework the protocol
     ServerFactory = BroadcastServerFactory
