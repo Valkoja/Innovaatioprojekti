@@ -3244,6 +3244,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tabletop
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_Name
+      value: Armature
+      objectReference: {fileID: 0}
     - target: {fileID: 400016, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
