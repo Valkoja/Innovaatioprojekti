@@ -1,53 +1,87 @@
-import time
-import datetime
-from pathlib import Path
-import sys
-
+import logging
 from sys import platform
-
 import can as pycan
 from candata.conversions import PDODecoder
+from threading import Thread
 
-# Play busmaster logs
+
+class Bus:
+    def __init__(self, interface, channel):
+        self.interface = interface
+        self.channel = channel
+    interface = ''
+    channel = ''
+
+    def __str__(self):
+        return self.interface + '/' + self.channel
+
+
 class CanAdapter():
     def __init__(self):
         self._messagesProcessed = 0
         self._stopped = False
+        self._thread = None
 
     def messagesProcessed(self):
         return self._messagesProcessed
 
     def stopBus(self):
         self._stopped = True
+        #self._thread.join()
+
+    @staticmethod
+    def scan(cb):
+        available = []
+        if platform == 'linux':
+            # scan for socketcan
+            available.append(Bus('socketcan', 'vcan0'))
+            # scan for kvaser
+            available.append(Bus('kvaser', '0'))
+        elif platform == 'windows':
+            # scan for kvaser
+            available.append(Bus('kvaser', '0'))
+        elif platform == 'darwin':
+            available.append(Bus('nobus', '0'))
+        cb(available)
 
     def openBus(self, bus, reactor, callback):
         def cbAndTrack(message):
             # print(message)
             self._messagesProcessed += 1
             callback(message)
-        #f platform == 'linux' and bus == 'vcan0':
-        if False:
-            canbus = pycan.Bus('vcan0', bustype='socketcan')
+
+        if bus.interface == 'socketcan':
+            canbus = pycan.Bus(bustype=bus.interface, channel=bus.channel)
+        elif bus.interface == 'kvaser':
+            canbus = pycan.Bus(bustype=bus.interface, channel=bus.channel, bitrate=250000)
         else:
-            canbus = pycan.Bus(0, bustype='kvaser', bitrate=250000)
+            return
         
         # NMT
         canopen_nmt_start = pycan.Message(arbitration_id=0x00, data=[0x01, 0x00])
-        canbus.send(canopen_nmt_start)
-        
+        try:
+            canbus.send(canopen_nmt_start)
+        except pycan.CanError:
+            print("Problem sending NMT-open")
+
         decoder = PDODecoder()
+
+        logger = logging.getLogger('spam_application')
+        logger.setLevel(logging.DEBUG)
+
         def getMessages():
-            #for msg in canbus:
-            msg = canbus.recv()
-            message = decoder.decode_pdo(msg.arbitration_id, msg.data)
-            
-            if message:
-                cbAndTrack(message)
+            while True:
+                if self._stopped:
+                    print('Stopped')
+                    canbus.shutdown()
+                    return
+                msg = canbus.recv(timeout=5)
+                if msg:
+                    print("message")
+                    message = decoder.decode_pdo(msg.arbitration_id, msg.data)
+                    if message:
+                        cbAndTrack(message)
 
-            if not self._stopped:
-                reactor.callLater(0.001, getMessages)
-            else:
-                canbus.shutdown()
-                return
-
-        reactor.callLater(0.001, getMessages)
+        self._thread = Thread(target=getMessages)
+        self._thread.setDaemon(True)
+        self._thread.start()

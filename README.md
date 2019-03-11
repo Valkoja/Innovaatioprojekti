@@ -17,10 +17,14 @@ Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikk
 1. Luo ListItem luokan juuressa
 
 `ListItem item = new ListItem(0);`
+tai
+`ListItemR item = new ListItemR(0);`
 
 2. Lisää ListItem konsoliin joko juuressa tai Start() sisällä
 
 `ConsoleHandler.Instance.AddItemToConsole(item);`
+tai
+`ConsoleHandlerR.Instance.AddItemToConsole(item);`
 
 3. Päivitä tietoa koodissa
 
@@ -31,6 +35,8 @@ Jos samassa hakemistossa on jo logfile.csv, kirjoittaa tiedoston perään, elikk
 1. Luo ListItem dynaamisesti ja siirrä se konsoliin
 
 `ConsoleHandler.Instance.AddItemToConsole(new ListItem("asd",1));`
+tai
+`ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("asd",1));`
 
 ### Server/GUI-ajo
 
