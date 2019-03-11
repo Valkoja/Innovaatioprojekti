@@ -20,7 +20,7 @@ from gui.AppLogHandler import AppLogHandler
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
-from gui.ClientList import Controller, ListManager, Client, ThingWrapper
+from gui.ClientList import ClientListModel, ClientController, MockClient, ClientWrapper
 from gui.CanBusHandler import CanBusHandler, CanBusWrapper
 from gui.SVGElement import SVGElement
 
@@ -61,13 +61,10 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers
-    clients = [
-    ]
-    controller = Controller()
+    controller = ClientController()
     engine.rootContext().setContextProperty('controller', controller)
-    #peopleManager = ListManager(clients)
-    listModel = ListManager(clients).getModel()
-    engine.rootContext().setContextProperty('pythonListModel', listModel)
+    clientListModel = ClientListModel([])
+    engine.rootContext().setContextProperty('clientListModel', clientListModel)
 
     # Init Twisted logging
     appLogHandler = AppLogHandler()
@@ -80,7 +77,7 @@ if __name__ == '__main__':
     
     # Disable server until we rework the protocol
     ServerFactory = BroadcastServerFactory
-    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: listModel.addThing(ThingWrapper(Client(client.peer))))
+    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: clientListModel.addClient(client), lambda client: clientListModel.removeClient(client))
     factory.protocol = BroadcastServerProtocol
     listenWS(factory)
 
