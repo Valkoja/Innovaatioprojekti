@@ -18,7 +18,7 @@ ColumnLayout {
     ComboBox {
         id: busSelectComboBox
         Layout.minimumWidth: 164
-        Layout.margins: 8
+        Layout.leftMargin: 8
         model: canBusHandler.available
         textRole: "toString"
         enabled: canBusHandler.state == "open" ? false : true
@@ -34,7 +34,8 @@ ColumnLayout {
     Button {
         id: scanBus
         Layout.fillWidth: true
-        Layout.margins: 8
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
         text: "Scan"
         enabled: canBusHandler.state == "open" ? false : true
         onClicked: canBusHandler.handleScanClicked();
@@ -50,7 +51,8 @@ ColumnLayout {
     Button {
         id: openBus
         Layout.fillWidth: true
-        Layout.margins: 8
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
         text: "Open bus"
         enabled: canBusHandler.state == "ready" ? true : false
         onClicked: {
@@ -60,7 +62,8 @@ ColumnLayout {
     Button {
         id: stopBus
         Layout.fillWidth: true
-        Layout.margins: 8
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
         text: "Close bus"
         enabled: canBusHandler.state == "open" ? true : false
         onClicked: {

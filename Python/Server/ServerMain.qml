@@ -52,8 +52,8 @@ ApplicationWindow {
             }
 
             Rectangle {
-                Layout.minimumHeight: 700
-                Layout.minimumWidth: 700
+                Layout.minimumHeight: 580
+                Layout.minimumWidth: 580
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 border.width: 1
