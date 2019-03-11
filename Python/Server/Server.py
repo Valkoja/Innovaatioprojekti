@@ -16,7 +16,7 @@ from candata.MachineState import MachineState
 from candata.conversions import PDODecoder
 from candata.canadapter import CanAdapter
 
-#from gui.PiirtoQML import PiirtoQML
+from gui.AppLogHandler import AppLogHandler
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
@@ -69,9 +69,13 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('pythonListModel', listModel)
 
     # Init Twisted logging
-    observers = [textFileLogObserver(sys.stdout)]
+    appLogHandler = AppLogHandler()
+    observers = [appLogHandler.appendEvent]
+    # Comment out the line above and uncomment the one below to output log to stdout
+    # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
     log = Logger()
     globalLogBeginner.beginLoggingTo(observers)
+    engine.rootContext().setContextProperty('appLogHandler', appLogHandler)
     
     # Disable server until we rework the protocol
     ServerFactory = BroadcastServerFactory
