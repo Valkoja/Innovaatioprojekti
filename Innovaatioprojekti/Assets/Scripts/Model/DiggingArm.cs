@@ -5,6 +5,7 @@ using UnityEngine;
 public class DiggingArm : MonoBehaviour
 {
     private GameObject stateObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +16,13 @@ public class DiggingArm : MonoBehaviour
     void Update()
     {
         if(stateObject) {
-            var xRotation = stateObject.GetComponent<MachineState>().diggingArmAngle;
+            // Old:
+            // var xRotation = stateObject.GetComponent<MachineState>().diggingArmAngle;
             // Add 90 so we're moving zero point to be perpendicular to the ground
-            transform.localEulerAngles = new Vector3(-xRotation, 0, 0);
+            // transform.localEulerAngles = new Vector3(-xRotation, 0, 0);
+            
+            var zRotation = stateObject.GetComponent<MachineState>().diggingArmAngle;
+            transform.localEulerAngles = new Vector3(0, 0, -zRotation);
         }
     }
 }
