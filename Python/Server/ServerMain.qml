@@ -21,69 +21,81 @@ ApplicationWindow {
 
     property bool running: false
 
-    RowLayout {
+    ColumnLayout {
         id: mainLayout
         anchors.fill: parent
         anchors.margins: margin
-        spacing: 8
+        RowLayout {
 
-        ColumnLayout {
-            Rectangle {
-                width: 180
-                Layout.fillHeight: true
-                border.width: 1
-                border.color: "black"
-                LogPlayer {
-                    id: log
+            spacing: 8
+
+            ColumnLayout {
+                Rectangle {
+                    width: 180
+                    Layout.fillHeight: true
+                    border.width: 1
+                    border.color: "black"
+                    LogPlayer {
+                        id: log
+                    }
+                }
+
+                Rectangle {
+                    width: 180
+                    Layout.fillHeight: true
+                    border.width: 1
+                    border.color: "black"
+                    CanBus {
+                        id: bus
+                    }
                 }
             }
 
             Rectangle {
-                width: 180
+                Layout.minimumHeight: 700
+                Layout.minimumWidth: 700
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 border.width: 1
                 border.color: "black"
-                CanBus {
-                    id: bus
+
+                Visuals {
+                    id: svgContainer
+                }
+            }
+
+            ColumnLayout {
+                Rectangle {
+                    Layout.fillHeight: true
+                    Layout.minimumWidth: 275
+                    border.width: 1
+                    border.color: "black"
+
+                    ClientList {
+                        id: clients
+                    }
+                }
+
+                Rectangle {
+                    //Layout.fillHeight: true
+                    height: 400
+                    Layout.minimumWidth: 275
+                    border.width: 1
+                    border.color: "black"
+
+                    Information {
+                        id: info
+                    }
                 }
             }
         }
-
         Rectangle {
-            Layout.minimumHeight: 700
-            Layout.minimumWidth: 700
-            Layout.fillHeight: true
+            height: 150
             Layout.fillWidth: true
             border.width: 1
             border.color: "black"
+            AppLog {
 
-            Visuals {
-                id: svgContainer
-            }
-        }
-
-        ColumnLayout {
-            Rectangle {
-                Layout.fillHeight: true
-                Layout.minimumWidth: 275
-                border.width: 1
-                border.color: "black"
-
-                ClientList {
-                    id: clients
-                }
-            }
-
-            Rectangle {
-                //Layout.fillHeight: true
-                height: 400
-                Layout.minimumWidth: 275
-                border.width: 1
-                border.color: "black"
-
-                Information {
-                    id: info
-                }
             }
         }
     }

@@ -5,7 +5,7 @@ from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
-from twisted.python import log
+from twisted.logger import Logger, globalLogBeginner, LimitedHistoryLogObserver, textFileLogObserver
 from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
 from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
@@ -16,7 +16,7 @@ from candata.MachineState import MachineState
 from candata.conversions import PDODecoder
 from candata.canadapter import CanAdapter
 
-#from gui.PiirtoQML import PiirtoQML
+from gui.AppLogHandler import AppLogHandler
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
@@ -69,7 +69,13 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('pythonListModel', listModel)
 
     # Init Twisted logging
-    log.startLogging(sys.stdout)
+    appLogHandler = AppLogHandler()
+    observers = [appLogHandler.appendEvent]
+    # Comment out the line above and uncomment the one below to output log to stdout
+    # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
+    log = Logger()
+    globalLogBeginner.beginLoggingTo(observers)
+    engine.rootContext().setContextProperty('appLogHandler', appLogHandler)
     
     # Disable server until we rework the protocol
     ServerFactory = BroadcastServerFactory
