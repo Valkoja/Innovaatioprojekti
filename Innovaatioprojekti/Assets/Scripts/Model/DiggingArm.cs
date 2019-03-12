@@ -23,7 +23,7 @@ public class DiggingArm : MonoBehaviour
             
             var boomAngle = stateObject.GetComponent<MachineState>().mainBoomAngle;
             var armAngle = stateObject.GetComponent<MachineState>().diggingArmAngle;
-            var zRotation = (boomAngle + armAngle) * -1;
+            var zRotation = (armAngle - boomAngle) * -1;
             transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }
     }
