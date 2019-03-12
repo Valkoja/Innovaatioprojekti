@@ -8,66 +8,79 @@ import QtQuick.Dialogs 1.2
 
 ColumnLayout {
     width: 180
-    //property string bus: "vcan0"
-        Header {
-            title: "CAN Bus"
-            Layout.fillWidth: true
-        }
+    spacing: 0
 
+    Header {
+        title: "CAN Bus"
+        Layout.fillWidth: true
+    }
+
+    ComboBox {
+        id: busSelectComboBox
+        Layout.minimumWidth: 164
+        Layout.leftMargin: 8
+        model: canBusHandler.available
+        textRole: "toString"
+        enabled: canBusHandler.state == "open" ? false : true
+        delegate: ItemDelegate {
+            text: modelData.interface + "/" + modelData.channel
+            width: 164
+        }
+        onCurrentIndexChanged: {
+            canBusHandler.handleBusSelected(currentIndex)
+        }
+    }
+
+    Button {
+        id: scanBus
+        Layout.fillWidth: true
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
+        text: "Scan"
+        enabled: canBusHandler.state == "open" ? false : true
+        onClicked: canBusHandler.handleScanClicked();
+    }
+
+    Text {
+        id: processed
+        Layout.margins: 8
+        Layout.fillWidth: true
+        text: "Messages processed " + canBusHandler.processed
+    }
+
+    Button {
+        id: openBus
+        Layout.fillWidth: true
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
+        text: "Open bus"
+        enabled: canBusHandler.state == "ready" ? true : false
+        onClicked: {
+            canBusHandler.handleOpenBusClicked()
+        }
+    }
+    Button {
+        id: stopBus
+        Layout.fillWidth: true
+        Layout.leftMargin: 8
+        Layout.rightMargin: 8
+        text: "Close bus"
+        enabled: canBusHandler.state == "open" ? true : false
+        onClicked: {
+            canBusHandler.handleCloseBusClicked()
+        }
+    }
+
+    Dialog {
+        id: busErrored
+        standardButtons: Dialog.Ok
+        visible: canBusHandler.errorMessage != "" ? true : false
         Text {
-            id: busState
-            text: canBusHandler.bus + " off"
-            Layout.margins: 8
-            Layout.fillWidth: true
-            color: canBusHandler.state ? "green" : "red"
+            text: canBusHandler.errorMessage
+            height: 40
         }
-
-
-        Text {
-            id: processed
-            Layout.margins: 8
-            Layout.fillWidth: true
-            text: "Messages processed " + canBusHandler.processed
+        onAccepted: {
+            canBusHandler.handleErrorAcknowledgedClicked()
         }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.margins: 8
-            Button {
-                id: openDialog
-                Layout.fillWidth: true
-                text: "Select bus"
-                onClicked: selectBusDialog.open();
-            }
-            Button {
-                id: playLog
-                Layout.fillWidth: true
-                text: "Open bus"
-                onClicked: {
-                    canBusHandler.handleOpenBusClicked()
-                }
-            }
-        }
-
-        Dialog {
-            id: selectBusDialog
-            //modal: true
-            standardButtons: Dialog.Ok
-            Column {
-                anchors.fill: parent
-                Text {
-                    text: "Bus"
-                    height: 40
-                }
-                TextField {
-                    id: canBusInput
-                    width: parent.width * 0.75
-                    focus: true
-                    text: canBusHandler.bus
-                }
-            }
-            onAccepted: {
-                bus = canBusInput.text
-            }
-        }
+    }
 }

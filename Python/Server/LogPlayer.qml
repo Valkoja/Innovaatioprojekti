@@ -7,6 +7,8 @@ import QtQuick.Dialogs 1.2
 
 ColumnLayout {
     width: 180
+    spacing: 0
+    Layout.minimumHeight: 250
     Header {
         title: "Play a CAN log"
     }
@@ -19,10 +21,9 @@ ColumnLayout {
         text: "No file"
     }
 
-
     Text {
         id: processed
-        Layout.margins: 8
+        Layout.leftMargin: 8
         Layout.fillWidth: true
         text: "Messages processed " + logPlayerHandler.processed
     }
@@ -30,6 +31,7 @@ ColumnLayout {
     ColumnLayout {
         Layout.fillWidth: true
         Layout.margins: 8
+        spacing: 0
         Button {
             id: openDialog
             Layout.fillWidth: true
@@ -66,7 +68,6 @@ ColumnLayout {
             enabled: logPlayerHandler.state == "playing" ? true : false
         }
     }
-
 
     FileDialog {
         id: fdImport

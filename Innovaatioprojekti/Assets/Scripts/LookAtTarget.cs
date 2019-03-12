@@ -10,8 +10,8 @@ public class LookAtTarget : MonoBehaviour
     public Transform cameraItem;
     float cameraHeight;
     public Slider cameraZoomSlider;
-    //float cameraCenterHeight;
-    //float cameraZoom;
+    float cameraCenterHeight;
+    float cameraZoom;
 	
     // Start is called before the first frame update
     void Start()
@@ -27,35 +27,42 @@ public class LookAtTarget : MonoBehaviour
     {
         if (spinCamera)
         {
-            cameraSpinAction();
+            CameraSpinAction();
         }
-        
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log(Input.mousePosition);
+            }
+            //handle mouse drag
+        }
         
         transform.LookAt(target.transform);
     }
 
-    void cameraSpinAction()
+    void CameraSpinAction()
     {
         transform.Translate(Vector3.right * Time.deltaTime);
     }
 
-    public void setCameraSpin(bool b)
+    public void SetCameraSpin(bool b)
     {
         spinCamera = b;
     }
 
-    public void setCameraHeight(float f)
+    public void SetCameraHeight(float f)
     {
         cameraHeight = f;
         cameraItem.position = new Vector3(cameraItem.position.x, cameraHeight, cameraItem.position.z);
     }
 
-    public void setCameraCenterHeight(float f)
+    public void SetCameraCenterHeight(float f)
     {
         target.position = new Vector3(target.position.x, f, target.position.z);
     }
 
-    public void setCameraZoom(float f)
+    public void SetCameraZoom(float f)
     {
         float distance = 0.0f;
         f = -(f - (cameraZoomSlider.maxValue + cameraZoomSlider.minValue));

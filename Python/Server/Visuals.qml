@@ -7,6 +7,7 @@ import SVGElement 1.0
 ColumnLayout {
     // Miksi tämä korjaa tilanteen?
     anchors.fill: parent
+    spacing: 0
 
     Header {
         title: "Visualization"

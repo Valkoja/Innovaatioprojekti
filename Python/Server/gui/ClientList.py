@@ -1,60 +1,60 @@
 from PyQt5.QtCore import QTimer, QObject, QUrl, QAbstractListModel, QModelIndex, pyqtSlot, pyqtSignal, pyqtProperty
 
-class ThingWrapper(QObject):
-    def __init__(self, thing):
+class ClientWrapper(QObject):
+    def __init__(self, client):
         super().__init__()
-        self._thing = thing
+        self._client = client
 
     def _peer(self):
-        return str(self._thing.peer) 
+        return self._client.peer
 
     changed = pyqtSignal()
     peer = pyqtProperty(str, _peer, notify=changed)
 
-class ThingListModel(QAbstractListModel):
-    COLUMNS = (b'thing',)
+class ClientListModel(QAbstractListModel):
+    COLUMNS = (b'client',)
 
-    def __init__(self, things):
+    def __init__(self, clients):
         super().__init__()
-        self._things = things
+        self._clients = clients
 
-    def addThing(self, thing):
-        row = len(self._things)
+    def addClient(self, client):
+        row = len(self._clients)
         self.beginInsertRows(QModelIndex(), row, row)
-        self._things.append(thing)
+        self._clients.append(ClientWrapper(client))
         self.endInsertRows()
+
+    def removeClient(self, client):
+        # Qt deals in indexes and our objects have different wrappers, so we need to find the index to remove an item
+        row = [i for i in range(len(self._clients)) if self._clients[i].peer == client.peer][0]
+        print(row)
+        self.beginRemoveRows(QModelIndex(), row, row)
+        self._clients.pop(row)
+        self.endRemoveRows()
         return True
-        #self.dataChanged.emit()
 
     def roleNames(self):
-        return dict(enumerate(ThingListModel.COLUMNS))
+        return dict(enumerate(ClientListModel.COLUMNS))
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self._things)
+        return len(self._clients)
 
     def data(self, index, role):
-        if index.isValid() and role == ThingListModel.COLUMNS.index(b'thing'):
+        if index.isValid() and role == ClientListModel.COLUMNS.index(b'client'):
             #print(self._things[index.row()])
-            return self._things[index.row()]
+            return self._clients[index.row()]
         else:
             return None
 
-class Controller(QObject):
+class ClientController(QObject):
     @pyqtSlot(QObject)
-    def thingSelected(self, wrapper):
-        print("User clicked on: %s" %(wrapper._thing.peer))
+    def clientKicked(self, wrapper):
+        print("User clicked on: %s" %(wrapper._client.peer))
+        wrapper._client.disconnectClient()
 
-class Client(object):
+class MockClient(object):
     def __init__(self, peer):
         self.peer = peer
 
     def str(self):
         return str("Peer {self.peer}")
-
-class ListManager():
-    def __init__(self, clients):
-        self.clients = clients
-        self.model = ThingListModel([ThingWrapper(thing) for thing in self.clients])
-
-    def getModel(self):
-        return self.model

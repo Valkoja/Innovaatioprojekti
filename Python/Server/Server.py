@@ -5,7 +5,7 @@ from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
-from twisted.python import log
+from twisted.logger import Logger, globalLogBeginner, LimitedHistoryLogObserver, textFileLogObserver
 from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
 from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
@@ -16,12 +16,12 @@ from candata.MachineState import MachineState
 from candata.conversions import PDODecoder
 from candata.canadapter import CanAdapter
 
-#from gui.PiirtoQML import PiirtoQML
+from gui.AppLogHandler import AppLogHandler
 from gui.LogPlayerHandler import LogPlayerHandler
 from gui.ModelWrapper import ModelWrapper
 from gui.Networking import Networking
-from gui.ClientList import Controller, ListManager, Client, ThingWrapper
-from gui.CanBusHandler import CanBusHandler
+from gui.ClientList import ClientListModel, ClientController, MockClient, ClientWrapper
+from gui.CanBusHandler import CanBusHandler, CanBusWrapper
 from gui.SVGElement import SVGElement
 
 if __name__ == '__main__':
@@ -32,6 +32,7 @@ if __name__ == '__main__':
     # Init PyQt5
     app = QGuiApplication(sys.argv)
     qmlRegisterType(SVGElement, 'SVGElement', 1, 0, 'SVGElement')
+    qmlRegisterType(CanBusWrapper, 'CanBusWrapper', 1, 0, 'CanBusWrapper')
     import qt5reactor
     qt5reactor.install()
     from twisted.internet import reactor
@@ -56,24 +57,27 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
-    modelWrapper = ModelWrapper(state, useQuarternions = False)
+    modelWrapper = ModelWrapper(state)
     engine.rootContext().setContextProperty('modelWrapper', modelWrapper)
 
     # Init client model and handlers
-    clients = [
-    ]
-    controller = Controller()
+    controller = ClientController()
     engine.rootContext().setContextProperty('controller', controller)
-    #peopleManager = ListManager(clients)
-    listModel = ListManager(clients).getModel()
-    engine.rootContext().setContextProperty('pythonListModel', listModel)
+    clientListModel = ClientListModel([])
+    engine.rootContext().setContextProperty('clientListModel', clientListModel)
 
     # Init Twisted logging
-    log.startLogging(sys.stdout)
+    appLogHandler = AppLogHandler()
+    observers = [appLogHandler.appendEvent]
+    # Comment out the line above and uncomment the one below to output log to stdout
+    # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
+    log = Logger()
+    globalLogBeginner.beginLoggingTo(observers)
+    engine.rootContext().setContextProperty('appLogHandler', appLogHandler)
     
     # Disable server until we rework the protocol
     ServerFactory = BroadcastServerFactory
-    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: listModel.addThing(ThingWrapper(Client(client.peer))))
+    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: clientListModel.addClient(client), lambda client: clientListModel.removeClient(client))
     factory.protocol = BroadcastServerProtocol
     listenWS(factory)
 

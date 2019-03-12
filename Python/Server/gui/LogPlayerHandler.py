@@ -15,6 +15,7 @@ class LogPlayerHandler(QObject):
         self._callback = callback
         self._player = LogPlayer(reactor, self.update, self.playerStateChanged)
         self._state = LogPlayerState.nofile
+        self._loopLog = False
 
     def state(self):
         return self._state.name
