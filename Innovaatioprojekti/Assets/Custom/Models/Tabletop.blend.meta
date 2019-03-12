@@ -1,0 +1,189 @@
+fileFormatVersion: 2
+guid: fb6884aa4587aa34f8eee91e2f91d633
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Arm_Bone
+    100002: Arm_Mesh
+    100004: Base_Bone
+    100006: Base_Mesh
+    100008: Boom_Bone
+    100010: Boom_Mesh
+    100012: Bucket_Bone
+    100014: Bucket_Mesh
+    100016: //RootNode
+    100018: Tabletop
+    100020: Armature
+    100022: Armature_001
+    100024: 0-Base
+    100026: 0-Measurements
+    100028: LP-Base
+    100030: LP-Boom
+    100032: LP-Bucket
+    100034: LP-Digging_Arm
+    100036: Mesh_Base
+    100038: Mesh_Boom
+    100040: Mesh_Arm
+    100042: Bone_Arm
+    100044: Bone_Base
+    100046: Bone_Boom
+    100048: Bone_Bucket
+    100050: Mesh_Bucket
+    400000: Arm_Bone
+    400002: Arm_Mesh
+    400004: Base_Bone
+    400006: Base_Mesh
+    400008: Boom_Bone
+    400010: Boom_Mesh
+    400012: Bucket_Bone
+    400014: Bucket_Mesh
+    400016: //RootNode
+    400018: Tabletop
+    400020: Armature
+    400022: Armature_001
+    400024: 0-Base
+    400026: 0-Measurements
+    400028: LP-Base
+    400030: LP-Boom
+    400032: LP-Bucket
+    400034: LP-Digging_Arm
+    400036: Mesh_Base
+    400038: Mesh_Boom
+    400040: Mesh_Arm
+    400042: Bone_Arm
+    400044: Bone_Base
+    400046: Bone_Boom
+    400048: Bone_Bucket
+    400050: Mesh_Bucket
+    2100000: unnamed
+    2300000: 0-Base
+    2300002: 0-Measurements
+    2300004: LP-Base
+    2300006: LP-Boom
+    2300008: LP-Bucket
+    2300010: LP-Digging_Arm
+    2300012: Mesh_Base
+    2300014: Mesh_Boom
+    2300016: Mesh_Arm
+    2300018: Mesh_Bucket
+    3300000: 0-Base
+    3300002: 0-Measurements
+    3300004: LP-Base
+    3300006: LP-Boom
+    3300008: LP-Bucket
+    3300010: LP-Digging_Arm
+    3300012: Mesh_Base
+    3300014: Mesh_Boom
+    3300016: Mesh_Arm
+    3300018: Mesh_Bucket
+    4300000: Base_Mesh
+    4300002: Boom_Mesh
+    4300004: Arm_Mesh
+    4300006: Bucket_Mesh
+    4300008: LP-Base
+    4300010: LP-Bucket
+    4300012: LP-Digging_Arm
+    4300014: LP-Boom
+    4300016: 0-Base
+    4300018: 0-Measurements
+    4300020: Mesh_Base
+    4300022: Mesh_Boom
+    4300024: Mesh_Arm
+    4300026: Mesh_Bucket
+    7400000: Default Take
+    9500000: //RootNode
+    13700000: Arm_Mesh
+    13700002: Base_Mesh
+    13700004: Boom_Mesh
+    13700006: Bucket_Mesh
+    13700008: Mesh_Base
+    13700010: Mesh_Arm
+    13700012: Mesh_Boom
+    13700014: Mesh_Bucket
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

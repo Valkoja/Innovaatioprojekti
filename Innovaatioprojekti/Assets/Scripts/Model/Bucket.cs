@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bucket : MonoBehaviour
 {
     private GameObject stateObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +16,13 @@ public class Bucket : MonoBehaviour
     void Update()
     {
         if(stateObject) {
-            var xRotation = stateObject.GetComponent<MachineState>().bucketAngle;
+            // Old:
+            // var xRotation = stateObject.GetComponent<MachineState>().bucketAngle;
             // Add 90 so we're moving zero point to be perpendicular to the ground
-            transform.localEulerAngles = new Vector3(-xRotation, 0, 0);
+            // transform.localEulerAngles = new Vector3(-xRotation, 0, 0);
+
+            var zRotation = stateObject.GetComponent<MachineState>().bucketAngle;
+            transform.localEulerAngles = new Vector3(0, 0, -zRotation);
         }
     }
 }
