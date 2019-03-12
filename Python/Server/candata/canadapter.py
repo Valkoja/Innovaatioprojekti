@@ -66,9 +66,6 @@ class CanAdapter():
 
         decoder = PDODecoder()
 
-        logger = logging.getLogger('spam_application')
-        logger.setLevel(logging.DEBUG)
-
         def getMessages():
             while True:
                 if self._stopped:
@@ -77,7 +74,6 @@ class CanAdapter():
                     return
                 msg = canbus.recv(timeout=5)
                 if msg:
-                    print("message")
                     message = decoder.decode_pdo(msg.arbitration_id, msg.data)
                     if message:
                         cbAndTrack(message)
