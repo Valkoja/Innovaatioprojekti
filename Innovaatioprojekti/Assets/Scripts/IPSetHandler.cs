@@ -30,11 +30,11 @@ public class IPSetHandler : MonoBehaviour
         if (IsInputIPCorrect(inputText))
         {
             currentHostIPText.text = inputText;
-            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting to "+inputText+"...",1));
+            ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("Connecting to "+inputText+"...",1));
             await Network.ConnectToServer(inputText);
         }
         else {
-            ConsoleHandler.Instance.AddItemToConsole(new ListItem("Invalid address",1));
+            ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("Invalid address",1));
         }
     }
 
