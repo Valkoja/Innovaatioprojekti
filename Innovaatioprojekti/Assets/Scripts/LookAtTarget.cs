@@ -18,8 +18,8 @@ public class LookAtTarget : MonoBehaviour
     {
         spinCamera = true;
         cameraHeight = 0.5f;
-        cameraCenterHeight = 0.3f;
-        cameraZoom = 3.0f;
+        //cameraCenterHeight = 0.3f;
+        //cameraZoom = 3.0f;
     }
 
     // Update is called once per frame

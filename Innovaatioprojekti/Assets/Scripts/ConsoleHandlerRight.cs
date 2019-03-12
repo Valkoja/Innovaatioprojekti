@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConsoleHandlerR : Singleton<ConsoleHandler>
+public class ConsoleHandlerR : Singleton<ConsoleHandlerR>
 {
     protected ConsoleHandlerR() { }
 
