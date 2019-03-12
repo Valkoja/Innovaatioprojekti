@@ -37,7 +37,7 @@ class CanAdapter():
             available.append(Bus('socketcan', 'vcan0'))
             # scan for kvaser
             available.append(Bus('kvaser', '0'))
-        elif platform == 'windows':
+        elif platform == 'win32':
             # scan for kvaser
             available.append(Bus('kvaser', '0'))
         elif platform == 'darwin':
