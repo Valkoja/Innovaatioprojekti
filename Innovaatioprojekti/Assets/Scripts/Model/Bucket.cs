@@ -21,7 +21,8 @@ public class Bucket : MonoBehaviour
             // Add 90 so we're moving zero point to be perpendicular to the ground
             // transform.localEulerAngles = new Vector3(-xRotation, 0, 0);
 
-            var zRotation = stateObject.GetComponent<MachineState>().bucketAngle;
+            var rotations = stateObject.GetComponent<MachineState>().mainBoomAngle + stateObject.GetComponent<MachineState>().diggingArmAngle;
+            var zRotation = stateObject.GetComponent<MachineState>().bucketAngle + rotations;
             transform.localEulerAngles = new Vector3(0, 0, -zRotation);
         }
     }
