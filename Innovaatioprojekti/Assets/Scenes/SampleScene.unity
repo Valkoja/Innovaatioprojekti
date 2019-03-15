@@ -3240,7 +3240,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1856322275}
         m_MethodName: ToggleFPSVisibility
         m_Mode: 0
         m_Arguments:

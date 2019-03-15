@@ -195,7 +195,7 @@ public class ConsoleHandler : Singleton<ConsoleHandler>
         }
         else
         {
-            Debug.Log("Location not found, expected 0, 1 or 2. Found: " + location);
+            Debug.Log("Location not found: " + location);
         }
         
     }
@@ -206,18 +206,18 @@ public class ListItem
     int atype;
     string data = "";
     string alocation = "";
-    public ListItem(int type/* 0 = data, 1 = msg */, string location/*R = bottom right, L = bottom left, T = top left*/)
+    public ListItem(int type/* 0 = data, 1 = msg, 2 = hidden */, string location/*R = bottom right, L = bottom left, T = top left*/)
     {
         atype = type;
         alocation = location;
     }
-    public ListItem(string text,int type/* 0 = data, 1 = msg */, string location/*R = bottom right, L = bottom left, T = top left*/)
+    public ListItem(string text,int type/* 0 = data, 1 = msg, 2 = hidden */, string location/*R = bottom right, L = bottom left, T = top left*/)
     {
         atype = type;
         data = text;
         alocation = location;
     }
-
+    
     public string GetLocation()
     {
         return alocation;
@@ -226,6 +226,11 @@ public class ListItem
     public void SetData(string s)
     {
         data = s;
+    }
+
+    public void SetAType(int type)
+    {
+        atype = type;
     }
 
     public int GetAType()

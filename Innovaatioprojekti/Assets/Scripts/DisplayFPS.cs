@@ -25,19 +25,21 @@ public class DisplayFPS : MonoBehaviour
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-        if (displayFPS)
-        {
-            float msec = deltaTime * 1000.0f;
-            float fps = 1.0f / deltaTime;
-            fpsText = ((int)fps).ToString() + " FPS";
-            fpsItem.SetData(fpsText);
-        }
-        else
-            fpsItem.SetData("");
+        float msec = deltaTime * 1000.0f;
+        float fps = 1.0f / deltaTime;
+        fpsText = ((int)fps).ToString() + " FPS";
+        fpsItem.SetData(fpsText);
     }
     
     public void ToggleFPSVisibility(bool setValue)
     {
-        displayFPS = setValue;
+        if (setValue)
+        {
+            fpsItem.SetAType(0);
+        }
+        else
+        {
+            fpsItem.SetAType(2);
+        }
     }
 }
