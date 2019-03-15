@@ -43,13 +43,13 @@ public class Network : MonoBehaviour
 
     public static async Task ConnectToServer(string ip) {
         address = ip;
-        ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("Connecting...",1));
+        ConsoleHandler.Instance.AddItemToConsole(new ListItem("Connecting...",1,"R"));
         webSocket = new ClientWebSocket();
         await Connect("ws://" + address + ":9000");
     }
 
     private static async Task Reconnect() {
-        ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("Lost connection, reconnecting in 5...",1));
+        ConsoleHandler.Instance.AddItemToConsole(new ListItem("Lost connection, reconnecting in 5...",1,"R"));
         connectionAttempts += 1;
         await Task.Delay(TimeSpan.FromSeconds(5));
         await ConnectToServer(address);
@@ -60,7 +60,7 @@ public class Network : MonoBehaviour
         try
         {
             await webSocket.ConnectAsync(new Uri(uri), CancellationToken.None);
-            ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR($"Connected to {address}",1));
+            ConsoleHandler.Instance.AddItemToConsole(new ListItem($"Connected to {address}",1,"R"));
             connectionAttempts += 1;
             await Task.WhenAll(ReceiveState(webSocket));
         }
@@ -80,7 +80,7 @@ public class Network : MonoBehaviour
                 }
             }
             else if(connectionAttempts == maxConnectionAttempts) {
-                ConsoleHandlerR.Instance.AddItemToConsole(new ListItemR("Host unavailable",1));
+                ConsoleHandler.Instance.AddItemToConsole(new ListItem("Host unavailable",1,"R"));
             }
         }
     }

@@ -16,8 +16,8 @@ public class DisplayFPS : MonoBehaviour
     void Start()
     {
         displayFPS = true;
-        fpsItem = new ListItem(0);
-        fpsItem.SetData("INFINITE FPS");
+        fpsItem = new ListItem(0,"L");
+        fpsItem.SetData("0 FPS");
         ConsoleHandler.Instance.AddItemToConsole(fpsItem);
     }
 
