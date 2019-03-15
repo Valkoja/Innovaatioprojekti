@@ -12,11 +12,16 @@ public class LookAtTarget : MonoBehaviour
     public Slider cameraZoomSlider;
     float cameraCenterHeight;
     float cameraZoom;
+    Vector3 lastMousePosition;
+    float cameraRotationX = -1f;
+    float cameraRotationY = -1f;
+    float cameraRotateSpeed = 3;
 	
     // Start is called before the first frame update
     void Start()
     {
-        spinCamera = true;
+        lastMousePosition.Set(0.0f, 0.0f, 0.0f);
+        spinCamera = false;
         cameraHeight = 0.5f;
         //cameraCenterHeight = 0.3f;
         //cameraZoom = 3.0f;
@@ -32,13 +37,59 @@ public class LookAtTarget : MonoBehaviour
         else
         {
             if (Input.GetMouseButtonDown(0))
+                lastMousePosition = Input.mousePosition;
+            if (Input.GetMouseButton(0))
             {
-                Debug.Log(Input.mousePosition);
+                Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition-lastMousePosition);
+                Vector3 move = new Vector3(pos.x*cameraRotateSpeed*cameraRotationX, pos.y * cameraRotateSpeed * cameraRotationY, 0);
+                cameraItem.Translate(move);
+                lastMousePosition = Input.mousePosition;
             }
-            //handle mouse drag
+            if (Input.GetAxis("Mouse ScrollWheel") > 0f) 
+            {
+                cameraItem.Translate(Vector3.forward * 0.5f);
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") < 0f )
+            {
+                cameraItem.Translate(Vector3.forward * -0.5f);
+            }
+            CheckCameraBoundaries();
         }
-        
+            
         transform.LookAt(target.transform);
+    }
+
+    public void ReverseCameraX(bool r)
+    {
+        if (r)
+        {
+            cameraRotationX = -1;
+        }
+        else
+        {
+            cameraRotationX = 1;
+        }
+    }
+
+    public void ReverseCameraY(bool r)
+    {
+        if (r)
+        {
+            cameraRotationY = -1;
+        }
+        else
+        {
+            cameraRotationY = 1;
+        }
+    }
+
+    void CheckCameraBoundaries()
+    {
+        float Distance = Vector3.Distance(new Vector3(target.position.x, 0f, target.position.z), new Vector3(cameraItem.position.x, 0f, cameraItem.position.z));
+        if (Distance > 5f)
+        {
+            cameraItem.Translate(Vector3.forward * (Distance-5f));
+        }
     }
 
     void CameraSpinAction()
