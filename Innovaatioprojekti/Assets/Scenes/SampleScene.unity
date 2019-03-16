@@ -1986,6 +1986,7 @@ MonoBehaviour:
   target: {fileID: 1944682796}
   cameraItem: {fileID: 534669905}
   cameraZoomSlider: {fileID: 42268408}
+  cameraHeightSlider: {fileID: 117091107}
 --- !u!1 &547111588
 GameObject:
   m_ObjectHideFlags: 0

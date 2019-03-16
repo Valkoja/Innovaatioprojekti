@@ -10,6 +10,7 @@ public class LookAtTarget : MonoBehaviour
     public Transform cameraItem;
     float cameraHeight;
     public Slider cameraZoomSlider;
+    public Slider cameraHeightSlider;
     float cameraCenterHeight;
     float cameraZoom;
     Vector3 lastMousePosition;
@@ -48,15 +49,27 @@ public class LookAtTarget : MonoBehaviour
             if (Input.GetAxis("Mouse ScrollWheel") > 0f) 
             {
                 cameraItem.Translate(Vector3.forward * 0.5f);
+
             }
             else if (Input.GetAxis("Mouse ScrollWheel") < 0f )
             {
                 cameraItem.Translate(Vector3.forward * -0.5f);
             }
             CheckCameraBoundaries();
+            SetSliderValuesAfterMove();
         }
             
         transform.LookAt(target.transform);
+    }
+
+    void SetSliderValuesAfterMove()
+    {
+        float DistanceFlat = Vector3.Distance(new Vector3(target.position.x, 0f, target.position.z), new Vector3(cameraItem.position.x, 0f, cameraItem.position.z));
+        float Height = cameraItem.position.y;
+        float ZoomValue = -(DistanceFlat - (cameraZoomSlider.maxValue + cameraZoomSlider.minValue));
+        cameraZoomSlider.value = ZoomValue;
+        cameraHeightSlider.value = Height;
+        //f = -(f - (cameraZoomSlider.maxValue + cameraZoomSlider.minValue)); F = 1...5 OP = 5...1
     }
 
     public void ReverseCameraX(bool r)
@@ -86,9 +99,21 @@ public class LookAtTarget : MonoBehaviour
     void CheckCameraBoundaries()
     {
         float Distance = Vector3.Distance(new Vector3(target.position.x, 0f, target.position.z), new Vector3(cameraItem.position.x, 0f, cameraItem.position.z));
-        if (Distance > 5f)
+        if (Distance > cameraZoomSlider.maxValue)
         {
-            cameraItem.Translate(Vector3.forward * (Distance-5f));
+            cameraItem.Translate(Vector3.forward * (Distance-cameraZoomSlider.maxValue));
+        }
+        else if (Distance < cameraZoomSlider.minValue)
+        {
+            cameraItem.Translate(Vector3.forward * (Distance - cameraZoomSlider.minValue));
+        }
+        if (cameraItem.position.y > cameraHeightSlider.maxValue)
+        {
+            SetCameraHeight(cameraHeightSlider.maxValue);
+        }
+        else if (cameraItem.position.y < cameraHeightSlider.minValue)
+        {
+            SetCameraHeight(cameraHeightSlider.minValue);
         }
     }
 
