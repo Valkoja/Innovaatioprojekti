@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ public class LookAtTarget : MonoBehaviour
     float cameraRotationX = -1f;
     float cameraRotationY = -1f;
     float cameraRotateSpeed = 3;
+    public GameObject settingsPanel;
 	
     // Start is called before the first frame update
     void Start()
@@ -39,7 +41,7 @@ public class LookAtTarget : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
                 lastMousePosition = Input.mousePosition;
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && LocationLegality())
             {
                 Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition-lastMousePosition);
                 Vector3 move = new Vector3(pos.x*cameraRotateSpeed*cameraRotationX, pos.y * cameraRotateSpeed * cameraRotationY, 0);
@@ -70,6 +72,17 @@ public class LookAtTarget : MonoBehaviour
         cameraZoomSlider.value = ZoomValue;
         cameraHeightSlider.value = Height;
         //f = -(f - (cameraZoomSlider.maxValue + cameraZoomSlider.minValue)); F = 1...5 OP = 5...1
+    }
+
+    bool LocationLegality()
+    {
+        Rect panelPos = settingsPanel.GetComponent<RectTransform>().rect;
+        Vector3 editMousePosition = new Vector3(lastMousePosition.x-Screen.width, lastMousePosition.y-Screen.height);
+        if (panelPos.Contains(editMousePosition) && settingsPanel.activeSelf)
+        {
+            return false;
+        }
+        return true;
     }
 
     public void ReverseCameraX(bool r)
