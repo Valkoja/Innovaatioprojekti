@@ -16,7 +16,7 @@ public class MainBoom : MonoBehaviour
     void Update()
     {
         if(stateObject) {
-            var zRotation = stateObject.GetComponent<MachineState>().mainBoomAngle;
+            var zRotation = stateObject.GetComponent<MachineState>().mainBoomAngle - 90;
             transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }
     }
