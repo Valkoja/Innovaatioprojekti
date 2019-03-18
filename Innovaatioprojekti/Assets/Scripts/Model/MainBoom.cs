@@ -16,13 +16,8 @@ public class MainBoom : MonoBehaviour
     void Update()
     {
         if(stateObject) {
-            // Old:
-            // var xRotation = stateObject.GetComponent<MachineState>().mainBoomAngle;
-            // Add 90 so we're moving zero point to be perpendicular to the ground
-            // transform.localEulerAngles = new Vector3(-xRotation+90, 0, 0);
-
             var zRotation = stateObject.GetComponent<MachineState>().mainBoomAngle;
-            transform.localEulerAngles = new Vector3(0, 0, -zRotation);
+            transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }
     }
 }
