@@ -47,9 +47,9 @@ public class MachineState : MonoBehaviour
         this.bucketQuaternion = Quaternion.Euler(0, 0, 0);
         this.frameQuaternion = Quaternion.Euler(0, 0, 0);
 
-        this.mainBoomAngle = 40f;
-        this.diggingArmAngle = -100f;
-        this.bucketAngle = -90f;
+        this.mainBoomQuaternionAngle = 40f;
+        this.diggingAmrQuaternionAngle = -100f;
+        this.bucketQuaternionAngle = -90f;
 
         this.mainBoomEulerAngle = 40f;
         this.diggingArmEulerAngle = -100f;
@@ -57,10 +57,6 @@ public class MachineState : MonoBehaviour
         this.framePitchEulerAngle = 0f;
         this.frameRollEulerAngle = 0f;
         this.headingEulerAngle = 0f;
-        
-        this.mainBoomQuaternionAngle = 40f;
-        this.diggingAmrQuaternionAngle = -100f;
-        this.bucketQuaternionAngle = -90f;
         
         this.limitLeft = false;
         this.limitRight = false;
