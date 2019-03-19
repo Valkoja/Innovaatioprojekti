@@ -16,10 +16,9 @@ public class Bucket : MonoBehaviour
     void Update()
     {
         if (stateObject) {
-            var boomAngle = stateObject.GetComponent<MachineState>().mainBoomQuaternionAngle;
-            var armAngle = stateObject.GetComponent<MachineState>().diggingAmrQuaternionAngle;
+            var armAngle = stateObject.GetComponent<MachineState>().diggingArmQuaternionAngle;
             var bucketAngle = stateObject.GetComponent<MachineState>().bucketQuaternionAngle;
-            var zRotation = (bucketAngle - armAngle -boomAngle) * -1;
+            var zRotation = (bucketAngle - armAngle) * -1;
             transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }
     }

@@ -17,7 +17,7 @@ public class DiggingArm : MonoBehaviour
     {
         if (stateObject) {
             var boomAngle = stateObject.GetComponent<MachineState>().mainBoomQuaternionAngle;
-            var armAngle = stateObject.GetComponent<MachineState>().diggingAmrQuaternionAngle;
+            var armAngle = stateObject.GetComponent<MachineState>().diggingArmQuaternionAngle;
             var zRotation = (armAngle - boomAngle) * -1;
             transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }

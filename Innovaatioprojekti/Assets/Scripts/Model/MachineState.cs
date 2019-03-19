@@ -22,7 +22,7 @@ public class MachineState : MonoBehaviour
 
     // Converted euler angles from quaternions
     public float mainBoomQuaternionAngle;
-    public float diggingAmrQuaternionAngle;
+    public float diggingArmQuaternionAngle;
     public float bucketQuaternionAngle;
 
     // Limit toggles
@@ -48,7 +48,7 @@ public class MachineState : MonoBehaviour
         this.frameQuaternion = Quaternion.Euler(0, 0, 0);
 
         this.mainBoomQuaternionAngle = 40f;
-        this.diggingAmrQuaternionAngle = -100f;
+        this.diggingArmQuaternionAngle = -100f;
         this.bucketQuaternionAngle = -90f;
 
         this.mainBoomEulerAngle = 40f;
@@ -81,25 +81,25 @@ public class MachineState : MonoBehaviour
         // Quaternions & derived angles
         if (message.quaternions.main_boom_orientation != null) {
             var quat = message.quaternions.main_boom_orientation;
-            this.mainBoomQuaternion = Quaternion(quat.x, quat.y, quat.z, quat.w);
+            this.mainBoomQuaternion = new Quaternion(quat.x, quat.y, quat.z, quat.w);
             this.mainBoomQuaternionAngle = getEulerXAngle(quat.w, quat.x, quat.y, quat.z);
         }
 
         if (message.quaternions.digging_arm_orientation != null) {
             var quat = message.quaternions.digging_arm_orientation;
-            this.diggingArmQuaternion = Quaternion(quat.x, quat.y, quat.z, quat.w);
+            this.diggingArmQuaternion = new Quaternion(quat.x, quat.y, quat.z, quat.w);
             this.diggingArmQuaternionAngle = getEulerXAngle(quat.w, quat.x, quat.y, quat.z);
         }
 
         if (message.quaternions.bucket_orientation != null) {
             var quat = message.quaternions.bucket_orientation;
-            this.bucketQuaternion = Quaternion(quat.x, quat.y, quat.z, quat.w);
+            this.bucketQuaternion = new Quaternion(quat.x, quat.y, quat.z, quat.w);
             this.bucketQuaternionAngle = getEulerXAngle(quat.w, quat.x, quat.y, quat.z);
         }
 
         if (message.quaternions.frame_orientation != null) {
             var quat = message.quaternions.frame_orientation;
-            this.frameQuaternion = Quaternion(quat.x, quat.y, quat.z, quat.w);
+            this.frameQuaternion = new Quaternion(quat.x, quat.y, quat.z, quat.w);
         }
 
         // Euler angles
@@ -157,16 +157,16 @@ public class MachineState : MonoBehaviour
         }
 
         // Zero level
-        if (message.height_from_zero != null) {
-            this.zeroHeightFrom = height_from_zero;
+        if (message.zeroLevel.height_from_zero != null) {
+            this.zeroHeightFrom = message.zeroLevel.height_from_zero;
         }
 
-        if (message.distance_to_zero != null) {
-            this.zeroDistanceTo = distance_to_zero;
+        if (message.zeroLevel.distance_to_zero != null) {
+            this.zeroDistanceTo = message.zeroLevel.distance_to_zero;
         }
 
-        if (message.height_to_slope_from_zero != null) {
-            this.zeroHeightToSlope = height_to_slope_from_zero;
+        if (message.zeroLevel.height_to_slope_from_zero != null) {
+            this.zeroHeightToSlope = message.zeroLevel.height_to_slope_from_zero;
         }
     }
 
