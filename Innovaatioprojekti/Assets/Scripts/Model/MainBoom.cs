@@ -15,9 +15,9 @@ public class MainBoom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(stateObject) {
-            var zRotation = stateObject.GetComponent<MachineState>().mainBoomAngle - 90;
-            transform.localEulerAngles = new Vector3(0, 0, zRotation);
+        if (stateObject) {
+            var zRotation = stateObject.GetComponent<MachineState>().mainBoomQuaternionAngle;
+            transform.localEulerAngles = new Vector3(0, 0, -zRotation);
         }
     }
 }

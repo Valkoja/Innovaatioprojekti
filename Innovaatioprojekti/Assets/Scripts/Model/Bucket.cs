@@ -15,11 +15,10 @@ public class Bucket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(stateObject) {
-            var boomAngle = stateObject.GetComponent<MachineState>().mainBoomAngle;
-            var armAngle = stateObject.GetComponent<MachineState>().diggingArmAngle;
-            var bucketAngle = stateObject.GetComponent<MachineState>().bucketAngle;
-            var zRotation = bucketAngle - armAngle - boomAngle;
+        if (stateObject) {
+            var armAngle = stateObject.GetComponent<MachineState>().diggingArmQuaternionAngle;
+            var bucketAngle = stateObject.GetComponent<MachineState>().bucketQuaternionAngle;
+            var zRotation = (bucketAngle - armAngle) * -1;
             transform.localEulerAngles = new Vector3(0, 0, zRotation);
         }
     }

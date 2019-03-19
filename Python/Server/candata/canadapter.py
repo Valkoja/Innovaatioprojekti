@@ -1,6 +1,6 @@
 import logging
 from sys import platform
-import can as pycan
+import can
 from candata.conversions import PDODecoder
 from threading import Thread
 
@@ -31,6 +31,7 @@ class CanAdapter():
 
     @staticmethod
     def scan(cb):
+        print("Scanning")
         available = []
         if platform == 'linux':
             # scan for socketcan
@@ -50,19 +51,30 @@ class CanAdapter():
             self._messagesProcessed += 1
             callback(message)
 
+        canbus = None
+
         if bus.interface == 'socketcan':
-            canbus = pycan.Bus(bustype=bus.interface, channel=bus.channel)
+            canbus = can.Bus(bustype=bus.interface, channel=bus.channel)
         elif bus.interface == 'kvaser':
-            canbus = pycan.Bus(bustype=bus.interface, channel=bus.channel, bitrate=250000)
+            from can.interfaces.kvaser.canlib import KvaserBus
+            try:
+                canbus = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
+            except Exception as e:
+                print("Problem setting bus")
+                raise e
+            print("Bus type set")
         else:
             return
         
         # NMT
-        canopen_nmt_start = pycan.Message(arbitration_id=0x00, data=[0x01, 0x00])
+        canopen_nmt_start = can.Message(arbitration_id=0x00, data=[0x01, 0x00], is_extended_id=False)
+        print("Sending NMT-open")
+        print(canopen_nmt_start.__str__())
         try:
             canbus.send(canopen_nmt_start)
-        except pycan.CanError:
+        except Exception as e:
             print("Problem sending NMT-open")
+            raise e
 
         decoder = PDODecoder()
 
