@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.3
 import SVGElement 1.0
 
 ColumnLayout {
-    // Miksi tämä korjaa tilanteen?
     anchors.fill: parent
     spacing: 0
 
@@ -17,36 +16,15 @@ ColumnLayout {
     SVGElement {
         id: svgViewport 
 
-        /*
-        Layout.preferredWidth: 600
-        Layout.preferredHeight: 600
-        */
-
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        /*
-        boomAngle: modelWrapper.mainBoomAngle
-        armAngle: modelWrapper.diggingArmAngle
-        bucketAngle: modelWrapper.bucketAngle
-        */
-
-        boomAngle: modelWrapper.mainBoomAngleQuaternion
-        armAngle: modelWrapper.diggingArmAngleQuaternion
-        bucketAngle: modelWrapper.bucketAngleQuaternion
+        boomAngle: Math.round(modelWrapper.mainBoomAngleQuaternion * 10) / 10;
+        armAngle: Math.round(modelWrapper.diggingArmAngleQuaternion * 10) / 10;
+        bucketAngle: Math.round(modelWrapper.bucketAngleQuaternion * 10) / 10;
 
         Component.onCompleted: {
             modelWrapper.changed.connect(reDraw)
         }
-/*
-        renderStrategy: Canvas.Threaded
-
-        onPaint: {
-            visualizationCanvas.requestAnimationFrame(VisualizationFunctions.updateCanvas)
-        }
-        onPainted: {
-            visualizationCanvas.requestPaint()
-        }
-*/
     }
 }
