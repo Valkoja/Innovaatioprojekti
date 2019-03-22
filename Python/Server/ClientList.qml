@@ -16,10 +16,17 @@ ColumnLayout {
         clip: true
         model: clientListModel
         delegate: ItemDelegate {
-            contentItem: 
+            height: delegateLayout.Layout.minimumHeight + 16 * 2
+            contentItem:
                 Item {
-                    Text {
-                        text: model.client.peer
+                    ColumnLayout {
+                        id: delegateLayout
+                        Text {
+                            text: model.client.library + "@" + model.client.peer + " on " + model.client.platform
+                        }
+                        Text {
+                            text: "latency: " + model.client.latency + " ms, tickrate: " + model.client.tickRate + " Hz"
+                        }
                     }
                 }
             width: parent.width
