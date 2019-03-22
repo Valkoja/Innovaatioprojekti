@@ -20,19 +20,19 @@ public class Network : MonoBehaviour
     private static GameObject stateObject;
     const int maxConnectionAttempts = 5;
     private static int connectionAttempts = 0;
+    
+    private static ListItem latencyItem;
 
-    void Start()
+    private void Start()
     {
         Debug.Log("Init network");
         stateObject = GameObject.Find("MachineState");
+        latencyItem = new ListItem(0,"T");
+        latencyItem.SetData("- ms");
+        ConsoleHandler.Instance.AddItemToConsole(latencyItem);
     }
 
-    void Update()
-    {
-
-    }
-
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (webSocket != null) {
             webSocket.Abort();
@@ -62,6 +62,9 @@ public class Network : MonoBehaviour
             await webSocket.ConnectAsync(new Uri(uri), CancellationToken.None);
             ConsoleHandler.Instance.AddItemToConsole(new ListItem($"Connected to {address}",1,"R"));
             connectionAttempts += 1;
+            // await SendStringAsync("{ \"type\": \"HELLO\", \"info\": { \"library\": \"C#\", \"client\": \"unity\" }}");
+            var hello = JsonUtility.ToJson(new XSiteDataHelloMessage());
+            await SendStringAsync(hello);
             await Task.WhenAll(ReceiveState(webSocket));
         }
         catch (Exception ex)
@@ -90,9 +93,13 @@ public class Network : MonoBehaviour
         while (webSocket.State == WebSocketState.Open)
         {
             var result = await ReceiveStringAsync();
-            var message = JsonUtility.FromJson<MachineStateMessage>(result);
+            var message = JsonUtility.FromJson<XSiteDataMessage>(result);
             if(stateObject) {
-                stateObject.GetComponent<MachineState>().consumeMessage(message);
+                stateObject.GetComponent<MachineState>().consumeMessage(message.state);
+                latencyItem.SetData(((int)message.latency).ToString() + " ms");
+                if (message.id % 50 != 0) continue;
+                var response = JsonUtility.ToJson(XSiteDataConfirmationMessage.FromDataMessage(message));
+                await SendStringAsync(response);
             }
             else {
                 Debug.Log("No state available");
