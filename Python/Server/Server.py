@@ -1,26 +1,19 @@
 import sys
 
-from PyQt5.QtCore import QObject, QUrl, pyqtSlot, pyqtSignal, pyqtProperty
+from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
-from twisted.logger import Logger, globalLogBeginner, LimitedHistoryLogObserver, textFileLogObserver, FilteringLogObserver, LogLevelFilterPredicate, LogLevel
+from twisted.logger import Logger, globalLogBeginner, FilteringLogObserver, LogLevelFilterPredicate, LogLevel
 
 from network import XSiteBroadcastServerFactory, XSiteServerProtocol
 from autobahn.twisted.websocket import listenWS
 
-from candata.logplayer import LogPlayer
-from candata.MachineState import MachineState
-from candata.conversions import PDODecoder
-from candata.canadapter import CanAdapter
+from candata import CanAdapter, MachineState
 
-from gui.AppLogHandler import AppLogHandler
-from gui.LogPlayerHandler import LogPlayerHandler
-from gui.ModelWrapper import ModelWrapper
-from gui.Networking import Networking
-from gui.ClientList import ClientListModel, ClientController, MockClient, ClientWrapper
-from gui.CanBusHandler import CanBusHandler, CanBusWrapper
-from gui.SVGElement import SVGElement
+from gui import AppLogHandler, CanBusHandler, CanBusWrapper, ClientListModel, ClientController, LogPlayerHandler, \
+    ModelWrapper, Networking, SVGElement
+
 
 if __name__ == '__main__':
     # Force material theme
@@ -68,7 +61,7 @@ if __name__ == '__main__':
     appLogHandler = AppLogHandler()
     # observers = [appLogHandler.appendEvent]
     # Comment out the line above and uncomment the one below to output log to stdout
-    #observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
+    # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
     log = Logger()
     infoPredicate = LogLevelFilterPredicate(LogLevel.info)
     logfilter = FilteringLogObserver(appLogHandler.appendEvent, predicates=[infoPredicate])
