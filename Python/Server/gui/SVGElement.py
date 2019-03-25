@@ -17,11 +17,11 @@ class SVGElement(QQuickPaintedItem):
         self._boomAngle = 0
 
         self._armSVG = svgutils.compose.SVG('./gui/svg/arm.svg')
-        self._armList = [-100 for i in range(10)]
+        self._armList = [-60 for i in range(10)]
         self._armAngle = 0
 
         self._bucketSVG = svgutils.compose.SVG('./gui/svg/bucket.svg')
-        self._bucketList = [-90 for i in range(10)]
+        self._bucketList = [-150 for i in range(10)]
         self._bucketAngle = 0
 
 
