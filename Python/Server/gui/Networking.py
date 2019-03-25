@@ -1,11 +1,13 @@
 from PyQt5.QtCore import QObject, pyqtSlot
-from PyQt5.QtNetwork import QNetworkInterface
+from PyQt5.QtNetwork import QNetworkInterface, QAbstractSocket, QHostAddress
 
 
 class Networking(QObject):
     @pyqtSlot(result=str)
     def getIP(self):
-        info = QNetworkInterface().allAddresses()
-        print(info[3].toString())
-        if info:
-            return info[3].toString()
+        localhost = QHostAddress(QHostAddress.LocalHost)
+        addresses = QNetworkInterface().allAddresses()
+        if addresses:
+            for address in addresses:
+                if address.protocol() == QAbstractSocket.IPv4Protocol and address != localhost:
+                    return address.toString()
