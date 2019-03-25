@@ -67,7 +67,7 @@ class SVGElement(QQuickPaintedItem):
         armX = boomX + self.calculateX(boomA, 385)
         armY = boomY + self.calculateY(boomA, 385)
 
-        armSVG.rotate(self._armAngle, 500, 500)
+        armSVG.rotate(armA, 500, 500)
         armSVG.move(armX - 500, armY - 500)
 
         # Bucket
