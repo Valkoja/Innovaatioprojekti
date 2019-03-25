@@ -43,7 +43,7 @@ public class ConsoleHandler : Singleton<ConsoleHandler>
         {
             consoleTextR.text += writeBufferR[i] + "\n";
         }
-        for (int i = writeBufferT.Count-1; i >= 0; i++)
+        for (int i = 0; i < writeBufferT.Count; i++)
         {
             consoleTextT.text += writeBufferT[i] + "\n";
         }

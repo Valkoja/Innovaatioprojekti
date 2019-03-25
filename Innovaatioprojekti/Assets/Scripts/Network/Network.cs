@@ -22,6 +22,7 @@ public class Network : MonoBehaviour
     private static int connectionAttempts = 0;
     
     private static ListItem latencyItem;
+    private static ListItem tickrateItem;
 
     private void Start()
     {
@@ -30,6 +31,9 @@ public class Network : MonoBehaviour
         latencyItem = new ListItem(0,"T");
         latencyItem.SetData("- ms");
         ConsoleHandler.Instance.AddItemToConsole(latencyItem);
+        tickrateItem = new ListItem(0,"T");
+        tickrateItem.SetData("- Hz");
+        ConsoleHandler.Instance.AddItemToConsole(tickrateItem);
     }
 
     private void OnDestroy()
@@ -97,6 +101,7 @@ public class Network : MonoBehaviour
             if(stateObject) {
                 stateObject.GetComponent<MachineState>().consumeMessage(message.state);
                 latencyItem.SetData(((int)message.latency).ToString() + " ms");
+                tickrateItem.SetData(((int)message.tickRate).ToString() + " Hz");
                 if (message.id % 50 != 0) continue;
                 var response = JsonUtility.ToJson(XSiteDataConfirmationMessage.FromDataMessage(message));
                 await SendStringAsync(response);
