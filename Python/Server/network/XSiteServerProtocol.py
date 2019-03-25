@@ -4,6 +4,7 @@ from autobahn.twisted.websocket import WebSocketServerProtocol
 import json
 import datetime
 import dateutil.parser
+from twisted.logger import Logger
 
 
 class StateMessage:
@@ -37,7 +38,6 @@ class XSiteServerProtocol(WebSocketServerProtocol):
         self._trackingId = None
         self._trackingOk = True
         self._onUpdate = None
-        from twisted.logger import Logger
         self.log = Logger()
         self.log.namespace = type(self).__name__
 
@@ -55,13 +55,16 @@ class XSiteServerProtocol(WebSocketServerProtocol):
 
     def latency(self):
         from statistics import mean
-        if self._latencies.__len__() > 0:
+        if len(self._latencies) > 0:
             return mean(self._latencies)
         else:
             return 0
 
     def tickRate(self):
         return 1 / self._tickInterval
+
+    def setTickRate(self, tickRate):
+        self._tickInterval = 1 / tickRate
 
     def onOpen(self):
         self.factory.register(self)
@@ -88,6 +91,7 @@ class XSiteServerProtocol(WebSocketServerProtocol):
 
     def connectionLost(self, reason):
         WebSocketServerProtocol.connectionLost(self, reason)
+        self.log.info('Client ' + self.peer + "@" + self.clientLibrary() + ' on ' + self.clientPlatform() + " disconnected")
         self.factory.unregister(self)
         self._state = ClientState.disconnected
 

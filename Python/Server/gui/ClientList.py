@@ -10,13 +10,17 @@ class ClientWrapper(QObject):
     def _peer(self):
         return self._client.peer.split(':')[1]
 
+    @pyqtSlot(int)
+    def setTickRate(self, rate):
+        self._client.setTickRate(rate)
+
     changed = pyqtSignal()
     peer = pyqtProperty(str, _peer, notify=changed)
     library = pyqtProperty(str, lambda self: self._client.clientLibrary(), notify=changed)
     platform = pyqtProperty(str, lambda self: self._client.clientPlatform(), notify=changed)
     version = pyqtProperty(str, lambda self: self._client.clientVersion(), notify=changed)
     latency = pyqtProperty(str, lambda self: str(round(self._client.latency(), 0)) if self._client.latency() else "-", notify=changed)
-    tickRate = pyqtProperty(float, lambda self: self._client.tickRate(), notify=changed)
+    tickRate = pyqtProperty(int, fget=lambda self: self._client.tickRate(), notify=changed)
 
 
 class ClientListModel(QAbstractListModel):
@@ -35,7 +39,6 @@ class ClientListModel(QAbstractListModel):
     def removeClient(self, client):
         # Qt deals in indexes and our objects have different wrappers, so we need to find the index to remove an item
         row = [i for i in range(len(self._clients)) if self._clients[i]._client.peer == client.peer][0]
-        print(row)
         self.beginRemoveRows(QModelIndex(), row, row)
         self._clients.pop(row)
         self.endRemoveRows()
@@ -64,5 +67,6 @@ class MockClient(object):
     def __init__(self, peer):
         self.peer = peer
 
-    def str(self):
+    @staticmethod
+    def str():
         return str("Peer {self.peer}")
