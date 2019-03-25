@@ -13,11 +13,17 @@ class SVGElement(QQuickPaintedItem):
         self.setOpaquePainting(False)
 
         self._boomSVG = svgutils.compose.SVG('./gui/svg/boom.svg')
+        self._boomList = [40 for i in range(10)]
         self._boomAngle = 0
+
         self._armSVG = svgutils.compose.SVG('./gui/svg/arm.svg')
+        self._armList = [-100 for i in range(10)]
         self._armAngle = 0
+
         self._bucketSVG = svgutils.compose.SVG('./gui/svg/bucket.svg')
+        self._bucketList = [-90 for i in range(10)]
         self._bucketAngle = 0
+
 
     def calculateX(self, angle, length):
         x = math.floor(math.fabs(math.cos(math.radians(angle)) * length))
@@ -27,6 +33,7 @@ class SVGElement(QQuickPaintedItem):
         
         return x
 
+
     def calculateY(self, angle, length):
         y = math.floor(math.fabs(math.sin(math.radians(angle)) * length))
         
@@ -35,30 +42,43 @@ class SVGElement(QQuickPaintedItem):
         
         return y
 
+
     def paint(self, painter):
         boomSVG = copy.deepcopy(self._boomSVG)
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
 
         # Boom
+        self._boomList.pop(0)
+        self._boomList.append(self._boomAngle)
+
+        boomA = round(sum(self._boomList) / 10, 1)
         boomX = 900
         boomY = 900
 
-        boomSVG.rotate(self._boomAngle, 500, 500)
+        boomSVG.rotate(boomA, 500, 500)
         boomSVG.move(boomX - 500, boomY - 500)
 
         # Digging arm
-        armX = boomX + self.calculateX(self._boomAngle, 385)
-        armY = boomY + self.calculateY(self._boomAngle, 385)
+        self._armList.pop(0)
+        self._armList.append(self._armAngle)
+
+        armA = round(sum(self._armList) / 10, 1)
+        armX = boomX + self.calculateX(boomA, 385)
+        armY = boomY + self.calculateY(boomA, 385)
 
         armSVG.rotate(self._armAngle, 500, 500)
         armSVG.move(armX - 500, armY - 500)
 
         # Bucket
-        bucketX = armX + self.calculateX(self._armAngle, 176)
-        bucketY = armY + self.calculateY(self._armAngle, 176)
+        self._bucketList.pop(0)
+        self._bucketList.append(self._bucketAngle)
 
-        bucketSVG.rotate(self._bucketAngle, 500, 500)
+        bucketA = round(sum(self._bucketList) / 10, 1)
+        bucketX = armX + self.calculateX(armA, 176)
+        bucketY = armY + self.calculateY(armA, 176)
+
+        bucketSVG.rotate(bucketA, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Combine pieces into one
