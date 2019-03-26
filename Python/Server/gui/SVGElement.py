@@ -13,15 +13,18 @@ class SVGElement(QQuickPaintedItem):
         self.setOpaquePainting(False)
 
         self._boomSVG = svgutils.compose.SVG('./gui/svg/boom.svg')
-        self._boomList = [40 for i in range(10)]
+        self._boomSin = [math.sin(math.radians(40 + 180)) for i in range(10)]
+        self._boomCos = [math.cos(math.radians(40 + 180)) for i in range(10)]
         self._boomAngle = 0
 
         self._armSVG = svgutils.compose.SVG('./gui/svg/arm.svg')
-        self._armList = [-60 for i in range(10)]
+        self._armSin = [math.sin(math.radians(-60 + 180)) for i in range(10)]
+        self._armCos = [math.cos(math.radians(-60 + 180)) for i in range(10)]
         self._armAngle = 0
 
         self._bucketSVG = svgutils.compose.SVG('./gui/svg/bucket.svg')
-        self._bucketList = [-150 for i in range(10)]
+        self._bucketSin = [math.sin(math.radians(-150 + 180)) for i in range(10)]
+        self._bucketCos = [math.cos(math.radians(-150 + 180)) for i in range(10)]
         self._bucketAngle = 0
 
 
@@ -42,6 +45,21 @@ class SVGElement(QQuickPaintedItem):
         
         return y
 
+    
+    def calculateA(self, aSin, aCos):
+        s = sum(aSin)
+        c = sum(aCos)
+        a = math.atan2(s, c)
+
+        # if s > 0 and c > 0:
+        #     a -= 180
+        # elif c < 0:
+        #     a
+        # else:
+        #     a += 180
+
+        return round(math.degrees(a) + 180, 1)
+
 
     def paint(self, painter):
         boomSVG = copy.deepcopy(self._boomSVG)
@@ -49,10 +67,12 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG = copy.deepcopy(self._bucketSVG)
 
         # Boom
-        self._boomList.pop(0)
-        self._boomList.append(self._boomAngle)
+        self._boomSin.pop(0)
+        self._boomCos.pop(0)
+        self._boomSin.append(math.sin(math.radians(self._boomAngle + 180)))
+        self._boomCos.append(math.cos(math.radians(self._boomAngle + 180)))
 
-        boomA = round(sum(self._boomList) / 10, 1)
+        boomA = self.calculateA(self._boomSin, self._boomCos)
         boomX = 900
         boomY = 900
 
@@ -60,10 +80,12 @@ class SVGElement(QQuickPaintedItem):
         boomSVG.move(boomX - 500, boomY - 500)
 
         # Digging arm
-        self._armList.pop(0)
-        self._armList.append(self._armAngle)
+        self._armSin.pop(0)
+        self._armCos.pop(0)
+        self._armSin.append(math.sin(math.radians(self._armAngle + 180)))
+        self._armCos.append(math.cos(math.radians(self._armAngle + 180)))
 
-        armA = round(sum(self._armList) / 10, 1)
+        armA = self.calculateA(self._armSin, self._armCos)
         armX = boomX + self.calculateX(boomA, 385)
         armY = boomY + self.calculateY(boomA, 385)
 
@@ -71,14 +93,12 @@ class SVGElement(QQuickPaintedItem):
         armSVG.move(armX - 500, armY - 500)
 
         # Bucket
-        self._bucketList.pop(0)
+        self._bucketSin.pop(0)
+        self._bucketCos.pop(0)
+        self._bucketSin.append(math.sin(math.radians(self._bucketAngle + 180)))
+        self._bucketCos.append(math.cos(math.radians(self._bucketAngle + 180)))
 
-        if self._bucketAngle > 120:
-            self._bucketList.append(self._bucketAngle - 360)
-        else:
-            self._bucketList.append(self._bucketAngle)
-
-        bucketA = round(sum(self._bucketList) / 10, 1)
+        bucketA = self.calculateA(self._bucketSin, self._bucketCos)
         bucketX = armX + self.calculateX(armA, 176)
         bucketY = armY + self.calculateY(armA, 176)
 
