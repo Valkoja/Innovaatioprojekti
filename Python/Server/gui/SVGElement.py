@@ -13,52 +13,45 @@ class SVGElement(QQuickPaintedItem):
         self.setOpaquePainting(False)
 
         self._boomSVG = svgutils.compose.SVG('./gui/svg/boom.svg')
-        self._boomSin = [math.sin(math.radians(40 + 180)) for i in range(10)]
-        self._boomCos = [math.cos(math.radians(40 + 180)) for i in range(10)]
+        self._boomSin = [math.sin(math.radians(40)) for i in range(10)]
+        self._boomCos = [math.cos(math.radians(40)) for i in range(10)]
         self._boomAngle = 0
 
         self._armSVG = svgutils.compose.SVG('./gui/svg/arm.svg')
-        self._armSin = [math.sin(math.radians(-60 + 180)) for i in range(10)]
-        self._armCos = [math.cos(math.radians(-60 + 180)) for i in range(10)]
+        self._armSin = [math.sin(math.radians(-60)) for i in range(10)]
+        self._armCos = [math.cos(math.radians(-60)) for i in range(10)]
         self._armAngle = 0
 
         self._bucketSVG = svgutils.compose.SVG('./gui/svg/bucket.svg')
-        self._bucketSin = [math.sin(math.radians(-150 + 180)) for i in range(10)]
-        self._bucketCos = [math.cos(math.radians(-150 + 180)) for i in range(10)]
+        self._bucketSin = [math.sin(math.radians(-150)) for i in range(10)]
+        self._bucketCos = [math.cos(math.radians(-150)) for i in range(10)]
         self._bucketAngle = 0
 
 
-    def calculateX(self, angle, length):
-        x = math.floor(math.fabs(math.cos(math.radians(angle)) * length))
+    def calculateX(self, aAngle, aLength):
+        x = math.floor(math.fabs(math.cos(math.radians(aAngle)) * aLength))
 
-        if -90 <= angle <= 90:
+        if -90 <= aAngle <= 90:
             x = x * -1
         
         return x
 
 
-    def calculateY(self, angle, length):
-        y = math.floor(math.fabs(math.sin(math.radians(angle)) * length))
+    def calculateY(self, aAngle, aLength):
+        y = math.floor(math.fabs(math.sin(math.radians(aAngle)) * aLength))
         
-        if 0 <= angle <= 180:
+        if 0 <= aAngle <= 180:
             y = y * -1
         
         return y
 
-    
-    def calculateA(self, aSin, aCos):
-        s = sum(aSin)
-        c = sum(aCos)
+
+    def calculateA(self, aSinList, aCosList):
+        s = sum(aSinList)
+        c = sum(aCosList)
         a = math.atan2(s, c)
 
-        # if s > 0 and c > 0:
-        #     a -= 180
-        # elif c < 0:
-        #     a
-        # else:
-        #     a += 180
-
-        return round(math.degrees(a) + 180, 1)
+        return round(math.degrees(a), 1)
 
 
     def paint(self, painter):
@@ -69,8 +62,8 @@ class SVGElement(QQuickPaintedItem):
         # Boom
         self._boomSin.pop(0)
         self._boomCos.pop(0)
-        self._boomSin.append(math.sin(math.radians(self._boomAngle + 180)))
-        self._boomCos.append(math.cos(math.radians(self._boomAngle + 180)))
+        self._boomSin.append(math.sin(math.radians(self._boomAngle)))
+        self._boomCos.append(math.cos(math.radians(self._boomAngle)))
 
         boomA = self.calculateA(self._boomSin, self._boomCos)
         boomX = 900
@@ -82,8 +75,8 @@ class SVGElement(QQuickPaintedItem):
         # Digging arm
         self._armSin.pop(0)
         self._armCos.pop(0)
-        self._armSin.append(math.sin(math.radians(self._armAngle + 180)))
-        self._armCos.append(math.cos(math.radians(self._armAngle + 180)))
+        self._armSin.append(math.sin(math.radians(self._armAngle)))
+        self._armCos.append(math.cos(math.radians(self._armAngle)))
 
         armA = self.calculateA(self._armSin, self._armCos)
         armX = boomX + self.calculateX(boomA, 385)
@@ -95,8 +88,8 @@ class SVGElement(QQuickPaintedItem):
         # Bucket
         self._bucketSin.pop(0)
         self._bucketCos.pop(0)
-        self._bucketSin.append(math.sin(math.radians(self._bucketAngle + 180)))
-        self._bucketCos.append(math.cos(math.radians(self._bucketAngle + 180)))
+        self._bucketSin.append(math.sin(math.radians(self._bucketAngle)))
+        self._bucketCos.append(math.cos(math.radians(self._bucketAngle)))
 
         bucketA = self.calculateA(self._bucketSin, self._bucketCos)
         bucketX = armX + self.calculateX(armA, 176)
