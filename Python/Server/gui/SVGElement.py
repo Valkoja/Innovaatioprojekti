@@ -72,7 +72,11 @@ class SVGElement(QQuickPaintedItem):
 
         # Bucket
         self._bucketList.pop(0)
-        self._bucketList.append(self._bucketAngle)
+
+        if self._bucketAngle > 120:
+            self._bucketList.append(self._bucketAngle - 360)
+        else:
+            self._bucketList.append(self._bucketAngle)
 
         bucketA = round(sum(self._bucketList) / 10, 1)
         bucketX = armX + self.calculateX(armA, 176)
