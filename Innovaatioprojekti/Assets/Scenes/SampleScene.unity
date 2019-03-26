@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.43632972, g: 0.47471184, b: 0.5147129, a: 1}
+  m_IndirectSpecularColor: {r: 0.43632904, g: 0.47471118, b: 0.5147121, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4311,6 +4311,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 400044, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4383,18 +4387,34 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: acbc9d10a48de60409f0009b5b2f2696, type: 2}
+    - target: {fileID: 13700008, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 13700010, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6ac1b3fbe7f125443a976d11c1ba6645, type: 2}
+    - target: {fileID: 13700010, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 13700012, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7029f35d8a132bd41af5e26f46483713, type: 2}
+    - target: {fileID: 13700012, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 13700014, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c0712c52fa8a13449bce07486138e39d, type: 2}
+    - target: {fileID: 13700014, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fb6884aa4587aa34f8eee91e2f91d633, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
@@ -4780,9 +4800,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f8818d211904a73bd6777cbb2e5be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainBoomAngle: 42.367752
-  diggingArmAngle: 308.8998
-  bucketAngle: 277.07684
+  mainBoomQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  diggingArmQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  bucketQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  frameQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  mainBoomEulerAngle: 0
+  diggingArmEulerAngle: 0
+  bucketEulerAngle: 0
+  framePitchEulerAngle: 0
+  frameRollEulerAngle: 0
+  headingEulerAngle: 0
+  mainBoomQuaternionAngle: 0
+  diggingArmQuaternionAngle: 0
+  bucketQuaternionAngle: 0
+  limitLeft: 0
+  limitRight: 0
+  limitUpper: 0
+  limitLower: 0
+  limitForward: 0
+  limitProperty: 0
+  limitOverload: 0
+  zeroHeightFrom: 0
+  zeroDistanceTo: 0
+  zeroHeightToSlope: 0
 --- !u!1 &1236543680
 GameObject:
   m_ObjectHideFlags: 0
