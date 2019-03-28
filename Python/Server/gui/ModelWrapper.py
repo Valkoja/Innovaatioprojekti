@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 from PyQt5.QtGui import QQuaternion
 import math
 
+
 class ModelWrapper(QObject):
     def __init__(self, stateObject):
         super().__init__()
