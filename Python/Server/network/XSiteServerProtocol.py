@@ -5,18 +5,7 @@ import json
 import datetime
 import dateutil.parser
 from twisted.logger import Logger
-
-
-class StateMessage:
-    def __init__(self, msgid, data, latency, tickrate):
-        self.id = msgid
-        self.state = data
-        self.timestamp = datetime.datetime.now().isoformat()
-        self.latency = latency
-        self.tickRate = tickrate
-
-    def asJson(self):
-        return json.dumps(self.__dict__)
+from network.XSiteMessage import StateMessage, MessageType
 
 
 class ClientState(Enum):
@@ -72,22 +61,26 @@ class XSiteServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         if not isBinary:
             msg = json.loads(payload.decode('utf8'))
-            if msg['type'] == 'HELLO':
-                self.log.info('Hello from ' + msg['library'] + ' on ' + msg['platform'])
+            if msg['type'] == MessageType.hello.value:
                 self._clientLibrary = msg['library']
                 self._clientPlatform = msg['platform']
                 self._clientVersion = msg['version']
                 self._state = ClientState.listening
+                self.log.info('Hello from ' + self._clientLibrary+ ' on ' + self._clientPlatform)
                 self.sendState()
-            elif msg['type'] == 'CONFIRM':
+            elif msg['type'] == MessageType.confirm.value:
                 if self._trackingId == msg['id']:
                     delta = datetime.datetime.now() - dateutil.parser.parse(msg['timestamp'])
                     self._latencies.append(delta.microseconds / 2 / 1000)
                     if self._latencies.__len__() > 20:
                         self._latencies.pop(0)
                     self._trackingOk = True
+            elif msg['type'] == MessageType.command.value:
+                self.log.info('Command ' + msg['command'] + ' from ' + self._clientLibrary+ ' on ' + self._clientPlatform)
+                self.factory.stateObject.consumeCommand(msg['command'])
             else:
-                self.log.critical('Unkown type of message')
+                print(msg)
+                self.log.critical('Unknown type of message')
 
     def connectionLost(self, reason):
         WebSocketServerProtocol.connectionLost(self, reason)
@@ -100,7 +93,7 @@ class XSiteServerProtocol(WebSocketServerProtocol):
 
     def sendState(self):
         if self._state == ClientState.listening:
-            state = self.factory.getState()
+            state = self.factory.stateObject.getState()
             msg = StateMessage(self._id, state, self.latency(), self.tickRate()).asJson()
             self._id = self._id + 1
             if self._id % 50 == 0 and self._trackingOk:
