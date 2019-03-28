@@ -1,7 +1,8 @@
 from collections import namedtuple
 from struct import unpack
 
-class PDODecoder():
+
+class PDODecoder:
     def __init__(self):
         self._pdo_map = dict([
             ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward property overload'))),
@@ -17,7 +18,7 @@ class PDODecoder():
         self._ok = 0
         self._failed = 0
 
-    #PDO: id+message, in bytes
+    # PDO: id+message, in bytes
     def decode_pdo(self, id, data):
         if not isinstance(id, int):
             raise TypeError
@@ -35,16 +36,50 @@ class PDODecoder():
         else:
             self._failed = self._failed + 1
             return False
-            
-    @classmethod  
-    def qToFloat(self, q, fraction):
+
+    @classmethod
+    def qToFloat(cls, q, fraction):
         if q != 0:
             return float(q) * 2 ** -fraction
         else:
             return float(0)
-    
+
     def ok_parses(self):
         return self._ok
-    
+
+    def fail_parses(self):
+        return self._failed
+
+
+# Message that zeroes 2D-features at bucket tip
+# ID is SDO download channel for node 0
+# Data bytes:
+# SDO expedited download
+# Index of 2D-features, 0x2020
+# Subindex of zero with bucket tip, 0x02
+# "Writing" 1 into that register
+
+class SDOEncoder:
+    def __init__(self):
+        self._sdo_map = dict([
+            ('zero_with_bucket_tip',
+             dict(format=namedtuple('zero_with_bucket_tip', 'id data'),
+                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x02, 0x01]))
+        ])
+        self._ok = 0
+        self._failed = 0
+
+    def encode_sdo(self, command):
+        if command in self._sdo_map:
+            sdo = self._sdo_map[command]
+            self._ok = self._ok + 1
+            return sdo['format'](sdo['id'], sdo['data'])
+        else:
+            self._failed = self._failed + 1
+            return False
+
+    def ok_parses(self):
+        return self._ok
+
     def fail_parses(self):
         return self._failed
