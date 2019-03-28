@@ -11,6 +11,8 @@ class CanBusWrapper(QObject):
     def __init__(self, bus):
         super().__init__()
         self._bus = bus
+        self.log = Logger()
+        self.log.namespace = type(self).__name__
 
     def bus(self):
         return self._bus
@@ -42,7 +44,7 @@ class CanBusHandler(QObject):
         self._available.clear()
         for bus in available:
             self.available.append(CanBusWrapper(bus))
-        print('Scan done')
+        self.log('Scan done')
         # self._bus = self._available[0]
         self._state = CanAdapterState.ready
         self.busChanged.emit()
@@ -71,6 +73,7 @@ class CanBusHandler(QObject):
             if index < len(self._available):
                 self._bus = self._available[index].bus()
                 print(Template('Bus set to $bus').substitute(bus=self._bus))
+                self._adapter.setBus(self._bus)
         except:
             self.log.info("fail")
 
