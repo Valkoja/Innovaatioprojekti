@@ -1,9 +1,8 @@
-import time
 import datetime
 from pathlib import Path
-import sys
 from candata.conversions import PDODecoder
 from sys import platform
+
 
 class LogPlayerJob():
     def __init__(self, file, reactor, callback, finished, ignoreFailed=True):
