@@ -1,7 +1,7 @@
 import logging
 from sys import platform
 import can
-from candata.conversions import PDODecoder
+from candata.conversions import PDODecoder, SDOEncoder
 from threading import Thread
 
 
@@ -21,13 +21,13 @@ class CanAdapter():
         self._messagesProcessed = 0
         self._stopped = False
         self._thread = None
+        self._bus = None
 
     def messagesProcessed(self):
         return self._messagesProcessed
 
     def stopBus(self):
         self._stopped = True
-        #self._thread.join()
 
     @staticmethod
     def scan(cb):
@@ -45,7 +45,35 @@ class CanAdapter():
             available.append(Bus('nobus', '0'))
         cb(available)
 
-    def openBus(self, bus, reactor, callback):
+    def sendMessage(self, message):
+        encoder = SDOEncoder()
+        msg = encoder.encode_sdo(message)
+
+        if not self._bus:
+            print("Nobus, sending message " + msg.__str__())
+            return
+        elif self._bus.interface == 'socketcan':
+            canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
+        elif self._bus.interface == 'kvaser':
+            try:
+                canbus = can.interface.Bus(dict(bustype='kvaser', channel=0, bitrate=250000))
+            except Exception as e:
+                print("Problem setting bus")
+                raise e
+            print("Bus type set")
+        else:
+            return
+
+        try:
+            canbus.send(can.Message(arbitration_id=message.id, data=message.data, extended_id=False))
+        except Exception as e:
+            print("Problem sending command")
+            raise e
+
+    def setBus(self, bus):
+        self._bus = bus
+
+    def openBus(self, callback):
         def cbAndTrack(message):
             # print(message)
             self._messagesProcessed += 1
@@ -53,10 +81,9 @@ class CanAdapter():
 
         canbus = None
 
-        if bus.interface == 'socketcan':
-            canbus = can.Bus(bustype=bus.interface, channel=bus.channel)
-        elif bus.interface == 'kvaser':
-            from can.interfaces.kvaser.canlib import KvaserBus
+        if self._bus.interface == 'socketcan':
+            canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
+        elif self._bus.interface == 'kvaser':
             try:
                 canbus = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
             except Exception as e:
