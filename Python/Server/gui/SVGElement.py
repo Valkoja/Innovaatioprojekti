@@ -27,8 +27,8 @@ class SVGElement(QQuickPaintedItem):
         self._bucketCos = [math.cos(math.radians(-150)) for i in range(10)]
         self._bucketAngle = 0
 
-        self._zeroSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        self._zeroSlopeAngle = 0
+        self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
+        self._levelSlope = 0
         self._heightFromZero = 0
         self._heightToSlopeFromZero = 0
 
@@ -63,7 +63,7 @@ class SVGElement(QQuickPaintedItem):
         boomSVG = copy.deepcopy(self._boomSVG)
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
-        zeroSVG = copy.deepcopy(self._zeroSVG)
+        levelSVG = copy.deepcopy(self._levelSVG)
 
         # Boom
         self._boomSin.pop(0)
@@ -105,21 +105,20 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level
-        tipHeight = bucketY + self.calculateY(bucketA, 136)
-        zeroHeight = tipHeight + (self._heightFromZero * 100)
+        levelHeight = (bucketY + self.calculateY(bucketA, 136)) + (self._heightFromZero * 10)
 
         if self._heightToSlopeFromZero != 0:
-            zeroHeight += (self._heightToSlopeFromZero * 100)
+            levelHeight += (self._heightToSlopeFromZero * 10)
 
         if self._zeroSlope != 0:
-            zeroA = (self.zeroSlope / 100) * 90
+            zeroA = (self.zeroSlope / 100) * 45
             zeroA = round(math.degrees(zeroA), 1)
-            zeroSVG.rotate(zeroA, 1000, 1000)
+            levelSVG.rotate(zeroA, 1000, 1000)
 
-        zeroSVG.move(-1000, zeroHeight - 1000)
+        levelSVG.move(-1000, round(levelHeight - 1000))
 
         # Combine pieces into one
-        compose = svgutils.compose.Figure('1000px', '1000px', zeroSVG, boomSVG, armSVG, bucketSVG)
+        compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
