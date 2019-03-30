@@ -25,7 +25,7 @@ ColumnLayout {
 
         heightFromZero: modelWrapper.heightFromZero;
         heightToSlopeFromZero: modelWrapper.heightToSlopeFromZero;
-        levelSlope: 0;
+        levelSlopePercent: 0;
 
         Component.onCompleted: {
             modelWrapper.changed.connect(reDraw)
