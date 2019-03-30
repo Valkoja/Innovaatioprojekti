@@ -1,7 +1,7 @@
 import logging
 from sys import platform
 import can
-from candata.conversions import PDODecoder, SDOEncoder
+from candata.conversions import XSiteDecoder, SDOEncoder
 from threading import Thread
 
 
@@ -45,27 +45,30 @@ class CanAdapter():
             available.append(Bus('nobus', '0'))
         cb(available)
 
-    def sendMessage(self, message):
+    def sendMessage(self, message, argument):
         encoder = SDOEncoder()
-        msg = encoder.encode_sdo(message)
+        msg = encoder.encode_sdo(message, argument)
 
         if not self._bus:
             print("Nobus, sending message " + msg.__str__())
             return
         elif self._bus.interface == 'socketcan':
-            canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
-        elif self._bus.interface == 'kvaser':
             try:
-                canbus = can.interface.Bus(dict(bustype='kvaser', channel=0, bitrate=250000))
+                canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
             except Exception as e:
                 print("Problem setting bus")
                 raise e
-            print("Bus type set")
+        elif self._bus.interface == 'kvaser':
+            try:
+                canbus = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
+            except Exception as e:
+                print("Problem setting bus")
+                raise e
         else:
             return
 
         try:
-            canbus.send(can.Message(arbitration_id=message.id, data=message.data, extended_id=False))
+            canbus.send(can.Message(arbitration_id=msg.id, data=msg.data, extended_id=False))
         except Exception as e:
             print("Problem sending command")
             raise e
@@ -116,6 +119,10 @@ class CanAdapter():
                     message = decoder.decode_pdo(msg.arbitration_id, msg.data)
                     if message:
                         cbAndTrack(message)
+                    else:
+                        message = decoder.decode_sdo(msg.arbitration_id, msg.data)
+                        if message:
+                            cbAndTrack(message)
 
         self._thread = Thread(target=getMessages)
         self._thread.setDaemon(True)
