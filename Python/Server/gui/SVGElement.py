@@ -28,7 +28,7 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = 0
 
         self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        self._levelList = [0 for i in range(10)]
+        # self._levelList = [0 for i in range(10)]
         self._levelSlope = 0
         self._heightFromZero = 0
         self._heightToSlopeFromZero = 0
@@ -106,11 +106,12 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level
-        self._levelList.pop(0)
-        self._levelList.append(self._heightToSlopeFromZero + self._heightFromZero)
+        # self._levelList.pop(0)
+        # self._levelList.append(self._heightToSlopeFromZero + self._heightFromZero)
 
         levelX = bucketX + self.calculateX(bucketA, 136)
-        levelY = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
+        levelY = bucketY + self.calculateY(bucketA, 136) + self._heightToSlopeFromZero + self._heightFromZero
+        # levelY = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
 
         if self._levelSlope != 0:
             levelA = (self._levelSlope / 100) * 45
