@@ -28,9 +28,8 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = 0
 
         self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        self._levelSlope = [0 for i in range(10)]
-        self._levelHeight = [0 for i in range(10)]
-        self._levelSlopePercent = 0
+        self._levelList = [0 for i in range(10)]
+        self._levelSlope = 0
         self._heightFromZero = 0
         self._heightToSlopeFromZero = 0
 
@@ -107,18 +106,14 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level
-        self._levelSlope.pop(0)
-        self._levelHeight.pop(0)
-        self._levelSlope.append(self._heightToSlopeFromZero)
-        self._levelHeight.append(self._heightFromZero)
+        self._levelList.pop(0)
+        self._levelList.append(self._heightToSlopeFromZero + self._heightFromZero)
 
         levelX = bucketX + self.calculateX(bucketA, 136)
-        levelY = bucketY + self.calculateY(bucketA, 136)
-        levelY += sum(self._levelSlope) / 10
-        levelY += sum(self._levelHeight) / 10
+        levelY = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
 
-        if self._levelSlopePercent != 0:
-            levelA = (self._levelSlopePercent / 100) * 45
+        if self._levelSlope != 0:
+            levelA = (self._levelSlope / 100) * 45
             levelA = round(math.degrees(levelA), 1)
             levelSVG.rotate(levelA, 1000, 1000)
 
@@ -200,13 +195,13 @@ class SVGElement(QQuickPaintedItem):
 
 
     @pyqtProperty(float)
-    def levelSlopePercent(self):
-        return self._levelSlopePercent
+    def levelSlope(self):
+        return self._levelSlope
 
 
-    @levelSlopePercent.setter
-    def levelSlopePercent(self, levelSlopePercent):
-        self._levelSlopePercent = levelSlopePercent
+    @levelSlope.setter
+    def levelSlope(self, levelSlope):
+        self._levelSlope = levelSlope
 
 
     @pyqtSlot()
