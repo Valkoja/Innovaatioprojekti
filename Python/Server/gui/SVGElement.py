@@ -107,12 +107,12 @@ class SVGElement(QQuickPaintedItem):
 
         # Zero level
         self._levelList.pop(0)
-        self._levelList.append(self._heightFromZero * 10)
+        self._levelList.append(self._heightFromZero * 100)
 
-        levelHeight = (bucketY + self.calculateY(bucketA, 136)) + (round(sum(self._levelList) / 10))
+        levelHeight = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
 
-        if self._heightToSlopeFromZero != 0:
-            levelHeight += (self._heightToSlopeFromZero * 10)
+        # if self._heightToSlopeFromZero != 0:
+        #     levelHeight += (self._heightToSlopeFromZero * 100)
 
         if self._levelSlope != 0:
             levelA = (self.levelSlope / 100) * 45
@@ -177,7 +177,7 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = bucketAngle
 
 
-    @pyqtProperty(int)
+    @pyqtProperty(float)
     def heightFromZero(self):
         return self._heightFromZero
 
@@ -187,7 +187,7 @@ class SVGElement(QQuickPaintedItem):
         self._heightFromZero = heightFromZero
 
 
-    @pyqtProperty(int)
+    @pyqtProperty(float)
     def heightToSlopeFromZero(self):
         return self._heightToSlopeFromZero
 
@@ -197,7 +197,7 @@ class SVGElement(QQuickPaintedItem):
         self._heightToSlopeFromZero = heightToSlopeFromZero
 
 
-    @pyqtProperty(int)
+    @pyqtProperty(float)
     def levelSlope(self):
         return self._levelSlope
 
