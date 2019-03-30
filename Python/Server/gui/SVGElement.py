@@ -12,6 +12,10 @@ class SVGElement(QQuickPaintedItem):
         super().__init__(self, parent)
         self.setOpaquePainting(False)
 
+        self._zeroHeight = 0
+        self._zeroDistance = 0
+        self._zeroSlope = 0
+
         self._boomSVG = svgutils.compose.SVG('./gui/svg/boom.svg')
         self._boomSin = [math.sin(math.radians(40)) for i in range(10)]
         self._boomCos = [math.cos(math.radians(40)) for i in range(10)]
@@ -122,6 +126,36 @@ class SVGElement(QQuickPaintedItem):
 
         svg = QSvgRenderer(imageStr)
         svg.render(painter)
+
+
+    @pyqtProperty(int)
+    def zeroHeight(self):
+        return self._zeroHeight
+
+
+    @zeroHeight.setter
+    def zeroHeight(self, zeroHeight):
+        self._zeroHeight = zeroHeight
+
+
+    @pyqtProperty(int)
+    def zeroDistance(self):
+        return self._zeroDistance
+
+
+    @zeroDistance.setter
+    def zeroDistance(self, zeroDistance):
+        self._zeroDistance = zeroDistance
+
+
+    @pyqtProperty(int)
+    def zeroSlope(self):
+        return self._zeroSlope
+
+
+    @zeroSlope.setter
+    def zeroSlope(self, zeroSlope):
+        self._zeroSlope = zeroSlope
 
 
     @pyqtProperty(int)
