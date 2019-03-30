@@ -110,10 +110,10 @@ class SVGElement(QQuickPaintedItem):
         if self._heightToSlopeFromZero != 0:
             levelHeight += (self._heightToSlopeFromZero * 10)
 
-        if self._zeroSlope != 0:
-            zeroA = (self.zeroSlope / 100) * 45
-            zeroA = round(math.degrees(zeroA), 1)
-            levelSVG.rotate(zeroA, 1000, 1000)
+        if self._levelSlope != 0:
+            levelA = (self.levelSlope / 100) * 45
+            levelA = round(math.degrees(levelA), 1)
+            levelSVG.rotate(levelA, 1000, 1000)
 
         levelSVG.move(-1000, round(levelHeight - 1000))
 
@@ -194,13 +194,13 @@ class SVGElement(QQuickPaintedItem):
 
 
     @pyqtProperty(int)
-    def zeroSlope(self):
-        return self._zeroSlope
+    def levelSlope(self):
+        return self._levelSlope
 
 
-    @zeroSlope.setter
-    def zeroSlope(self, zeroSlope):
-        self._zeroSlope = zeroSlope
+    @levelSlope.setter
+    def levelSlope(self, levelSlope):
+        self._levelSlope = levelSlope
 
 
     @pyqtSlot()
