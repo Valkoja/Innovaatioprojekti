@@ -12,10 +12,6 @@ class SVGElement(QQuickPaintedItem):
         super().__init__(self, parent)
         self.setOpaquePainting(False)
 
-        self._zeroHeight = 0
-        self._zeroDistance = 0
-        self._zeroSlope = 0
-
         self._boomSVG = svgutils.compose.SVG('./gui/svg/boom.svg')
         self._boomSin = [math.sin(math.radians(40)) for i in range(10)]
         self._boomCos = [math.cos(math.radians(40)) for i in range(10)]
@@ -30,6 +26,11 @@ class SVGElement(QQuickPaintedItem):
         self._bucketSin = [math.sin(math.radians(-150)) for i in range(10)]
         self._bucketCos = [math.cos(math.radians(-150)) for i in range(10)]
         self._bucketAngle = 0
+
+        self._zeroSVG = svgutils.compose.SVG('./gui/svg/level.svg')
+        self._zeroHeight = 0
+        self._zeroDistance = 0
+        self._zeroSlope = 0
 
 
     def calculateX(self, aAngle, aLength):
@@ -62,6 +63,7 @@ class SVGElement(QQuickPaintedItem):
         boomSVG = copy.deepcopy(self._boomSVG)
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
+        zeroSVG = copy.deepcopy(self._zeroSVG)
 
         # Boom
         self._boomSin.pop(0)
@@ -102,8 +104,22 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.rotate(bucketA, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
+        # Zero level
+        tipX = bucketX + self.calculateX(bucketA, 123)
+        tipY = bucketY + self.calculateY(bucketA, 123)
+
+        zeroX = tipX - (self._zeroDistance * 10) # Direction and multiplier to convert _zeroDistance -> pikselit unknown
+        zeroY = tipY - (self._zeroHeight * 10) # Multiplier unknown, direction should be ok...
+
+        if self._zeroHeight != self._zeroSlope:
+            zeroA = math.atan2(self._zeroDistance, (self._zeroSlope - self._zeroHeight))
+            zeroA = round(math.degrees(zeroA), 1)
+            zeroSVG.rotate(zeroA, 1000, 1000)
+
+        zeroSVG.move(zeroX - 1000, zeroY - 1000)
+
         # Combine pieces into one
-        compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
+        compose = svgutils.compose.Figure('1000px', '1000px', zeroSVG, boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
@@ -126,36 +142,6 @@ class SVGElement(QQuickPaintedItem):
 
         svg = QSvgRenderer(imageStr)
         svg.render(painter)
-
-
-    @pyqtProperty(int)
-    def zeroHeight(self):
-        return self._zeroHeight
-
-
-    @zeroHeight.setter
-    def zeroHeight(self, zeroHeight):
-        self._zeroHeight = zeroHeight
-
-
-    @pyqtProperty(int)
-    def zeroDistance(self):
-        return self._zeroDistance
-
-
-    @zeroDistance.setter
-    def zeroDistance(self, zeroDistance):
-        self._zeroDistance = zeroDistance
-
-
-    @pyqtProperty(int)
-    def zeroSlope(self):
-        return self._zeroSlope
-
-
-    @zeroSlope.setter
-    def zeroSlope(self, zeroSlope):
-        self._zeroSlope = zeroSlope
 
 
     @pyqtProperty(int)
@@ -186,6 +172,36 @@ class SVGElement(QQuickPaintedItem):
     @bucketAngle.setter
     def bucketAngle(self, bucketAngle):
         self._bucketAngle = bucketAngle
+
+
+    @pyqtProperty(int)
+    def zeroHeight(self):
+        return self._zeroHeight
+
+
+    @zeroHeight.setter
+    def zeroHeight(self, zeroHeight):
+        self._zeroHeight = zeroHeight
+
+
+    @pyqtProperty(int)
+    def zeroDistance(self):
+        return self._zeroDistance
+
+
+    @zeroDistance.setter
+    def zeroDistance(self, zeroDistance):
+        self._zeroDistance = zeroDistance
+
+
+    @pyqtProperty(int)
+    def zeroSlope(self):
+        return self._zeroSlope
+
+
+    @zeroSlope.setter
+    def zeroSlope(self, zeroSlope):
+        self._zeroSlope = zeroSlope
 
 
     @pyqtSlot()
