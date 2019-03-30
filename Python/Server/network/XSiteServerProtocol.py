@@ -76,8 +76,13 @@ class XSiteServerProtocol(WebSocketServerProtocol):
                         self._latencies.pop(0)
                     self._trackingOk = True
             elif msg['type'] == MessageType.command.value:
-                self.log.info('Command ' + msg['command'] + ' from ' + self._clientLibrary+ ' on ' + self._clientPlatform)
-                self.factory.stateObject.consumeCommand(msg['command'])
+                command = msg['command']
+                self.log.info('Command ' + command + ' from ' + self.peer)
+                if msg['argument']:
+                    argument = msg['argument']
+                    self.factory.stateObject.consumeCommand(command, argument)
+                else:
+                    self.factory.stateObject.consumeCommand(command)
             else:
                 print(msg)
                 self.log.critical('Unknown type of message')
