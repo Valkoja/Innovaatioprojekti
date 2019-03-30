@@ -106,17 +106,17 @@ class SVGElement(QQuickPaintedItem):
 
         # Zero level
         tipHeight = bucketY + self.calculateY(bucketA, 136)
-        zeroHeight = tipHeight - (self._heightFromZero * 100)
+        zeroHeight = tipHeight + (self._heightFromZero * 100)
 
         if self._heightToSlopeFromZero != 0:
-            zeroHeight -= (self._heightToSlopeFromZero * 100)
+            zeroHeight += (self._heightToSlopeFromZero * 100)
 
         if self._zeroSlope != 0:
             zeroA = (self.zeroSlope / 100) * 90
             zeroA = round(math.degrees(zeroA), 1)
             zeroSVG.rotate(zeroA, 1000, 1000)
 
-        zeroSVG.move(-1000, zeroY - 1000)
+        zeroSVG.move(-1000, zeroHeight - 1000)
 
         # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', zeroSVG, boomSVG, armSVG, bucketSVG)
