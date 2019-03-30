@@ -1,8 +1,8 @@
 from collections import namedtuple
-from struct import unpack
+from struct import unpack, pack
 
 
-class PDODecoder:
+class XSiteDecoder:
     def __init__(self):
         self._pdo_map = dict([
             ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward property overload'))),
@@ -14,6 +14,9 @@ class PDODecoder:
             ('0x18c', ('<4h', namedtuple('main_boom_orientation_quaternion', 'w x y z'))),
             ('0x18d', ('<4h', namedtuple('digging_arm_orientation_quaternion', 'w x y z'))),
             ('0x18e', ('<4h', namedtuple('bucket_orientation_quaternion', 'w x y z')))
+        ])
+        self._sdo_map = dict([
+            ('0x580', ('<3xf', namedtuple('slope', 'slope')))
         ])
         self._ok = 0
         self._failed = 0
@@ -31,7 +34,29 @@ class PDODecoder:
             msg = format[1]._make(unpack(format[0], data))
             self._ok = self._ok + 1
             if type(msg).__name__.endswith('quaternion'):
-                return format[1]._make([PDODecoder.qToFloat(msg.w, 14), PDODecoder.qToFloat(msg.x, 14), PDODecoder.qToFloat(msg.y, 14), PDODecoder.qToFloat(msg.z, 14)])
+                return format[1]._make([
+                    XSiteDecoder.qToFloat(msg.w, 14),
+                    XSiteDecoder.qToFloat(msg.x, 14),
+                    XSiteDecoder.qToFloat(msg.y, 14),
+                    XSiteDecoder.qToFloat(msg.z, 14)
+                ])
+            return msg
+        else:
+            self._failed = self._failed + 1
+            return False
+
+    # SDO: id+message, in bytes
+    def decode_sdo(self, id, data):
+        if not isinstance(id, int):
+            raise TypeError
+        if not (isinstance(data, bytes) or isinstance(data, bytearray)):
+            raise TypeError
+        padding = 4
+        _id = f"{id:#0{padding}x}".lower()
+        if _id in self._sdo_map:
+            format = self._sdo_map[_id]
+            msg = format[1]._make(unpack(format[0], data))
+            self._ok = self._ok + 1
             return msg
         else:
             self._failed = self._failed + 1
@@ -59,21 +84,51 @@ class PDODecoder:
 # Subindex of zero with bucket tip, 0x02
 # "Writing" 1 into that register
 
+# Message that sets 2D-features 'slope'
+# ID is SDO download channel for node 0
+# Data bytes:
+# SDO expedited download
+# Index of 2D-features, 0x2020
+# Subindex of zero with bucket tip, 0x01
+# "Writing" argument into that register
+
+# Message that reads 2D-features 'slope'
+# ID is SDO upload channel for node 0
+# Data bytes:
+# SDO expedited upload
+# Index of 2D-features, 0x2020
+# Subindex of zero with bucket tip, 0x01
+# "Reading" value of that register
+# Requires implementation of SDODecoder as well...
+
 class SDOEncoder:
     def __init__(self):
         self._sdo_map = dict([
             ('zero_with_bucket_tip',
              dict(format=namedtuple('zero_with_bucket_tip', 'id data'),
-                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x02, 0x01]))
+                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x02, 0x01])),
+            ('set_slope',
+             dict(format=namedtuple('set_slope', 'id data'),
+                  id=0x580, data=[0b00101111, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
+            ('get_slope',
+             dict(format=namedtuple('get_slope', 'id data'),
+                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x01, 0x01])),
         ])
         self._ok = 0
         self._failed = 0
 
-    def encode_sdo(self, command):
+    def encode_sdo(self, command, argument=None):
         if command in self._sdo_map:
-            sdo = self._sdo_map[command]
+            fmt = self._sdo_map[command]
+            if argument:
+                data = fmt['data'].copy()
+                data.extend(fmt['input_transform'](argument))
+                sdo = fmt['format'](fmt['id'], data)
+            else:
+                data = fmt['data']
+                sdo = fmt['format'](fmt['id'], data)
             self._ok = self._ok + 1
-            return sdo['format'](sdo['id'], sdo['data'])
+            return sdo
         else:
             self._failed = self._failed + 1
             return False
