@@ -110,6 +110,7 @@ class SVGElement(QQuickPaintedItem):
         self._levelList.append(self._heightFromZero * 100)
 
         levelHeight = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
+        # levelHeight = bucketY + self.calculateY(bucketA, 136) + self._heightFromZero * 100
 
         # if self._heightToSlopeFromZero != 0:
         #     levelHeight += (self._heightToSlopeFromZero * 100)
@@ -119,7 +120,7 @@ class SVGElement(QQuickPaintedItem):
             levelA = round(math.degrees(levelA), 1)
             levelSVG.rotate(levelA, 1000, 1000)
 
-        levelSVG.move(-1000, round(levelHeight - 1000))
+        levelSVG.move(-1000, levelHeight - 1000)
 
         # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
