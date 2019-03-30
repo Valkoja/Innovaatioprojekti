@@ -28,9 +28,9 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = 0
 
         self._zeroSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        self._zeroHeight = 0
-        self._zeroDistance = 0
-        self._zeroSlope = 0
+        self._zeroSlopeAngle = 0
+        self._heightFromZero = 0
+        self._heightToSlopeFromZero = 0
 
 
     def calculateX(self, aAngle, aLength):
@@ -105,18 +105,18 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level
-        tipX = bucketX + self.calculateX(bucketA, 123)
-        tipY = bucketY + self.calculateY(bucketA, 123)
+        tipHeight = bucketY + self.calculateY(bucketA, 136)
+        zeroHeight = tipHeight - (self._heightFromZero * 100)
 
-        zeroX = tipX - (self._zeroDistance * 10) # Direction and multiplier to convert _zeroDistance -> pikselit unknown
-        zeroY = tipY - (self._zeroHeight * 10) # Multiplier unknown, direction should be ok...
+        if self._heightToSlopeFromZero != 0:
+            zeroHeight -= (self._heightToSlopeFromZero * 100)
 
-        if self._zeroHeight != self._zeroSlope:
-            zeroA = math.atan2(self._zeroDistance, (self._zeroSlope - self._zeroHeight))
+        if self._zeroSlope != 0:
+            zeroA = (self.zeroSlope / 100) * 90
             zeroA = round(math.degrees(zeroA), 1)
             zeroSVG.rotate(zeroA, 1000, 1000)
 
-        zeroSVG.move(zeroX - 1000, zeroY - 1000)
+        zeroSVG.move(-1000, zeroY - 1000)
 
         # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', zeroSVG, boomSVG, armSVG, bucketSVG)
@@ -175,23 +175,23 @@ class SVGElement(QQuickPaintedItem):
 
 
     @pyqtProperty(int)
-    def zeroHeight(self):
-        return self._zeroHeight
+    def heightFromZero(self):
+        return self._heightFromZero
 
 
-    @zeroHeight.setter
-    def zeroHeight(self, zeroHeight):
-        self._zeroHeight = zeroHeight
+    @heightFromZero.setter
+    def heightFromZero(self, heightFromZero):
+        self._heightFromZero = heightFromZero
 
 
     @pyqtProperty(int)
-    def zeroDistance(self):
-        return self._zeroDistance
+    def heightToSlopeFromZero(self):
+        return self._heightToSlopeFromZero
 
 
-    @zeroDistance.setter
-    def zeroDistance(self, zeroDistance):
-        self._zeroDistance = zeroDistance
+    @heightToSlopeFromZero.setter
+    def heightToSlopeFromZero(self, heightToSlopeFromZero):
+        self._heightToSlopeFromZero = heightToSlopeFromZero
 
 
     @pyqtProperty(int)

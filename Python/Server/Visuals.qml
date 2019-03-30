@@ -23,9 +23,9 @@ ColumnLayout {
         armAngle: modelWrapper.diggingArmAngleQuaternion;
         bucketAngle: modelWrapper.bucketAngleQuaternion;
 
-        zeroHeight: modelWrapper.heightFromZero;
-        zeroDistance: modelWrapper.distanceToZero;
-        zeroSlope: modelWrapper.heightToSlopeFromZero;
+        heightFromZero: modelWrapper.heightFromZero;
+        heightToSlopeFromZero: modelWrapper.heightToSlopeFromZero;
+        zeroSlope: 0;
 
         Component.onCompleted: {
             modelWrapper.changed.connect(reDraw)
