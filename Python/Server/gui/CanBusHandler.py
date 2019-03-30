@@ -25,12 +25,11 @@ class CanBusWrapper(QObject):
 class CanBusHandler(QObject):
     log = Logger()
 
-    def __init__(self, adapter, reactor, callback):
+    def __init__(self, adapter, callback):
         super().__init__()
         self._adapter = adapter
         self._available = []
         self._bus = ''
-        self._reactor = reactor
         self._callback = callback
         self._state = CanAdapterState.idle
         self._errorMessage = ''
@@ -44,7 +43,7 @@ class CanBusHandler(QObject):
         self._available.clear()
         for bus in available:
             self.available.append(CanBusWrapper(bus))
-        self.log('Scan done')
+        self.log.info('Scan done')
         # self._bus = self._available[0]
         self._state = CanAdapterState.ready
         self.busChanged.emit()
@@ -84,7 +83,7 @@ class CanBusHandler(QObject):
             self.stateChanged.emit()
             print(Template('Opening bus $bus').substitute(bus=self._bus))
             try:
-                self._adapter.openBus(self._bus, self._reactor, self.update)
+                self._adapter.openBus(self.update)
             except Exception as e:
                 print("Error opening can")
                 self._state = CanAdapterState.error
