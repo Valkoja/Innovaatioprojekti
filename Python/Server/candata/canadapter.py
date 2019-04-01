@@ -106,7 +106,7 @@ class CanAdapter():
             print("Problem sending NMT-open")
             raise e
 
-        decoder = PDODecoder()
+        decoder = XSiteDecoder()
 
         def getMessages():
             while True:
