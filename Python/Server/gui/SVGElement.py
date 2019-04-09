@@ -28,10 +28,10 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = 0
 
         self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        # self._levelList = [0 for i in range(10)]
-        self._levelSlope = 0
+        self._slopeAngle = 0
         self._heightFromZero = 0
-        self._heightToSlopeFromZero = 0
+        self._heightFromSlope = 0
+        self._distanceFromZero = 0
 
 
     def calculateX(self, aAngle, aLength):
@@ -186,23 +186,33 @@ class SVGElement(QQuickPaintedItem):
 
 
     @pyqtProperty(float)
-    def heightToSlopeFromZero(self):
-        return self._heightToSlopeFromZero
+    def heightFromSlope(self):
+        return self._heightFromSlope
 
 
-    @heightToSlopeFromZero.setter
-    def heightToSlopeFromZero(self, heightToSlopeFromZero):
-        self._heightToSlopeFromZero = heightToSlopeFromZero * 100 # Meters to centimeters
+    @heightFromSlope.setter
+    def heightFromSlope(self, heightFromSlope):
+        self._heightFromSlope = heightFromSlope * 100 # Meters to centimeters
 
 
     @pyqtProperty(float)
-    def levelSlope(self):
-        return self._levelSlope
+    def distanceFromZero(self):
+        return self._distanceFromZero
 
 
-    @levelSlope.setter
-    def levelSlope(self, levelSlope):
-        self._levelSlope = levelSlope
+    @distanceFromZero.setter
+    def distanceFromZero(self, distanceFromZero):
+        self._distanceFromZero = distanceFromZero * 100 # Meters to centimeters
+
+
+    @pyqtProperty(float)
+    def slopePercent(self):
+        return (self._slopeAngle / 90) * 45
+
+
+    @slopePercent.setter
+    def slopePercent(self, slopePercent):
+        self._slopeAngle = (slopePercent / 45) * 90
 
 
     @pyqtSlot()
