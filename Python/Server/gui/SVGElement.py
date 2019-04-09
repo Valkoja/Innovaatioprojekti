@@ -106,18 +106,10 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level
-        # self._levelList.pop(0)
-        # self._levelList.append(self._heightToSlopeFromZero + self._heightFromZero)
+        levelX = bucketX + self.calculateX(bucketA, 136) + self._distanceFromZero
+        levelY = bucketY + self.calculateY(bucketA, 136) + self._heightFromZero
 
-        levelX = bucketX + self.calculateX(bucketA, 136)
-        levelY = bucketY + self.calculateY(bucketA, 136) + self._heightToSlopeFromZero + self._heightFromZero
-        # levelY = bucketY + self.calculateY(bucketA, 136) + sum(self._levelList) / 10
-
-        if self._levelSlope != 0:
-            levelA = (self._levelSlope / 100) * 45
-            levelA = round(math.degrees(levelA), 1)
-            levelSVG.rotate(levelA, 1000, 1000)
-
+        levelSVG.rotate(self._slopeAngle, 1000, 1000)
         levelSVG.move(levelX - 1000, levelY - 1000)
 
         # Combine pieces into one
@@ -126,8 +118,8 @@ class SVGElement(QQuickPaintedItem):
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
             scale = 0.6
-            moveX = -200 # Despite scale, same as in win / linux
-            moveY = -200 # pending further investigation
+            moveX = -200 # Despite different scale, same as in
+            moveY = -200 # win / linux, pending further investigation
         else:
             scale = 1.2
             moveX = -200
@@ -207,12 +199,12 @@ class SVGElement(QQuickPaintedItem):
 
     @pyqtProperty(float)
     def slopePercent(self):
-        return (self._slopeAngle / 90) * 45
+        return (self._slopeAngle / 45) * 100
 
 
     @slopePercent.setter
     def slopePercent(self, slopePercent):
-        self._slopeAngle = (slopePercent / 45) * 90
+        self._slopeAngle = round((slopePercent / 100) * 45, 1)
 
 
     @pyqtSlot()
