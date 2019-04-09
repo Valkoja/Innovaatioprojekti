@@ -169,42 +169,50 @@ class SVGElement(QQuickPaintedItem):
 
     @pyqtProperty(float)
     def heightFromZero(self):
-        return self._heightFromZero
+        # Centimeters back to meters
+        return self._heightFromZero / 100
 
 
     @heightFromZero.setter
     def heightFromZero(self, heightFromZero):
-        self._heightFromZero = heightFromZero * 100 # Meters to centimeters
+        # Meters to centimeters
+        self._heightFromZero = heightFromZero * 100
 
 
     @pyqtProperty(float)
     def heightFromSlope(self):
-        return self._heightFromSlope
+        # Centimeters back to meters
+        return self._heightFromSlope / 100
 
 
     @heightFromSlope.setter
     def heightFromSlope(self, heightFromSlope):
-        self._heightFromSlope = heightFromSlope * 100 # Meters to centimeters
+        # Meters to centimeters
+        self._heightFromSlope = heightFromSlope * 100
 
 
     @pyqtProperty(float)
     def distanceFromZero(self):
-        return self._distanceFromZero
+        # Centimeters back to meters
+        return self._distanceFromZero / 100
 
 
     @distanceFromZero.setter
     def distanceFromZero(self, distanceFromZero):
-        self._distanceFromZero = distanceFromZero * 100 # Meters to centimeters
+        # Meters to centimeters
+        self._distanceFromZero = distanceFromZero * 100
 
 
     @pyqtProperty(float)
     def slopePercent(self):
+        # Degrees back to percents, 45 deg is 100 %
         return (self._slopeAngle / 45) * 100
 
 
     @slopePercent.setter
     def slopePercent(self, slopePercent):
-        self._slopeAngle = round((slopePercent / 100) * 45, 1)
+        # Percents to degrees, 100 % is 45 deg
+        self._slopeAngle = (slopePercent / 100) * 45
 
 
     @pyqtSlot()
