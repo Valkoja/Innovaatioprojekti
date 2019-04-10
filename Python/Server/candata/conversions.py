@@ -16,7 +16,7 @@ class XSiteDecoder:
             ('0x18e', ('<4h', namedtuple('bucket_orientation_quaternion', 'w x y z')))
         ])
         self._sdo_map = dict([
-            ('0x580', ('<3xf', namedtuple('slope', 'slope')))
+            ('0x60A', ('<3xf', namedtuple('slope', 'slope')))
         ])
         self._ok = 0
         self._failed = 0
@@ -106,13 +106,13 @@ class SDOEncoder:
         self._sdo_map = dict([
             ('zero_with_bucket_tip',
              dict(format=namedtuple('zero_with_bucket_tip', 'id data'),
-                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x02, 0x01])),
+                  id=0x60A, data=[0b00101111, 0x20, 0x20, 0x02, 0x01, 0x0, 0x0, 0x0])),
             ('set_slope',
              dict(format=namedtuple('set_slope', 'id data'),
-                  id=0x580, data=[0b00101111, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
+                  id=0x58A, data=[0b00101111, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
             ('get_slope',
              dict(format=namedtuple('get_slope', 'id data'),
-                  id=0x600, data=[0b00101111, 0x20, 0x20, 0x01, 0x01])),
+                id=0x60A, data=[0b01000000, 0x20, 0x20, 0x01, 0x0, 0x0, 0x0, 0x0])),
         ])
         self._ok = 0
         self._failed = 0
