@@ -112,7 +112,7 @@ class SDOEncoder:
                   id=0x60A, data=[0b00101111, 0x20, 0x20, 0x02, 0x01, 0x0, 0x0, 0x0])),
             ('set_slope',
              dict(format=namedtuple('set_slope', 'id data'),
-                  id=0x58A, data=[0b00101111, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
+                  id=0x58A, data=[0b00100011, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
             ('get_slope',
              dict(format=namedtuple('get_slope', 'id data'),
                 id=0x60A, data=[0b01000000, 0x20, 0x20, 0x01, 0x0, 0x0, 0x0, 0x0])),
