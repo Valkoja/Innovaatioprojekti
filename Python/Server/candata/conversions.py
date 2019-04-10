@@ -34,7 +34,7 @@ class XSiteDecoder:
             msg = msgformat[1]._make(unpack(msgformat[0], data))
             self._ok = self._ok + 1
             if type(msg).__name__.endswith('quaternion'):
-                return format[1]._make([
+                return msgformat[1]._make([
                     XSiteDecoder.qToFloat(msg.w, 14),
                     XSiteDecoder.qToFloat(msg.x, 14),
                     XSiteDecoder.qToFloat(msg.y, 14),
@@ -52,14 +52,13 @@ class XSiteDecoder:
         if not (isinstance(data, bytes) or isinstance(data, bytearray)):
             raise TypeError
         padding = 4
-        _id = f"{id:#0{padding}x}".lower()
-        if _id == '0x60A':
-            sdoformat = '<hc'
-            sdoaddress = namedtuple('sdo', 'index subindex')._make(unpack(self._sdo_object_fields, data))
+        if id == 1418:
+            sdoformat = '<hb'
+            sdoaddress = namedtuple('sdo', 'index subindex')._make(unpack(sdoformat, data[1:4]))
             sdoid = hex(sdoaddress.index) + hex(sdoaddress.subindex)
             if sdoid in self._sdo_map:
                 msgformat = self._sdo_map[sdoid]
-                msg = msgformat[1]._make(unpack(msgformat[0], data))
+                msg = msgformat[1]._make(unpack(msgformat[0], data[-4:]))
                 self._ok = self._ok + 1
                 return msg
             else:
