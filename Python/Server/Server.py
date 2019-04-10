@@ -1,28 +1,19 @@
 import sys
 
-from PyQt5.QtCore import QObject, QUrl, pyqtSlot, pyqtSignal, pyqtProperty
+from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
-from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
-from twisted.logger import Logger, globalLogBeginner, LimitedHistoryLogObserver, textFileLogObserver
-from network.TickServer import BroadcastServerProtocol, BroadcastServerFactory
-from autobahn.twisted.websocket import WebSocketServerFactory, \
-    WebSocketServerProtocol, \
-    listenWS
+from twisted.logger import Logger, globalLogBeginner, FilteringLogObserver, LogLevelFilterPredicate, LogLevel
 
-from candata.logplayer import LogPlayer
-from candata.MachineState import MachineState
-from candata.conversions import PDODecoder
-from candata.canadapter import CanAdapter
+from network import XSiteBroadcastServerFactory, XSiteServerProtocol
+from autobahn.twisted.websocket import listenWS
 
-from gui.AppLogHandler import AppLogHandler
-from gui.LogPlayerHandler import LogPlayerHandler
-from gui.ModelWrapper import ModelWrapper
-from gui.Networking import Networking
-from gui.ClientList import ClientListModel, ClientController, MockClient, ClientWrapper
-from gui.CanBusHandler import CanBusHandler, CanBusWrapper
-from gui.SVGElement import SVGElement
+from candata import CanAdapter, MachineState
+
+from gui import AppLogHandler, CanBusHandler, CanBusWrapper, ClientListModel, ClientController, LogPlayerHandler, \
+    ModelWrapper, Networking, SVGElement
+
 
 if __name__ == '__main__':
     # Force material theme
@@ -68,17 +59,19 @@ if __name__ == '__main__':
 
     # Init Twisted logging
     appLogHandler = AppLogHandler()
-    observers = [appLogHandler.appendEvent]
+    # observers = [appLogHandler.appendEvent]
     # Comment out the line above and uncomment the one below to output log to stdout
     # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
     log = Logger()
-    globalLogBeginner.beginLoggingTo(observers)
+    infoPredicate = LogLevelFilterPredicate(LogLevel.info)
+    logfilter = FilteringLogObserver(appLogHandler.appendEvent, predicates=[infoPredicate])
+    globalLogBeginner.beginLoggingTo([logfilter])
     engine.rootContext().setContextProperty('appLogHandler', appLogHandler)
     
     # Disable server until we rework the protocol
-    ServerFactory = BroadcastServerFactory
+    ServerFactory = XSiteBroadcastServerFactory
     factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: clientListModel.addClient(client), lambda client: clientListModel.removeClient(client))
-    factory.protocol = BroadcastServerProtocol
+    factory.protocol = XSiteServerProtocol
     listenWS(factory)
 
     # Load main QML file
