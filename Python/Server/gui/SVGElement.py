@@ -27,6 +27,12 @@ class SVGElement(QQuickPaintedItem):
         self._bucketCos = [math.cos(math.radians(-150)) for i in range(10)]
         self._bucketAngle = 0
 
+        self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
+        self._slopeAngle = 0
+        self._heightFromZero = 0
+        self._heightFromSlope = 0
+        self._distanceFromZero = 0
+
 
     def calculateX(self, aAngle, aLength):
         x = math.floor(math.fabs(math.cos(math.radians(aAngle)) * aLength))
@@ -58,6 +64,7 @@ class SVGElement(QQuickPaintedItem):
         boomSVG = copy.deepcopy(self._boomSVG)
         armSVG = copy.deepcopy(self._armSVG)
         bucketSVG = copy.deepcopy(self._bucketSVG)
+        levelSVG = copy.deepcopy(self._levelSVG)
 
         # Boom
         self._boomSin.pop(0)
@@ -98,15 +105,21 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.rotate(bucketA, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
+        # Zero level
+        levelX = bucketX + self.calculateX(bucketA, 136) + self._distanceFromZero
+        levelY = bucketY + self.calculateY(bucketA, 136) + self._heightFromZero
+
+        levelSVG.rotate(self._slopeAngle, 1000, 1000)
+        levelSVG.move(levelX - 1000, levelY - 1000)
+
         # Combine pieces into one
-        compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
+        compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
             scale = 0.6
-            # For some reason, these values have to be the same as in win/linux, requires further investigation
-            moveX = -200
-            moveY = -200
+            moveX = -200 # Despite different scale, same as in
+            moveY = -200 # win / linux, pending further investigation
         else:
             scale = 1.2
             moveX = -200
@@ -152,6 +165,54 @@ class SVGElement(QQuickPaintedItem):
     @bucketAngle.setter
     def bucketAngle(self, bucketAngle):
         self._bucketAngle = bucketAngle
+
+
+    @pyqtProperty(float)
+    def heightFromZero(self):
+        # Centimeters back to meters
+        return self._heightFromZero / 100
+
+
+    @heightFromZero.setter
+    def heightFromZero(self, heightFromZero):
+        # Meters to centimeters
+        self._heightFromZero = heightFromZero * 100
+
+
+    @pyqtProperty(float)
+    def heightFromSlope(self):
+        # Centimeters back to meters
+        return self._heightFromSlope / 100
+
+
+    @heightFromSlope.setter
+    def heightFromSlope(self, heightFromSlope):
+        # Meters to centimeters
+        self._heightFromSlope = heightFromSlope * 100
+
+
+    @pyqtProperty(float)
+    def distanceFromZero(self):
+        # Centimeters back to meters
+        return self._distanceFromZero / 100
+
+
+    @distanceFromZero.setter
+    def distanceFromZero(self, distanceFromZero):
+        # Meters to centimeters
+        self._distanceFromZero = distanceFromZero * 100
+
+
+    @pyqtProperty(float)
+    def slopePercent(self):
+        # Degrees back to percents, 45 deg is 100 %
+        return (self._slopeAngle / 45) * 100
+
+
+    @slopePercent.setter
+    def slopePercent(self, slopePercent):
+        # Percents to degrees, 100 % is 45 deg
+        self._slopeAngle = (slopePercent / 100) * 45
 
 
     @pyqtSlot()
