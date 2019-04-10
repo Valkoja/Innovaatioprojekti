@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 
 ColumnLayout {
     width: 275
+
     function round(x) {
         return parseFloat(x).toPrecision(5);
     }
@@ -194,7 +195,9 @@ ColumnLayout {
             Layout.leftMargin: 8
             Layout.rightMargin: 8
             text: "Set"
+            property double initialSlope
             onClicked: {
+                initialSlope: modelWrapper.slope
                 slopeDialog.open()
             }
             Dialog {
@@ -207,12 +210,13 @@ ColumnLayout {
                     Item {
                         ColumnLayout {
                             Text {
-                                text: "Slope: " + round(modelWrapper.slope)
+                                text: "Slope: " + setSlope.initialSlope
                                 elide: Text.ElideRight
                             }
                             TextField {
                                 id: slopeInput
-                                text: modelWrapper.slope
+                                text: setSlope.initialSlope
+                                validator: DoubleValidator {bottom: -45.0; decimals: 2; top: 45.0;}
                             }
                         }
                     }
@@ -224,6 +228,7 @@ ColumnLayout {
                         }
                         Button {
                             text: "Set"
+                            enabled: slopeInput.acceptableInput
                             DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
                             onClicked: modelWrapper.setSlope(slopeInput.text)
                         }
