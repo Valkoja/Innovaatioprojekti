@@ -16,7 +16,7 @@ class XSiteDecoder:
             ('0x18e', ('<4h', namedtuple('bucket_orientation_quaternion', 'w x y z')))
         ])
         self._sdo_map = dict([
-            ('0x60A', ('<3xf', namedtuple('slope', 'slope')))
+            ('0x20200x1', ('<f', namedtuple('slope', 'slope')))
         ])
         self._ok = 0
         self._failed = 0
@@ -30,8 +30,8 @@ class XSiteDecoder:
         padding = 4
         _id = f"{id:#0{padding}x}".lower()
         if _id in self._pdo_map:
-            format = self._pdo_map[_id]
-            msg = format[1]._make(unpack(format[0], data))
+            msgformat = self._pdo_map[_id]
+            msg = msgformat[1]._make(unpack(msgformat[0], data))
             self._ok = self._ok + 1
             if type(msg).__name__.endswith('quaternion'):
                 return format[1]._make([
@@ -53,14 +53,18 @@ class XSiteDecoder:
             raise TypeError
         padding = 4
         _id = f"{id:#0{padding}x}".lower()
-        if _id in self._sdo_map:
-            format = self._sdo_map[_id]
-            msg = format[1]._make(unpack(format[0], data))
-            self._ok = self._ok + 1
-            return msg
-        else:
-            self._failed = self._failed + 1
-            return False
+        if _id == '0x60A':
+            sdoformat = '<hc'
+            sdoaddress = namedtuple('sdo', 'index subindex')._make(unpack(self._sdo_object_fields, data))
+            sdoid = hex(sdoaddress.index) + hex(sdoaddress.subindex)
+            if sdoid in self._sdo_map:
+                msgformat = self._sdo_map[sdoid]
+                msg = msgformat[1]._make(unpack(msgformat[0], data))
+                self._ok = self._ok + 1
+                return msg
+            else:
+                self._failed = self._failed + 1
+                return False
 
     @classmethod
     def qToFloat(cls, q, fraction):
