@@ -147,7 +147,7 @@ class ModelWrapper(QObject):
     @staticmethod
     def toEulerXAngle(w, x, y, z):
         # roll (x-axis rotation)
-        sinr_cosp = +2.0 * w * x + y * z
-        cosr_cosp = +1.0 - 2.0 * x * x + y * y
+        sinr_cosp = +2.0 * (w * x + y * z)
+        cosr_cosp = +1.0 - 2.0 * (x * x + y * y)
         roll = math.atan2(sinr_cosp, cosr_cosp)
         return math.degrees(roll)
