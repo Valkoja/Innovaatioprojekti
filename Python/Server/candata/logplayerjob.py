@@ -1,9 +1,8 @@
-import time
 import datetime
 from pathlib import Path
-import sys
-from candata.conversions import PDODecoder
+from candata.conversions import XSiteDecoder
 from sys import platform
+
 
 class LogPlayerJob():
     def __init__(self, file, reactor, callback, finished, ignoreFailed=True):
@@ -23,7 +22,7 @@ class LogPlayerJob():
     def start(self):
         recorded_start_time = None
         last_timestamp = 0
-        decoder = PDODecoder()
+        decoder = XSiteDecoder()
         file_in = Path(self._file)
         if platform == 'win32':
             file_in = str(file_in)[1:]
@@ -45,9 +44,9 @@ class LogPlayerJob():
 
                 last_timestamp = timestamp
 
-                id = fields[3][2:]
+                msg_id = fields[3][2:]
                 data = ''.join(fields[6:-1])
-                message = decoder.decode_pdo(int(id, 16), bytes.fromhex(data))
+                message = decoder.decode_pdo(int(msg_id, 16), bytes.fromhex(data))
 
                 if message:
                     self._callIDs.append(self._reactor.callLater(remaining_gap.total_seconds(), self.onMessage, message))

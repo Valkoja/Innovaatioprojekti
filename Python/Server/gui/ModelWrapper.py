@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 from PyQt5.QtGui import QQuaternion
 import math
 
+
 class ModelWrapper(QObject):
     def __init__(self, stateObject):
         super().__init__()
@@ -110,6 +111,9 @@ class ModelWrapper(QObject):
         else:
             return 0
 
+    def _slope(self):
+        return self.stateObject.getState()['slope']
+
     def update(self):
         self.changed.emit()
 
@@ -130,19 +134,20 @@ class ModelWrapper(QObject):
     heightFromZero = pyqtProperty(float, _heightFromZero, notify=changed)
     distanceToZero = pyqtProperty(float, _distanceToZero, notify=changed)
     heightToSlopeFromZero = pyqtProperty(float, _heightToSlopeFromZero, notify=changed)
+    slope = pyqtProperty(float, _slope, notify=changed)
 
-    def toEulerXAngle(self, w, x, y, z):
+    @pyqtSlot(float)
+    def setSlope(self, slope):
+        self.stateObject.consumeCommand('set_slope', slope)
+
+    @pyqtSlot()
+    def getSlope(self,):
+        self.stateObject.consumeCommand('get_slope')
+
+    @staticmethod
+    def toEulerXAngle(w, x, y, z):
         # roll (x-axis rotation)
         sinr_cosp = +2.0 * (w * x + y * z)
         cosr_cosp = +1.0 - 2.0 * (x * x + y * y)
         roll = math.atan2(sinr_cosp, cosr_cosp)
         return math.degrees(roll)
-
-        # sinp = +2.0 * (w * y - z * x)
-
-        # if abs(sinp) >= 1:
-        #     pitch = math.copysign(pi / 2, sinp)
-        # else:
-        #     pitch = math.asin(sinp)
-
-        # return math.degrees(pitch)
