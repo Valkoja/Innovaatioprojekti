@@ -1,4 +1,5 @@
 import React from 'react';
+import Handler from './handler';
 
 class Wrapper extends React.Component
 {
@@ -8,7 +9,7 @@ class Wrapper extends React.Component
 
     render() {
         return (
-            <div>Wrapper</div>
+            <Handler />
         );
     }
 }
