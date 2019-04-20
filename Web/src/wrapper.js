@@ -9,7 +9,7 @@ class Wrapper extends React.Component
 
     render() {
         return (
-            <Handler />
+            <Handler ip={'10.0.0.184'} />
         );
     }
 }
