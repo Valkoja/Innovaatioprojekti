@@ -72,7 +72,7 @@ class Handler extends React.Component
         let cosr_cosp = +1.0 - 2.0 * (aQuart.x * aQuart.x + aQuart.y * aQuart.y)
         let roll = Math.atan2(sinr_cosp, cosr_cosp)
 
-        return roll * (180 / Math.PI);
+        return Math.round( roll * (180 / Math.PI) * 10 ) / 10;
     }
 
     handleOpen() {
