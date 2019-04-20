@@ -9,8 +9,31 @@ class Handler extends React.Component
     constructor(props) {
         super(props);
 
-        this.state = {response: null};
         this.socket = null;
+        this.state = {
+            'response': {
+                'limitWarnings': {
+                    'left': false,
+                    'right': false,
+                    'upper': false,
+                    'lower': false,
+                    'forward': false,
+                    'property': false,
+                    'overload': false},
+                'zeroLevel': {
+                    'height_from_zero': 0.0,
+                    'distance_to_zero': 0.0,
+                    'height_to_slope_from_zero': 0.0},
+                'anglesEuler': {
+                    'boom': 0.0,
+                    'arm': 0.0,
+                    'bucket': 0.0},
+                'anglesQuaternion': {
+                    'boom': 0.0,
+                    'arm': 0.0,
+                    'bucket': 0.0}
+            }
+        };
 
         this.handleData = this.handleData.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
@@ -19,21 +42,20 @@ class Handler extends React.Component
 
     handleData(aResponse) {
         try {
-            let json = JSON.parse(aResponse);
+            let response = JSON.parse(aResponse);
 
-            if (json.hasOwnProperty('state')) {
+            if (response.hasOwnProperty('state')) {
                 let result = {
-                    'limitWarnings': json.state['limitWarnings'],
-                    'zeroLevel': json.state['zeroLevel'],
+                    'limitWarnings': response.state['limitWarnings'],
+                    'zeroLevel': response.state['zeroLevel'],
                     'anglesEuler': {
-                        'boom': json.state['angles']['main_boom'] / 10,
-                        'arm': json.state['angles']['digging_arm'] / 10,
-                        'bucket': json.state['angles']['bucket'] / 10},
+                        'boom': response.state['angles']['main_boom'] / 10,
+                        'arm': response.state['angles']['digging_arm'] / 10,
+                        'bucket': response.state['angles']['bucket'] / 10},
                     'anglesQuaternion': {
-                        'boom': this.convertAngle(json.state['quaternions']['main_boom_orientation']),
-                        'arm': this.convertAngle(json.state['quaternions']['digging_arm_orientation']),
-                        'bucket': this.convertAngle(json.state['quaternions']['bucket_orientation'])}
-
+                        'boom': this.convertAngle(response.state['quaternions']['main_boom_orientation']),
+                        'arm': this.convertAngle(response.state['quaternions']['digging_arm_orientation']),
+                        'bucket': this.convertAngle(response.state['quaternions']['bucket_orientation'])}
                 };
 
                 this.setState({'response': result});
@@ -42,6 +64,43 @@ class Handler extends React.Component
         catch(err) {
             alert(err);
         }
+
+    }
+
+    convertAngle(aQuart) {
+        let sinr_cosp = +2.0 * (aQuart.w * aQuart.x + aQuart.y * aQuart.z)
+        let cosr_cosp = +1.0 - 2.0 * (aQuart.x * aQuart.x + aQuart.y * aQuart.y)
+        let roll = Math.atan2(sinr_cosp, cosr_cosp)
+
+        return roll * (180 / Math.PI);
+    }
+
+    handleOpen() {
+        this.socket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
+    }
+
+    handleClose() {
+
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <Websocket url = {'ws://' + this.props.ip + ':9000'}
+                    onMessage = {this.handleData}
+                    onOpen = {this.handleOpen}
+                    onClose = {this.handleClose}
+                    reconnect = {true}
+                    debug = {true}
+                    ref = {(aSocket) => { this.socket = aSocket; }} />
+                <Telemetry response = {this.state.response} />
+                <Visuals response = {this.state.response} />
+            </React.Fragment>
+        );
+    }
+}
+
+export default Handler;
 
 /*
         {
@@ -102,42 +161,3 @@ class Handler extends React.Component
             "tickRate": 200.0
         }
 */
-    }
-
-    convertAngle(aQuart) {
-        sinr_cosp = +2.0 * (aQuart.w * aQuart.x + aQuart.y * aQuart.z)
-        cosr_cosp = +1.0 - 2.0 * (aQuart.x * aQuart.x + aQuart.y * aQuart.y)
-        roll = math.atan2(sinr_cosp, cosr_cosp)
-
-        return math.degrees(roll)
-    }
-
-    handleOpen() {
-        // console.log('handleOpen');
-        this.socket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
-    }
-
-    handleClose() {
-
-    }
-
-    render() {
-        return (
-            <React.Fragment>
-                <Websocket url = {'ws://' + this.props.ip + ':9000'}
-                    onMessage = {this.handleData}
-                    onOpen = {this.handleOpen}
-                    onClose = {this.handleClose}
-                    reconnect = {true}
-                    debug = {true}
-                    ref = {(aSocket) => { this.socket = aSocket; }} />
-                <Telemetry response = {this.state.response} />
-                <Visuals response = {this.state.response} />
-            </React.Fragment>
-        );
-    }
-}
-
-// ref = {(aWebsocket) => { this.refWebSocket = aWebsocket; }} />
-
-export default Handler;
