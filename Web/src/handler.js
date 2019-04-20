@@ -19,12 +19,30 @@ class Handler extends React.Component
 
     handleData(aResponse) {
         try {
-            let resObj = JSON.parse(aResponse);
-            this.setState({'response': resObj.state});
+            let json = JSON.parse(aResponse);
+
+            if (json.hasOwnProperty('state')) {
+                let result = {
+                    'limitWarnings': json.state['limitWarnings'],
+                    'zeroLevel': json.state['zeroLevel'],
+                    'anglesEuler': {
+                        'boom': json.state['angles']['main_boom'] / 10,
+                        'arm': json.state['angles']['digging_arm'] / 10,
+                        'bucket': json.state['angles']['bucket'] / 10},
+                    'anglesQuaternion': {
+                        'boom': this.convertAngle(json.state['quaternions']['main_boom_orientation']),
+                        'arm': this.convertAngle(json.state['quaternions']['digging_arm_orientation']),
+                        'bucket': this.convertAngle(json.state['quaternions']['bucket_orientation'])}
+
+                };
+
+                this.setState({'response': result});
+            };
         }
         catch(err) {
             alert(err);
         }
+
 /*
         {
             "id": 69,
@@ -84,19 +102,18 @@ class Handler extends React.Component
             "tickRate": 200.0
         }
 */
+    }
 
+    convertAngle(aQuart) {
+        sinr_cosp = +2.0 * (aQuart.w * aQuart.x + aQuart.y * aQuart.z)
+        cosr_cosp = +1.0 - 2.0 * (aQuart.x * aQuart.x + aQuart.y * aQuart.y)
+        roll = math.atan2(sinr_cosp, cosr_cosp)
 
-        
-
-        // console.log('wat');
-        // let result = JSON.parse(data);
-        // this.setState({count: this.state.count + result.movement});
-        // console.log(data);
-        // console.log(aResponse);
+        return math.degrees(roll)
     }
 
     handleOpen() {
-        console.log('handleOpen');
+        // console.log('handleOpen');
         this.socket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
     }
 
@@ -114,8 +131,8 @@ class Handler extends React.Component
                     reconnect = {true}
                     debug = {true}
                     ref = {(aSocket) => { this.socket = aSocket; }} />
-                <Telemetry />
-                <Visuals />
+                <Telemetry response = {this.state.response} />
+                <Visuals response = {this.state.response} />
             </React.Fragment>
         );
     }
