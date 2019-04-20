@@ -1,5 +1,6 @@
 import React from 'react';
 import Websocket from 'react-websocket';
+import {XSiteDataHelloMessage} from './constants';
 
 class Handler extends React.Component
 {
@@ -19,7 +20,8 @@ class Handler extends React.Component
     }
 
     handleOpen() {
-
+        console.log('handleOpen');
+        this.refWebSocket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
     }
 
     handleClose() {
@@ -28,18 +30,15 @@ class Handler extends React.Component
 
     render() {
         return (
-            <div>
-                {/* Handler
-                <Websocket url='ws://10.0.0.184:9000' onMessage={this.handleData.bind(this)} /> */}
-
-                <Websocket url='ws://10.0.0.184:8888'
-                    onMessage={this.handleData}
-                    onOpen={this.handleOpen}
-                    onClose={this.handleClose}
-                    reconnect={true}
-                    debug={true}
-                    ref={(aWebsocket) => { this.refWebSocket = aWebsocket; }}/>
-            </div>
+            <React.Fragment>
+                <Websocket url = 'ws://10.0.0.184:9000'
+                    onMessage = {this.handleData}
+                    onOpen = {this.handleOpen}
+                    onClose = {this.handleClose}
+                    reconnect = {true}
+                    debug = {true}
+                    ref = {(aWebsocket) => { this.refWebSocket = aWebsocket; }} />
+            </React.Fragment>
         );
     }
 }
