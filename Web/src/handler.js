@@ -86,15 +86,20 @@ class Handler extends React.Component
     render() {
         return (
             <React.Fragment>
-                <Websocket url = {'ws://' + this.props.ip + ':9000'}
+                <Websocket
+                    url = {'ws://' + this.props.ip + ':9000'}
                     onMessage = {this.handleData}
                     onOpen = {this.handleOpen}
                     onClose = {this.handleClose}
                     reconnect = {true}
                     debug = {true}
                     ref = {(aSocket) => { this.socket = aSocket; }} />
-                <Telemetry response = {this.state.response} />
-                <Visuals response = {this.state.response} />
+                <Telemetry
+                    response = {this.state.response} />
+                <Visuals
+                    boomA = {this.state.response.anglesQuaternion.boom}
+                    armA = {this.state.response.anglesQuaternion.arm}
+                    bucketA = {this.state.response.anglesQuaternion.bucket} />
             </React.Fragment>
         );
     }
