@@ -25,7 +25,7 @@ class Visuals extends React.Component
     }
 
     calculateX(aAngle, aLength) {
-        let x = math.floor(math.fabs(math.cos(math.radians(aAngle)) * aLength))
+        let x = Math.floor(Math.fabs(Math.cos(Math.radians(aAngle)) * aLength))
 
         if (-90 <= aAngle && aAngle <= 90) {
             x = x * -1;
@@ -35,7 +35,7 @@ class Visuals extends React.Component
     }
 
     calculateY(aAngle, aLength) {
-        let y = math.floor(math.fabs(math.sin(math.radians(aAngle)) * aLength))
+        let y = Math.floor(Math.fabs(Math.sin(Math.radians(aAngle)) * aLength))
     
         if (0 <= aAngle && aAngle <= 180) {
             y = y * -1;
@@ -45,11 +45,13 @@ class Visuals extends React.Component
     }
 
     calculateA(aSinList, aCosList) {
-        s = sum(aSinList)
-        c = sum(aCosList)
-        a = math.atan2(s, c)
+        const reducer = (accumulator, currentValue) => { return accumulator + currentValue; };
+
+        let s = aSinList.reduce(reducer);
+        let c = aCosList.reduce(reducer);
+        let a = Math.atan2(s, c)
     
-        return round(math.degrees(a), 1)
+        return Math.round((a * 180 / Math.PI) * 10) / 10;
     }
 
     componentDidUpdate() {
@@ -88,20 +90,20 @@ class Visuals extends React.Component
     }
 
     render() {
-        let boomA = calculateA(boomSin, boomCos);
+        let boomA = this.calculateA(this.state.boomSin, this.state.boomCos);
         let boomX = 900;
         let boomY = 900;
     
-        let armA = calculateA(armSin, armCos);
-        let armX = boomX + calculateX(boomA, 385);
-        let armY = boomY + calculateY(boomA, 385);
+        let armA = this.calculateA(this.state.armSin, this.state.armCos);
+        let armX = boomX + this.calculateX(boomA, 385);
+        let armY = boomY + this.calculateY(boomA, 385);
     
-        let bucketA = calculateA(bucketSin, bucketCos);
-        let bucketX = armX + calculateX(armA, 176);
-        let bucketY = armY + calculateY(armA, 176);
+        let bucketA = this.calculateA(this.state.bucketSin, this.state.bucketCos);
+        let bucketX = armX + this.calculateX(armA, 176);
+        let bucketY = armY + this.calculateY(armA, 176);
 
-        let levelX = bucketX + calculateX(bucketA, 136) + distanceFromZero;
-        let levelY = bucketY + calculateY(bucketA, 136) + heightFromZero;
+        let levelX = bucketX + this.calculateX(bucketA, 136) + this.props.distanceFromZero;
+        let levelY = bucketY + this.calculateY(bucketA, 136) + this.props.heightFromZero;
 
         return (
             <svg
@@ -168,7 +170,7 @@ class Visuals extends React.Component
 
                 <path
                     id = 'SVGLevel'
-                    transform = {'rotate(' + levelA + ' 500 500) translate(' + (levelX - 500) + ' ' + (levelY - 500) + ')'}
+                    transform = {'rotate(' + this.props.levelA + ' 500 500) translate(' + (levelX - 500) + ' ' + (levelY - 500) + ')'}
                     d = 'M 0,1000 L 2000,1000 M 1000,980 L 1000,1020 Z' />
 
             </svg>
