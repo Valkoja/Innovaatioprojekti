@@ -25,7 +25,7 @@ class Visuals extends React.Component
     }
 
     calculateX(aAngle, aLength) {
-        let x = Math.floor(Math.fabs(Math.cos(Math.radians(aAngle)) * aLength))
+        let x = Math.floor(Math.abs(Math.cos(aAngle * ( Math.PI / 180)) * aLength))
 
         if (-90 <= aAngle && aAngle <= 90) {
             x = x * -1;
@@ -35,7 +35,7 @@ class Visuals extends React.Component
     }
 
     calculateY(aAngle, aLength) {
-        let y = Math.floor(Math.fabs(Math.sin(Math.radians(aAngle)) * aLength))
+        let y = Math.floor(Math.abs(Math.sin(aAngle * ( Math.PI / 180)) * aLength))
     
         if (0 <= aAngle && aAngle <= 180) {
             y = y * -1;
@@ -102,8 +102,8 @@ class Visuals extends React.Component
         let bucketX = armX + this.calculateX(armA, 176);
         let bucketY = armY + this.calculateY(armA, 176);
 
-        let levelX = bucketX + this.calculateX(bucketA, 136) + this.props.distanceFromZero;
-        let levelY = bucketY + this.calculateY(bucketA, 136) + this.props.heightFromZero;
+        // let levelX = bucketX + this.calculateX(bucketA, 136) + this.props.distanceFromZero;
+        // let levelY = bucketY + this.calculateY(bucketA, 136) + this.props.heightFromZero;
 
         return (
             <svg
@@ -168,14 +168,18 @@ class Visuals extends React.Component
                          C 488.19,500.92 497.00,509.11 502.94,505.97
                            509.83,502.34 506.78,491.03 497.06,494.03 Z' />
 
-                <path
-                    id = 'SVGLevel'
-                    transform = {'rotate(' + this.props.levelA + ' 500 500) translate(' + (levelX - 500) + ' ' + (levelY - 500) + ')'}
-                    d = 'M 0,1000 L 2000,1000 M 1000,980 L 1000,1020 Z' />
+
 
             </svg>
         );
     }
 }
+
+/*
+                <path
+                    id = 'SVGLevel'
+                    transform = {'rotate(' + this.props.levelA + ' 500 500) translate(' + (levelX - 500) + ' ' + (levelY - 500) + ')'}
+                    d = 'M 0,1000 L 2000,1000 M 1000,980 L 1000,1020 Z' />
+*/
 
 export default Visuals;
