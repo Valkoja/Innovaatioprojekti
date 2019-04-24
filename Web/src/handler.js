@@ -33,9 +33,9 @@ class Handler extends React.Component
                 'bucket': 0.0}
         };
 
-        this.handleData = this.handleData.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleMessage = this.handleMessage.bind(this);
     }
 
     convertAngle(aQuart) {
@@ -119,11 +119,14 @@ class Handler extends React.Component
                     debug = {true}
                     ref = {(aSocket) => { this.websocket = aSocket; }} />
                 <Telemetry
-                    response = {this.state.response} />
+                    limitWarnings = {this.state.limitWarnings}
+                    zeroLevel = {this.state.zeroLevel}
+                    anglesEuler = {this.state.anglesEuler}
+                    anglesQuaternion = {this.state.anglesQuaternion} />
                 <Visuals
-                    boomA = {this.state.response.anglesQuaternion.boom}
-                    armA = {this.state.response.anglesQuaternion.arm}
-                    bucketA = {this.state.response.anglesQuaternion.bucket} />
+                    boomA = {this.state.anglesQuaternion.boom}
+                    armA = {this.state.anglesQuaternion.arm}
+                    bucketA = {this.state.anglesQuaternion.bucket} />
             </React.Fragment>
         );
     }
