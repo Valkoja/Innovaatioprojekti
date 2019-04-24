@@ -9,62 +9,33 @@ class Handler extends React.Component
     constructor(props) {
         super(props);
 
-        this.socket = null;
+        this.websocket = null;
         this.state = {
-            'response': {
-                'limitWarnings': {
-                    'left': false,
-                    'right': false,
-                    'upper': false,
-                    'lower': false,
-                    'forward': false,
-                    'property': false,
-                    'overload': false},
-                'zeroLevel': {
-                    'height_from_zero': 0.0,
-                    'distance_to_zero': 0.0,
-                    'height_to_slope_from_zero': 0.0},
-                'anglesEuler': {
-                    'boom': 0.0,
-                    'arm': 0.0,
-                    'bucket': 0.0},
-                'anglesQuaternion': {
-                    'boom': 0.0,
-                    'arm': 0.0,
-                    'bucket': 0.0}
-            }
+            'limitWarnings': {
+                'left': false,
+                'right': false,
+                'upper': false,
+                'lower': false,
+                'forward': false,
+                'property': false,
+                'overload': false},
+            'zeroLevel': {
+                'height_from_zero': 0.0,
+                'distance_to_zero': 0.0,
+                'height_to_slope_from_zero': 0.0},
+            'anglesEuler': {
+                'boom': 0.0,
+                'arm': 0.0,
+                'bucket': 0.0},
+            'anglesQuaternion': {
+                'boom': 0.0,
+                'arm': 0.0,
+                'bucket': 0.0}
         };
 
         this.handleData = this.handleData.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
-    }
-
-    handleData(aResponse) {
-        try {
-            let response = JSON.parse(aResponse);
-
-            if (response.hasOwnProperty('state')) {
-                let result = {
-                    'limitWarnings': response.state['limitWarnings'],
-                    'zeroLevel': response.state['zeroLevel'],
-                    'anglesEuler': {
-                        'boom': response.state['angles']['main_boom'] / 10,
-                        'arm': response.state['angles']['digging_arm'] / 10,
-                        'bucket': response.state['angles']['bucket'] / 10},
-                    'anglesQuaternion': {
-                        'boom': this.convertAngle(response.state['quaternions']['main_boom_orientation']),
-                        'arm': this.convertAngle(response.state['quaternions']['digging_arm_orientation']),
-                        'bucket': this.convertAngle(response.state['quaternions']['bucket_orientation'])}
-                };
-
-                this.setState({'response': result});
-            };
-        }
-        catch(err) {
-            alert(err);
-        }
-
     }
 
     convertAngle(aQuart) {
@@ -75,12 +46,63 @@ class Handler extends React.Component
         return Math.round( roll * (180 / Math.PI) * 10 ) / 10;
     }
 
+    handleMessage(aMsg) {
+        try {
+             let jsonMsg = JSON.parse(aMsg);
+
+            if (jsonMsg.hasOwnProperty('state')) {
+                let jsonState = jsonMsg.state;
+
+                if (jsonState.hasOwnProperty('limitWarnings')) {
+                    this.setState({'limitWarnings': {
+                        'left': jsonState.limitWarnings.hasOwnProperty('left') ? jsonState.limitWarnings.left : this.state.limitWarnings.left,
+                        'right': jsonState.limitWarnings.hasOwnProperty('right') ? jsonState.limitWarnings.right : this.state.limitWarnings.right,
+                        'upper': jsonState.limitWarnings.hasOwnProperty('upper') ? jsonState.limitWarnings.upper : this.state.limitWarnings.upper,
+                        'lower': jsonState.limitWarnings.hasOwnProperty('lower') ? jsonState.limitWarnings.lower : this.state.limitWarnings.lower,
+                        'forward': jsonState.limitWarnings.hasOwnProperty('forward') ? jsonState.limitWarnings.forward : this.state.limitWarnings.forward,
+                        'property': jsonState.limitWarnings.hasOwnProperty('property') ? jsonState.limitWarnings.property : this.state.limitWarnings.property,
+                        'overload': jsonState.limitWarnings.hasOwnProperty('overload') ? jsonState.limitWarnings.overload : this.state.limitWarnings.overload
+                    }});
+                }
+
+                if (jsonState.hasOwnProperty('zeroLevel')) {
+                    this.setState({'zeroLevel': {
+                        'height_from_zero': jsonState.zeroLevel.hasOwnProperty('height_from_zero') ? jsonState.zeroLevel.height_from_zero : this.state.zeroLevel.height_from_zero,
+                        'distance_to_zero': jsonState.zeroLevel.hasOwnProperty('distance_to_zero') ? jsonState.zeroLevel.distance_to_zero : this.state.zeroLevel.distance_to_zero,
+                        'height_to_slope_from_zero': jsonState.zeroLevel.hasOwnProperty('height_to_slope_from_zero') ? jsonState.zeroLevel.height_to_slope_from_zero : this.state.zeroLevel.height_to_slope_from_zero
+                    }});
+                }
+
+                if (jsonState.hasOwnProperty('angles')) {
+                    this.setState({'anglesEuler': {
+                        'boom': jsonState.angles.hasOwnProperty('main_boom') ? jsonState.angles.main_boom / 10 : this.state.anglesEuler.boom,
+                        'arm': jsonState.angles.hasOwnProperty('digging_arm') ? jsonState.angles.digging_arm / 10 : this.state.anglesEuler.arm,
+                        'bucket': jsonState.angles.hasOwnProperty('bucket') ? jsonState.angles.bucket / 10 : this.state.anglesEuler.bucket
+                    }});
+                }
+
+                if (jsonState.hasOwnProperty('quaternions')) {
+                    this.setState({'anglesQuaternion': {
+                        'boom': jsonState.quaternions.hasOwnProperty('main_boom_orientation') ? this.convertAngle(jsonState.quaternions.main_boom_orientation) : this.state.anglesQuaternion.boom,
+                        'arm': jsonState.quaternions.hasOwnProperty('digging_arm_orientation') ? this.convertAngle(jsonState.quaternions.digging_arm_orientation) : this.state.anglesQuaternion.arm,
+                        'bucket': jsonState.quaternions.hasOwnProperty('bucket_orientation') ? this.convertAngle(jsonState.quaternions.bucket_orientation) : this.state.anglesQuaternion.bucket
+                    }});
+                }
+            };
+        }
+        catch(err) {
+            alert(err);
+        }
+
+    }
+
     handleOpen() {
-        this.socket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
+        console.log('Websocket open');
+        this.websocket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
     }
 
     handleClose() {
-
+        console.log('Websocket close');
     }
 
     render() {
@@ -88,12 +110,12 @@ class Handler extends React.Component
             <React.Fragment>
                 <Websocket
                     url = {'ws://' + this.props.ip + ':9000'}
-                    onMessage = {this.handleData}
+                    onMessage = {this.handleMessage}
                     onOpen = {this.handleOpen}
                     onClose = {this.handleClose}
                     reconnect = {true}
                     debug = {true}
-                    ref = {(aSocket) => { this.socket = aSocket; }} />
+                    ref = {(aSocket) => { this.websocket = aSocket; }} />
                 <Telemetry
                     response = {this.state.response} />
                 <Visuals
