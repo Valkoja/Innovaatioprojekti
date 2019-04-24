@@ -1,9 +1,10 @@
-export const OK = 'OK';
-export const ERROR = 'ERROR';
-export const UNDEFINED = 'UNDEFINED';
-export const DISCONNECT = 'DISCONNECT';
+export const INITIAL = 'INITIAL';
+export const CONNECTING = 'CONNECTING';
+export const CONNECTED = 'CONNECTED';
+export const NOTFOUND = 'NOTFOUND';
+export const DISCONNECTED = 'DISCONNECTED';
 
-export const XSiteDataHelloMessage = {
+export const XSITEDATAHELLOMESSAGE = {
     type: "HELLO",
     library: "Unity",
     platform: 'BrowserNameHere',
