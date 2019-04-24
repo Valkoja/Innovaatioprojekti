@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-#SVGBoom, #SVGArm, #SVGBucket {
+#SVGBoom, #SVGArm, #SVGBucket, #SVGLevel {
     fill: none;
     stroke: black;
     stroke-width: 1;

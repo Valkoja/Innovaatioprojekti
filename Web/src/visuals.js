@@ -5,22 +5,31 @@ class Visuals extends React.Component
     constructor(props) {
         super(props);
 
-        let boomSin = Math.sin(40 * ( Math.PI / 180));
-        let boomCos = Math.cos(40 * ( Math.PI / 180));
+        let boomSin = new Array(10);
+            boomSin.map(() => { return Math.sin(40 * ( Math.PI / 180)); });
 
-        let armSin = Math.sin(-60 * ( Math.PI / 180));
-        let armCos = Math.cos(-60 * ( Math.PI / 180));
+        let boomCos = new Array(10);
+            boomCos.map(() => { return Math.cos(40 * ( Math.PI / 180)); });
 
-        let bucketSin = Math.sin(-150 * ( Math.PI / 180));
-        let bucketCos = Math.cos(-150 * ( Math.PI / 180));
+        let armSin = new Array(10);
+            armSin.map(() => { return Math.sin(-60 * ( Math.PI / 180)); });
+
+        let armCos = new Array(10);
+            armCos.map(() => { return Math.cos(-60 * ( Math.PI / 180)); });
+
+        let bucketSin = new Array(10);
+            bucketSin.map(() => { return Math.sin(-150 * ( Math.PI / 180)); });
+
+        let bucketCos = new Array(10);
+            bucketCos.map(() => { return Math.cos(-150 * ( Math.PI / 180)); });
 
         this.state = {
-            'boomSin': [boomSin, boomSin, boomSin, boomSin, boomSin, boomSin, boomSin, boomSin, boomSin, boomSin],
-            'boomCos': [boomCos, boomCos, boomCos, boomCos, boomCos, boomCos, boomCos, boomCos, boomCos, boomCos],
-            'armSin': [armSin, armSin, armSin, armSin, armSin, armSin, armSin, armSin, armSin, armSin],
-            'armCos': [armCos, armCos, armCos, armCos, armCos, armCos, armCos, armCos, armCos, armCos],
-            'bucketSin': [bucketSin, bucketSin, bucketSin, bucketSin, bucketSin, bucketSin, bucketSin, bucketSin, bucketSin, bucketSin],
-            'bucketCos': [bucketCos, bucketCos, bucketCos, bucketCos, bucketCos, bucketCos, bucketCos, bucketCos, bucketCos, bucketCos]
+            'boomSin': boomSin,
+            'boomCos': boomCos,
+            'armSin': armSin,
+            'armCos': armCos,
+            'bucketSin': bucketSin,
+            'bucketCos': bucketCos
         };
     }
 
@@ -55,7 +64,6 @@ class Visuals extends React.Component
     }
 
     componentDidUpdate(oldProps) {
-
         if (oldProps.boomA !== this.props.boomA) {
             let boomSin = [...this.state.boomSin];
                 boomSin.shift();
