@@ -2,7 +2,7 @@ import React from 'react';
 import Websocket from 'react-websocket';
 import Telemetry from './telemetry';
 import Visuals from './visuals';
-import {XSiteDataHelloMessage} from './constants';
+import {CONNECTED, DISCONNECTED, XSITEDATAHELLOMESSAGE} from './constants';
 
 class Handler extends React.Component
 {
@@ -98,18 +98,20 @@ class Handler extends React.Component
 
     handleOpen() {
         console.log('Websocket open');
-        this.websocket.sendMessage(JSON.stringify(XSiteDataHelloMessage));
+        this.props.setConnection(CONNECTED);
+        this.websocket.sendMessage(JSON.stringify(XSITEDATAHELLOMESSAGE));
     }
 
     handleClose() {
         console.log('Websocket close');
+        this.props.setConnection(DISCONNECTED);
     }
 
     render() {
         return (
             <React.Fragment>
                 <Websocket
-                    url = {'ws://' + this.props.ip + ':9000'}
+                    url = {'ws://' + this.props.address + ':9000'}
                     onMessage = {this.handleMessage}
                     onOpen = {this.handleOpen}
                     onClose = {this.handleClose}
