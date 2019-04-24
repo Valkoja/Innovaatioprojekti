@@ -4,3 +4,13 @@
     padding: 0px;
     box-sizing: border-box;
 }
+
+#SVGBoom, #SVGArm, #SVGBucket {
+    fill: none;
+    stroke: black;
+    stroke-width: 1;
+}
+
+svg {
+    background-color: yellow;
+}
