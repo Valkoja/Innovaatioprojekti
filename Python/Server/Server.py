@@ -4,7 +4,7 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 
-from twisted.logger import Logger, globalLogBeginner, FilteringLogObserver, LogLevelFilterPredicate, LogLevel
+from twisted.logger import Logger, globalLogBeginner, FilteringLogObserver, LogLevelFilterPredicate, LogLevel, textFileLogObserver
 
 from network import XSiteBroadcastServerFactory, XSiteServerProtocol
 from autobahn.twisted.websocket import listenWS
@@ -42,9 +42,11 @@ if __name__ == '__main__':
 
     # Init can adapter
     adapter = CanAdapter()
+    # Connect consumer to adapter
+    state.setCommandConsumer(adapter.sendMessage)
 
     # Init gui handler for logs
-    canBusHandler = CanBusHandler(adapter, reactor, state.consumeMessage)
+    canBusHandler = CanBusHandler(adapter, state.consumeMessage)
     engine.rootContext().setContextProperty('canBusHandler', canBusHandler)
 
     # Init binding for visualization - no need to have a timer to run to use this, unfinished
@@ -61,16 +63,22 @@ if __name__ == '__main__':
     appLogHandler = AppLogHandler()
     # observers = [appLogHandler.appendEvent]
     # Comment out the line above and uncomment the one below to output log to stdout
-    # observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
-    log = Logger()
-    infoPredicate = LogLevelFilterPredicate(LogLevel.info)
-    logfilter = FilteringLogObserver(appLogHandler.appendEvent, predicates=[infoPredicate])
-    globalLogBeginner.beginLoggingTo([logfilter])
+    observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
+    # log = Logger()
+    #infoPredicate = LogLevelFilterPredicate(LogLevel.info)
+    #logfilter = FilteringLogObserver(textFileLogObserver(sys.stdout), predicates=[infoPredicate])
+    #observers = [textFileLogObserver(sys.stdout), appLogHandler.appendEvent]
+    globalLogBeginner.beginLoggingTo(observers)
+    #globalLogBeginner.beginLoggingTo([logfilter])
     engine.rootContext().setContextProperty('appLogHandler', appLogHandler)
     
     # Disable server until we rework the protocol
     ServerFactory = XSiteBroadcastServerFactory
-    factory = ServerFactory(u"ws://127.0.0.1:9000", reactor, lambda: state.getState(), lambda client: clientListModel.addClient(client), lambda client: clientListModel.removeClient(client))
+    factory = ServerFactory(u"ws://127.0.0.1:9000",
+                            reactor,
+                            state,
+                            lambda client: clientListModel.addClient(client),
+                            lambda client: clientListModel.removeClient(client))
     factory.protocol = XSiteServerProtocol
     listenWS(factory)
 

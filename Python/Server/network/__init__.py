@@ -1,2 +1,3 @@
 from .XSiteServerProtocol import XSiteServerProtocol
 from .XSiteBroadcastServerFactory import XSiteBroadcastServerFactory
+from .XSiteMessage import StateMessage, MessageType

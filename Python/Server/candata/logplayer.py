@@ -1,12 +1,6 @@
-import time
-import datetime
-from pathlib import Path
-import sys
-from candata.conversions import PDODecoder
 from candata.logplayerjob import LogPlayerJob
-from sys import platform
 
-# Play busmaster logs
+
 class LogPlayer():
     def __init__(self, reactor, msgcb, donecb):
         self._job = None

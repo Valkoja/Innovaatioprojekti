@@ -78,7 +78,7 @@ ApplicationWindow {
 
                 Rectangle {
                     //Layout.fillHeight: true
-                    height: 400
+                    height: 430
                     Layout.minimumWidth: 275
                     border.width: 1
                     border.color: "black"

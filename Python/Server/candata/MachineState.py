@@ -1,5 +1,5 @@
-from string import Template
 import re
+
 
 class MachineState():
     def __init__(self):
@@ -8,7 +8,9 @@ class MachineState():
         self._properties['zeroLevel'] = dict()
         self._properties['angles'] = dict()
         self._properties['quaternions'] = dict()
+        self._properties['slope'] = 0
         self._modelUpdated = None
+        self._commandConsumer = None
 
     def consumeMessage(self, message):
         messagetype = type(message).__name__ 
@@ -26,14 +28,21 @@ class MachineState():
             self._properties['quaternions'][re.sub(r'\_quaternion$', '', kind)] = dict()
             for name, value in message._asdict().items():
                 self._properties['quaternions'][kind][re.sub(r'\_orientation$', '', name)] = value
-                
+        elif messagetype == 'slope':
+            self._properties['slope'] = message.slope
         else:
             print('Unknown message')
             
         # If we have a cb, call it now
         if self._modelUpdated:
-            #print(self.getState())
             self._modelUpdated()
+
+    def setCommandConsumer(self, consumer):
+        self._commandConsumer = consumer
+
+    def consumeCommand(self, command, argument=None):
+        if self._commandConsumer:
+            self._commandConsumer(command, argument)
 
     def setUpdateCallback(self, cb):
         self._modelUpdated = cb

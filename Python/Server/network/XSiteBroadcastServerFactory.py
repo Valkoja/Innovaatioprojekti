@@ -2,10 +2,10 @@ from autobahn.twisted.websocket import WebSocketServerFactory
 
 
 class XSiteBroadcastServerFactory(WebSocketServerFactory):
-    def __init__(self, url, reactor, getValues, clientConnectedHandler, clientDisconnectedHandler):
+    def __init__(self, url, reactor, stateObject, clientConnectedHandler, clientDisconnectedHandler):
         WebSocketServerFactory.__init__(self, url)
         self.clients = []
-        self.getState = getValues
+        self.stateObject = stateObject
         self.reactor = reactor
         self.clientConnectedHandler = clientConnectedHandler
         self.clientDisconnectedHandler = clientDisconnectedHandler
