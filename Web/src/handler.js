@@ -9,7 +9,6 @@ class Handler extends React.Component
     constructor(props) {
         super(props);
 
-        this.websocket = null;
         this.state = {
             'limitWarnings': {
                 'left': false,
@@ -33,6 +32,7 @@ class Handler extends React.Component
                 'bucket': 0.0}
         };
 
+        this.websocket = null;
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleMessage = this.handleMessage.bind(this);
@@ -93,7 +93,6 @@ class Handler extends React.Component
         catch(err) {
             alert(err);
         }
-
     }
 
     handleOpen() {
@@ -110,7 +109,7 @@ class Handler extends React.Component
     renderContent() {
         if (this.props.connection === CONNECTED) {
             return (
-                <div>
+                <div id='wrapper'>
                     <Telemetry
                         limitWarnings = {this.state.limitWarnings}
                         zeroLevel = {this.state.zeroLevel}
@@ -125,8 +124,8 @@ class Handler extends React.Component
         }
         else {
             return (
-                <div>
-                    <h1>Connecting...</h1>
+                <div id='message'>
+                    <h1>Yhdistetään...</h1>
                 </div>
             );
         }
