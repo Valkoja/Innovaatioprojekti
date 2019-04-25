@@ -19,22 +19,18 @@ class Dialog extends React.Component
     }
 
     render() {
-        let title = '';
+        let title = 'Syötä palvelimen osoite';
 
-        switch(this.props.connection) {
-            case NOTFOUND:
-                title = 'Yhteyttä ei saatu avattua, tarkista osoite';
-                break;
-            case DISCONNECTED:
-                title = 'Yhteys katkesi';
-                break;
-            default:
-                title = 'Syötä palvelimen osoite';
-                break;
+        if (this.props.connection === NOTFOUND) {
+            title = 'Yhteyttä ei saatu avattua, tarkista osoite';
+        }
+
+        if (this.props.connection === DISCONNECTED) {
+            title = 'Yhteys katkesi';
         }
 
         return (
-            <div>
+            <div id='dialog'>
                 <h1>{title}</h1>
                 <input type="text" value={this.state.address} onChange={this.handleInput} />
                 <button onClick={this.handleSubmit}>Yhdistä</button>

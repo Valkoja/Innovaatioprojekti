@@ -3,6 +3,9 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    font-size: 18px;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #SVGBoom, #SVGArm, #SVGBucket, #SVGLevel {
@@ -13,4 +16,40 @@
 
 svg {
     background-color: yellow;
+}
+
+#dialog {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}   
+
+#dialog h1 {
+    margin: 4px;
+    padding: 2px;
+
+    font-size: 1.1em;
+}
+
+#dialog input {
+    margin: 4px;
+    padding: 2px;
+
+    border: 1px solid rgb(220, 220, 220);
+    text-align: center;
+    border-radius: 4px;
+}
+
+#dialog button {
+    margin: 4px;
+    padding: 3px 6px;
+
+    cursor: pointer;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 4px;
+    background-color: rgb(240, 240, 240);
+}
+
+#dialog button:hover {
+    background-color: rgb(230, 230, 230);
 }
