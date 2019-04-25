@@ -32,7 +32,7 @@ class Wrapper extends React.Component
                 break;
 
             default:
-                this.setState({'connection': aconnection});
+                this.setState({'connection': aConnection});
                 break;
         }
     }
