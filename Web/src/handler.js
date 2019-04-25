@@ -106,25 +106,30 @@ class Handler extends React.Component
         this.props.setConnection(DISCONNECTED);
     }
 
-    renderContent() {
+    renderPage() {
         if (this.props.connection === CONNECTED) {
             return (
                 <div id='wrapper'>
-                    <Telemetry
-                        limitWarnings = {this.state.limitWarnings}
-                        zeroLevel = {this.state.zeroLevel}
-                        anglesEuler = {this.state.anglesEuler}
-                        anglesQuaternion = {this.state.anglesQuaternion} />
-                    <Visuals
-                        boomA = {this.state.anglesQuaternion.boom}
-                        armA = {this.state.anglesQuaternion.arm}
-                        bucketA = {this.state.anglesQuaternion.bucket} />
+                    <div id='header'>
+                        <h1>Yhdistetty osoitteeseen {this.props.address}</h1>
+                    </div>
+                    <div id='container'>
+                        <Telemetry
+                            limitWarnings = {this.state.limitWarnings}
+                            zeroLevel = {this.state.zeroLevel}
+                            anglesEuler = {this.state.anglesEuler}
+                            anglesQuaternion = {this.state.anglesQuaternion} />
+                        <Visuals
+                            boomA = {this.state.anglesQuaternion.boom}
+                            armA = {this.state.anglesQuaternion.arm}
+                            bucketA = {this.state.anglesQuaternion.bucket} />
+                    </div>
                 </div>
             );
         }
         else {
             return (
-                <div id='message'>
+                <div id='dialog'>
                     <h1>Yhdistetään...</h1>
                 </div>
             );
@@ -142,7 +147,7 @@ class Handler extends React.Component
                     reconnect = {false}
                     debug = {true}
                     ref = {(aSocket) => { this.websocket = aSocket; }} />
-                {this.renderContent()}
+                {this.renderPage()}
             </React.Fragment>
         );
     }

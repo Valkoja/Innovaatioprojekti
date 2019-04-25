@@ -53,3 +53,34 @@ svg {
 #dialog button:hover {
     background-color: rgb(230, 230, 230);
 }
+
+#wrapper {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    background-color: blue;
+}
+
+#header {
+    flex: 0 0 auto;
+    background-color: green;
+}
+
+#container {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+
+    background-color: red;
+}
+
+#telemetry {
+    flex: 0 0 auto;
+    background-color: purple;
+}
+
+#visuals {
+    flex: 1 0 auto;
+    background-color: orange;
+}

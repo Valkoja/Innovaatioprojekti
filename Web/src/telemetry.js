@@ -8,7 +8,7 @@ class Telemetry extends React.Component
 
     render() {
         return (
-            <div>
+            <div id='telemetry'>
                 <h1>Telemetry</h1>
                 <table>
                     <tbody>
