@@ -14,8 +14,12 @@
     stroke-width: 1;
 }
 
-svg {
-    background-color: yellow;
+#root {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    position: absolute;
 }
 
 #dialog {
@@ -55,6 +59,7 @@ svg {
 }
 
 #wrapper {
+    max-height: 100%;
     display: flex;
     align-items: stretch;
     flex-direction: column;
@@ -81,6 +86,11 @@ svg {
 }
 
 #visuals {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     background-color: orange;
+}
+
+#visuals svg {
+    flex: 0 0 100%;
+    background-color: yellow;
 }
