@@ -107,6 +107,31 @@ class Handler extends React.Component
         this.props.setConnection(DISCONNECTED);
     }
 
+    renderContent() {
+        if (this.props.connection === CONNECTED) {
+            return (
+                <div>
+                    <Telemetry
+                        limitWarnings = {this.state.limitWarnings}
+                        zeroLevel = {this.state.zeroLevel}
+                        anglesEuler = {this.state.anglesEuler}
+                        anglesQuaternion = {this.state.anglesQuaternion} />
+                    <Visuals
+                        boomA = {this.state.anglesQuaternion.boom}
+                        armA = {this.state.anglesQuaternion.arm}
+                        bucketA = {this.state.anglesQuaternion.bucket} />
+                </div>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <h1>Connecting...</h1>
+                </div>
+            );
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -115,18 +140,10 @@ class Handler extends React.Component
                     onMessage = {this.handleMessage}
                     onOpen = {this.handleOpen}
                     onClose = {this.handleClose}
-                    reconnect = {true}
+                    reconnect = {false}
                     debug = {true}
                     ref = {(aSocket) => { this.websocket = aSocket; }} />
-                <Telemetry
-                    limitWarnings = {this.state.limitWarnings}
-                    zeroLevel = {this.state.zeroLevel}
-                    anglesEuler = {this.state.anglesEuler}
-                    anglesQuaternion = {this.state.anglesQuaternion} />
-                <Visuals
-                    boomA = {this.state.anglesQuaternion.boom}
-                    armA = {this.state.anglesQuaternion.arm}
-                    bucketA = {this.state.anglesQuaternion.bucket} />
+                {this.renderContent()}
             </React.Fragment>
         );
     }

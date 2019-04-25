@@ -39,10 +39,10 @@ class Wrapper extends React.Component
 
     render() {
         if (this.state.connection === CONNECTING || this.state.connection === CONNECTED) {
-            return <Handler setConnection={this.setConnection} address={this.state.address} />
+            return <Handler setConnection={this.setConnection} connection={this.state.connection} address={this.state.address} />
         }
         else {
-            return <Dialog setConnection={this.setConnection} address={this.state.address} />
+            return <Dialog setConnection={this.setConnection} connection={this.state.connection} address={this.state.address} />
         }
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {CONNECTING} from './constants';
+import {CONNECTING, NOTFOUND, DISCONNECTED} from './constants';
 
 class Dialog extends React.Component
 {
@@ -19,8 +19,23 @@ class Dialog extends React.Component
     }
 
     render() {
+        let title = '';
+
+        switch(this.props.connection) {
+            case NOTFOUND:
+                title = 'Yhteyttä ei saatu avattua, tarkista osoite';
+                break;
+            case DISCONNECTED:
+                title = 'Yhteys katkesi';
+                break;
+            default:
+                title = 'Syötä palvelimen osoite';
+                break;
+        }
+
         return (
             <div>
+                <h1>{title}</h1>
                 <input type="text" value={this.state.address} onChange={this.handleInput} />
                 <button onClick={this.handleSubmit}>Yhdistä</button>
             </div>
