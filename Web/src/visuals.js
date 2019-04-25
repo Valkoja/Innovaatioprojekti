@@ -5,32 +5,18 @@ class Visuals extends React.Component
     constructor(props) {
         super(props);
 
-        let boomSin = new Array(10);
-            boomSin.map(() => { return Math.sin(40 * ( Math.PI / 180)); });
-
-        let boomCos = new Array(10);
-            boomCos.map(() => { return Math.cos(40 * ( Math.PI / 180)); });
-
-        let armSin = new Array(10);
-            armSin.map(() => { return Math.sin(-60 * ( Math.PI / 180)); });
-
-        let armCos = new Array(10);
-            armCos.map(() => { return Math.cos(-60 * ( Math.PI / 180)); });
-
-        let bucketSin = new Array(10);
-            bucketSin.map(() => { return Math.sin(-150 * ( Math.PI / 180)); });
-
-        let bucketCos = new Array(10);
-            bucketCos.map(() => { return Math.cos(-150 * ( Math.PI / 180)); });
+        let emptyArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         this.state = {
-            'boomSin': boomSin,
-            'boomCos': boomCos,
-            'armSin': armSin,
-            'armCos': armCos,
-            'bucketSin': bucketSin,
-            'bucketCos': bucketCos
+            'boomSin': emptyArray.map(() => Math.sin(40 * ( Math.PI / 180))),
+            'boomCos': emptyArray.map(() => Math.cos(40 * ( Math.PI / 180))),
+            'armSin': emptyArray.map(() => Math.sin(-60 * ( Math.PI / 180))),
+            'armCos': emptyArray.map(() => Math.cos(-60 * ( Math.PI / 180))),
+            'bucketSin': emptyArray.map(() => Math.sin(-150 * ( Math.PI / 180))),
+            'bucketCos': emptyArray.map(() => Math.cos(-150 * ( Math.PI / 180)))
         };
+
+        console.log(this.state.boomSin);
     }
 
     calculateX(aAngle, aLength) {
