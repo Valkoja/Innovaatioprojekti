@@ -118,8 +118,8 @@ class ModelWrapper(QObject):
     def update(self):
         self.changed.emit()
 
-        if self.zeroTimestamp < self.stateObject.geState()['zeroTimestamp']:
-            self.zeroTimestamp = self.stateObject.geState()['zeroTimestamp']
+        if self.zeroTimestamp < self.stateObject.getState()['zero_with_bucket_tip']:
+            self.zeroTimestamp = self.stateObject.getState()['zero_with_bucket_tip']
             self.zeroChanged.emit()
 
     changed = pyqtSignal()
@@ -153,7 +153,7 @@ class ModelWrapper(QObject):
 
     @pyqtSlot()
     def setZero(self):
-        self.stateObject.consumeCommand('set_zero')
+        self.stateObject.consumeCommand('zero_with_bucket_tip')
 
     @staticmethod
     def toEulerXAngle(w, x, y, z):
