@@ -128,7 +128,7 @@ class SDOEncoder:
     def encode_sdo(self, command, argument=None):
         if command in self._sdo_map:
             fmt = self._sdo_map[command]
-            if argument:
+            if argument is not None:
                 data = fmt['data'].copy()
                 data.extend(fmt['input_transform'](argument))
                 sdo = fmt['format'](fmt['id'], data)

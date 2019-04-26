@@ -67,7 +67,6 @@ class CanAdapter():
         else:
             print("Nobus, sending message " + msg.__str__())
             return
-
         try:
             self._writeHandle.send(can.Message(arbitration_id=msg.id, data=msg.data, extended_id=False))
         except Exception as e:
