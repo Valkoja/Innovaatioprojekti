@@ -32,24 +32,30 @@ class ModelWrapper(QObject):
     def _main_boomQuaternion(self):
         if 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['main_boom_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return 40
         else:
             return 40
 
     def _digging_armQuaternion(self):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return -60
         else:
             return -60
 
     def _bucketQuaternion(self):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return -150
         else:
             return -150
 
@@ -159,6 +165,10 @@ class ModelWrapper(QObject):
     @pyqtSlot()
     def setZero(self):
         self.stateObject.consumeCommand('zero_with_bucket_tip')
+
+    @pyqtSlot()
+    def emitZero(self):
+        self.zeroChanged.emit()
 
     @staticmethod
     def toEulerXAngle(w, x, y, z):
