@@ -32,9 +32,8 @@ class SVGElement(QQuickPaintedItem):
         self._levelY = None
         self._levelA = 0
 
-        self._heightFromZero = 0
-        self._heightFromSlope = 0
-        self._distanceFromZero = 0
+        self._heightFromZero = None
+        self._distanceFromZero = None
 
 
     def calculateX(self, aAngle, aLength):
@@ -109,12 +108,13 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
         # Zero level, calculated without hysteresis for accuracy
-        if self._levelX is None or self._levelY is None:
-            self._levelX = 900 + self.calculateX(self._boomAngle, 385) + self.calculateX(self._armAngle, 176) + self.calculateX(self._bucketAngle, 136) + self._distanceFromZero - 1000
-            self._levelY = 900 + self.calculateY(self._boomAngle, 385) + self.calculateY(self._armAngle, 176) + self.calculateY(self._bucketAngle, 136) + self._heightFromZero - 1000
+        if self._heightFromZero is not None and self._distanceFromZero is not None:
+            if self._levelX is None or self._levelY is None:
+                self._levelX = 900 + self.calculateX(self._boomAngle, 385) + self.calculateX(self._armAngle, 176) + self.calculateX(self._bucketAngle, 136) + self._distanceFromZero
+                self._levelY = 900 + self.calculateY(self._boomAngle, 385) + self.calculateY(self._armAngle, 176) + self.calculateY(self._bucketAngle, 136) + self._heightFromZero
 
-        levelSVG.rotate(self._levelA, 1000, 1000)
-        levelSVG.move(self._levelX, self._levelY)
+            levelSVG.rotate(self._levelA, 1000, 1000)
+            levelSVG.move(self._levelX - 1000, self._levelY - 1000)
 
         # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
@@ -129,14 +129,9 @@ class SVGElement(QQuickPaintedItem):
             moveX = -200
             moveY = -200
 
-        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
-        # image = compose.move(moveX, moveY).scale(scale).tostr()
-
-        # Hacky wacky to make Qt not crash and burn about encoding and preserve aspect ratio without monkeypatching library
-        # imageStr = image.decode('utf-8')
+        # Hacky wacky to make Qt not crash and burn about encoding
         imageStr = compose.move(moveX, moveY).scale(scale).tostr().decode('utf-8')
         imageStr = imageStr.replace("encoding='ASCII'", "encoding='UTF-8'")
-        imageStr = imageStr.replace("<svg ", "<svg preserveAspectRatio='xMinYMin meet' ")
         imageStr = imageStr.encode('utf-8')
 
         svg = QSvgRenderer(imageStr)
@@ -183,18 +178,6 @@ class SVGElement(QQuickPaintedItem):
     def heightFromZero(self, heightFromZero):
         # Meters to centimeters
         self._heightFromZero = heightFromZero * 100
-
-
-    @pyqtProperty(float)
-    def heightFromSlope(self):
-        # Centimeters back to meters
-        return self._heightFromSlope / 100
-
-
-    @heightFromSlope.setter
-    def heightFromSlope(self, heightFromSlope):
-        # Meters to centimeters
-        self._heightFromSlope = heightFromSlope * 100
 
 
     @pyqtProperty(float)
