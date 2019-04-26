@@ -1,4 +1,5 @@
 import re
+import datetime
 
 
 class MachineState():
@@ -9,6 +10,8 @@ class MachineState():
         self._properties['angles'] = dict()
         self._properties['quaternions'] = dict()
         self._properties['slope'] = 0
+        self._properties['zero_with_bucket_tip'] = 0
+        self._properties['set_slope'] = 0
         self._modelUpdated = None
         self._commandConsumer = None
 
@@ -30,6 +33,10 @@ class MachineState():
                 self._properties['quaternions'][kind][re.sub(r'\_orientation$', '', name)] = value
         elif messagetype == 'slope':
             self._properties['slope'] = message.slope
+        elif messagetype == 'zero_with_bucket_tip':
+            self._properties['zero_with_bucket_tip'] = datetime.datetime.now().timestamp()
+        elif messagetype == 'set_slope':
+            self._properties['set_slop'] = datetime.datetime.now().timestamp()
         else:
             print('Unknown message')
             
