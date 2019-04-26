@@ -55,6 +55,7 @@ ColumnLayout {
             onClicked: {
                 logPlayerHandler.handlePlayLogClicked()
                 serverApp.running = true
+                modelWrapper.getZero()
             }
             enabled: logPlayerHandler.state == "ready" ? true : false
         }

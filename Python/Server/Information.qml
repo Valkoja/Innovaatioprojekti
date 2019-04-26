@@ -223,7 +223,7 @@ ColumnLayout {
                     Item {
                         ColumnLayout {
                             Text {
-                                text: "Current slope: " + setSlope.initialSlope
+                                text: "Current slope: " + modelWrapper.slope
                                 elide: Text.ElideRight
                             }
                             TextField {
