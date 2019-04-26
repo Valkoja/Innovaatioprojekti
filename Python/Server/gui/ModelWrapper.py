@@ -8,7 +8,8 @@ class ModelWrapper(QObject):
         super().__init__()
         self.stateObject = stateObject
         self.stateObject.setUpdateCallback(self.update)
-        self.zeroTimestamp = 0
+        self.zeroTimestamp = -1
+        self.slopeTimestamp = -1
 
     def _main_boom(self):
         if 'main_boom' in self.stateObject.getState()['angles']:
@@ -121,6 +122,10 @@ class ModelWrapper(QObject):
         if self.zeroTimestamp < self.stateObject.getState()['zero_with_bucket_tip']:
             self.zeroTimestamp = self.stateObject.getState()['zero_with_bucket_tip']
             self.zeroChanged.emit()
+
+        if self.slopeTimestamp < self.stateObject.getState()['set_slope']:
+            self.slopeTimestamp = self.stateObject.getState()['set_slope']
+            self.getSlope()
 
     changed = pyqtSignal()
     zeroChanged = pyqtSignal()
