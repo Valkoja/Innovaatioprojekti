@@ -36,7 +36,7 @@ class MachineState():
         elif messagetype == 'zero_with_bucket_tip':
             self._properties['zero_with_bucket_tip'] = datetime.datetime.now().timestamp()
         elif messagetype == 'set_slope':
-            self._properties['set_slop'] = datetime.datetime.now().timestamp()
+            self._properties['set_slope'] = datetime.datetime.now().timestamp()
         else:
             print('Unknown message')
             
