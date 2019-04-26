@@ -29,8 +29,8 @@ ColumnLayout {
         slopePercent: modelWrapper.slope;
 
         Component.onCompleted: {
-            modelWrapper.changed.connect(reDraw)
-            modelWrapper.zeroChanged.connect(reLevel)
+            modelWrapper.changed.connect(reDraw);
+            modelWrapper.zeroChanged.connect(reLevel);
         }
     }
 }
