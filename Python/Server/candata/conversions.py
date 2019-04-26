@@ -19,8 +19,8 @@ class XSiteDecoder:
         ])
         self._sdo_map = dict([
             ('0x430x20200x1', ('<f', namedtuple('slope', 'slope'))), # 0x43 0x20 0x20 0x1 <-> 43 20 20 01 00 00 00 00
-            ('0x600x20200x1', ('<i', namedtuple('zero_with_bucket_tip', 'result'))), # 0x60 0x20 0x20 0x1 <-> 60 20 20 01 00 00 00 00
-            ('0x600x20200x2', ('<i', namedtuple('set_slope', 'result'))) # 0x60 0x20 0x20 0x2 <-> 60 20 20 02 00 00 00 00
+            ('0x600x20200x2', ('<i', namedtuple('zero_with_bucket_tip', 'result'))), # 0x60 0x20 0x20 0x1 <-> 60 20 20 01 00 00 00 00
+            ('0x600x20200x1', ('<i', namedtuple('set_slope', 'result'))) # 0x60 0x20 0x20 0x2 <-> 60 20 20 02 00 00 00 00
         ])
         self._ok = 0
         self._failed = 0
