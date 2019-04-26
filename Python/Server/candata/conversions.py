@@ -3,6 +3,8 @@ from struct import unpack, pack
 
 
 class XSiteDecoder:
+    SDO_RECEIVE_ID = int('0x58a', 16)
+
     def __init__(self):
         self._pdo_map = dict([
             ('0x181', ('<7?', namedtuple('limit_warnings', 'left right upper lower forward property overload'))),
@@ -16,7 +18,9 @@ class XSiteDecoder:
             ('0x18e', ('<4h', namedtuple('bucket_orientation_quaternion', 'w x y z')))
         ])
         self._sdo_map = dict([
-            ('0x20200x1', ('<f', namedtuple('slope', 'slope')))
+            ('0x430x20200x1', ('<f', namedtuple('slope', 'slope'))), # 0x43 0x20 0x20 0x1 <-> 43 20 20 01 00 00 00 00
+            ('0x600x20200x1', ('<i', namedtuple('zero_with_bucket_tip', 'result'))), # 0x60 0x20 0x20 0x1 <-> 60 20 20 01 00 00 00 00
+            ('0x600x20200x2', ('<i', namedtuple('set_slope', 'result'))) # 0x60 0x20 0x20 0x2 <-> 60 20 20 02 00 00 00 00
         ])
         self._ok = 0
         self._failed = 0
@@ -51,15 +55,16 @@ class XSiteDecoder:
             raise TypeError
         if not (isinstance(data, bytes) or isinstance(data, bytearray)):
             raise TypeError
-        padding = 4
-        if id == 1418:
-            sdoformat = '<hb'
-            sdoaddress = namedtuple('sdo', 'index subindex')._make(unpack(sdoformat, data[1:4]))
-            sdoid = hex(sdoaddress.index) + hex(sdoaddress.subindex)
+        if id == XSiteDecoder.SDO_RECEIVE_ID:
+        # if id == 1418:
+            sdoformat = '<bhb'
+            sdoaddress = namedtuple('sdo', 'status index subindex')._make(unpack(sdoformat, data[0:4]))
+            sdoid = hex(sdoaddress.status) + hex(sdoaddress.index) + hex(sdoaddress.subindex)
             if sdoid in self._sdo_map:
                 msgformat = self._sdo_map[sdoid]
                 msg = msgformat[1]._make(unpack(msgformat[0], data[-4:]))
                 self._ok = self._ok + 1
+                print(msg)
                 return msg
             else:
                 self._failed = self._failed + 1
@@ -109,13 +114,13 @@ class SDOEncoder:
         self._sdo_map = dict([
             ('zero_with_bucket_tip',
              dict(format=namedtuple('zero_with_bucket_tip', 'id data'),
-                  id=0x60A, data=[0b00101111, 0x20, 0x20, 0x02, 0x01, 0x0, 0x0, 0x0])),
+                  id=0x60A, data=[0b00101111, 0x20, 0x20, 0x02, 0x01, 0x0, 0x0, 0x0])), # 60 20 20 02 00 00 00 00
             ('set_slope',
              dict(format=namedtuple('set_slope', 'id data'),
-                  id=0x60A, data=[0b00100011, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))),
+                  id=0x60A, data=[0b00100011, 0x20, 0x20, 0x01], input_transform=lambda arg: pack('<f', arg))), # 60 20 20 01 00 00 00 00
             ('get_slope',
              dict(format=namedtuple('get_slope', 'id data'),
-                id=0x60A, data=[0b01000000, 0x20, 0x20, 0x01, 0x0, 0x0, 0x0, 0x0])),
+                id=0x60A, data=[0b01000000, 0x20, 0x20, 0x01, 0x0, 0x0, 0x0, 0x0])), # 43 20 20 01 00 00 00 00
         ])
         self._ok = 0
         self._failed = 0
