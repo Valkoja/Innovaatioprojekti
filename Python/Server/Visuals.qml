@@ -24,12 +24,12 @@ ColumnLayout {
         bucketAngle: modelWrapper.bucketAngleQuaternion;
 
         heightFromZero: modelWrapper.heightFromZero;
-        heightFromSlope: modelWrapper.heightToSlopeFromZero;
-        distanceFromZero: modelWrapper.distanceFromZero;
-        slopePercent: 0;
+        distanceFromZero: modelWrapper.distanceToZero;
+        slopePercent: modelWrapper.slope;
 
         Component.onCompleted: {
-            modelWrapper.changed.connect(reDraw)
+            modelWrapper.changed.connect(reDraw);
+            modelWrapper.zeroChanged.connect(reLevel);
         }
     }
 }

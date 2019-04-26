@@ -169,15 +169,28 @@ ColumnLayout {
         text: "Height to slope from zero: " + round(modelWrapper.heightToSlopeFromZero)
     }
 
+    Text {
+        id: slope
+        Layout.topMargin: 4
+        Layout.bottomMargin: 4
+        Layout.leftMargin: 8
+        Layout.fillWidth: true
+        text: "Slope: " + round(modelWrapper.slope)
+    }
+
     RowLayout {
         Layout.topMargin: 4
         Layout.bottomMargin: 4
         Layout.leftMargin: 8
-        Text {
-            id: slope
-            Layout.margins: 4
+        Button {
+            id: setZero
             Layout.fillWidth: true
-            text: "Slope: " + round(modelWrapper.slope)
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            text: "Zero"
+            onClicked: {
+                modelWrapper.setZero()
+            }
         }
         Button {
             id: getSlope
@@ -210,7 +223,7 @@ ColumnLayout {
                     Item {
                         ColumnLayout {
                             Text {
-                                text: "Slope: " + setSlope.initialSlope
+                                text: "Current slope: " + modelWrapper.slope
                                 elide: Text.ElideRight
                             }
                             TextField {

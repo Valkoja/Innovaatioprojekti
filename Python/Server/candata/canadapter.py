@@ -22,6 +22,8 @@ class CanAdapter():
         self._stopped = False
         self._thread = None
         self._bus = None
+        self._readHandle = None
+        self._writeHandle = None
 
     def messagesProcessed(self):
         return self._messagesProcessed
@@ -49,26 +51,25 @@ class CanAdapter():
         encoder = SDOEncoder()
         msg = encoder.encode_sdo(message, argument)
 
-        if not self._bus:
+        if self._bus.interface == 'socketcan':
+            if not self._writeHandle:
+                try:
+                    self._writeHandle = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
+                except Exception as e:
+                    print("Problem setting bus")
+                    raise e
+        elif self._bus.interface == 'kvaser':
+            if not self._writeHandle:
+                try:
+                    self._writeHandle = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
+                except Exception as e:
+                    print("Problem setting bus")
+                    raise e
+        else:
             print("Nobus, sending message " + msg.__str__())
             return
-        elif self._bus.interface == 'socketcan':
-            try:
-                canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
-            except Exception as e:
-                print("Problem setting bus")
-                raise e
-        elif self._bus.interface == 'kvaser':
-            try:
-                canbus = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
-            except Exception as e:
-                print("Problem setting bus")
-                raise e
-        else:
-            return
-
         try:
-            canbus.send(can.Message(arbitration_id=msg.id, data=msg.data, extended_id=False))
+            self._writeHandle.send(can.Message(arbitration_id=msg.id, data=msg.data, extended_id=False))
         except Exception as e:
             print("Problem sending command")
             raise e
@@ -82,17 +83,17 @@ class CanAdapter():
             self._messagesProcessed += 1
             callback(message)
 
-        canbus = None
-
         if self._bus.interface == 'socketcan':
-            canbus = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
+            if not self._readHandle:
+                self._readHandle = can.Bus(bustype=self._bus.interface, channel=self._bus.channel)
         elif self._bus.interface == 'kvaser':
-            try:
-                canbus = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
-            except Exception as e:
-                print("Problem setting bus")
-                raise e
-            print("Bus type set")
+            if not self._readHandle:
+                try:
+                    self._readHandle = can.interface.Bus(bustype='kvaser', channel=0, bitrate=250000)
+                except Exception as e:
+                    print("Problem setting bus")
+                    raise e
+                print("Bus type set")
         else:
             return
         
@@ -101,7 +102,7 @@ class CanAdapter():
         print("Sending NMT-open")
         print(canopen_nmt_start.__str__())
         try:
-            canbus.send(canopen_nmt_start)
+            self._readHandle.send(canopen_nmt_start)
         except Exception as e:
             print("Problem sending NMT-open")
             raise e
@@ -112,9 +113,9 @@ class CanAdapter():
             while True:
                 if self._stopped:
                     print('Stopped')
-                    canbus.shutdown()
+                    self._readHandle.shutdown()
                     return
-                msg = canbus.recv(timeout=5)
+                msg = self._readHandle.recv(timeout=5)
                 if msg:
                     message = decoder.decode_pdo(msg.arbitration_id, msg.data)
                     if message:

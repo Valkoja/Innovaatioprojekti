@@ -8,6 +8,8 @@ class ModelWrapper(QObject):
         super().__init__()
         self.stateObject = stateObject
         self.stateObject.setUpdateCallback(self.update)
+        self.zeroTimestamp = -1
+        self.slopeTimestamp = -1
 
     def _main_boom(self):
         if 'main_boom' in self.stateObject.getState()['angles']:
@@ -30,24 +32,30 @@ class ModelWrapper(QObject):
     def _main_boomQuaternion(self):
         if 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['main_boom_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return 40
         else:
             return 40
 
     def _digging_armQuaternion(self):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return -60
         else:
             return -60
 
     def _bucketQuaternion(self):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
-            # quart = QQuaternion(components['w'], components['x'], components['y'], components['z']).toEulerAngles()
-            return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            if components['w'] and components['x'] and components['y'] and components['z']:
+                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+            else:
+                return -150
         else:
             return -150
 
@@ -117,7 +125,17 @@ class ModelWrapper(QObject):
     def update(self):
         self.changed.emit()
 
+        if self.zeroTimestamp < self.stateObject.getState()['zero_with_bucket_tip']:
+            self.zeroTimestamp = self.stateObject.getState()['zero_with_bucket_tip']
+            self.zeroChanged.emit()
+
+        if self.slopeTimestamp < self.stateObject.getState()['set_slope']:
+            self.slopeTimestamp = self.stateObject.getState()['set_slope']
+            self.getSlope()
+
     changed = pyqtSignal()
+    zeroChanged = pyqtSignal()
+
     mainBoomAngle = pyqtProperty(float, _main_boom, notify=changed)
     diggingArmAngle = pyqtProperty(float, _digging_arm, notify=changed)
     bucketAngle = pyqtProperty(float, _bucket, notify=changed)
@@ -141,8 +159,16 @@ class ModelWrapper(QObject):
         self.stateObject.consumeCommand('set_slope', slope)
 
     @pyqtSlot()
-    def getSlope(self,):
+    def getSlope(self):
         self.stateObject.consumeCommand('get_slope')
+
+    @pyqtSlot()
+    def setZero(self):
+        self.stateObject.consumeCommand('zero_with_bucket_tip')
+
+    @pyqtSlot()
+    def emitZero(self):
+        self.zeroChanged.emit()
 
     @staticmethod
     def toEulerXAngle(w, x, y, z):

@@ -28,10 +28,12 @@ class SVGElement(QQuickPaintedItem):
         self._bucketAngle = 0
 
         self._levelSVG = svgutils.compose.SVG('./gui/svg/level.svg')
-        self._slopeAngle = 0
-        self._heightFromZero = 0
-        self._heightFromSlope = 0
-        self._distanceFromZero = 0
+        self._levelX = None
+        self._levelY = None
+        self._levelA = 0
+
+        self._heightFromZero = None
+        self._distanceFromZero = None
 
 
     def calculateX(self, aAngle, aLength):
@@ -105,12 +107,14 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.rotate(bucketA, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
-        # Zero level
-        levelX = bucketX + self.calculateX(bucketA, 136) + self._distanceFromZero
-        levelY = bucketY + self.calculateY(bucketA, 136) + self._heightFromZero
+        # Zero level, calculated without hysteresis for accuracy
+        if self._heightFromZero is not None and self._distanceFromZero is not None:
+            if self._levelX is None or self._levelY is None:
+                self._levelX = 900 + self.calculateX(self._boomAngle, 385) + self.calculateX(self._armAngle, 176) + self.calculateX(self._bucketAngle, 136) + self._distanceFromZero
+                self._levelY = 900 + self.calculateY(self._boomAngle, 385) + self.calculateY(self._armAngle, 176) + self.calculateY(self._bucketAngle, 136) + self._heightFromZero
 
-        levelSVG.rotate(self._slopeAngle, 1000, 1000)
-        levelSVG.move(levelX - 1000, levelY - 1000)
+            levelSVG.rotate(self._levelA, 1000, 1000)
+            levelSVG.move(self._levelX - 1000, self._levelY - 1000)
 
         # Combine pieces into one
         compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
@@ -125,11 +129,8 @@ class SVGElement(QQuickPaintedItem):
             moveX = -200
             moveY = -200
 
-        # Do we need to compensate for position, eg. original moved -200 -200 for 1.2 scale
-        image = compose.move(moveX, moveY).scale(scale).tostr()
-
         # Hacky wacky to make Qt not crash and burn about encoding
-        imageStr = image.decode('utf-8')
+        imageStr = compose.move(moveX, moveY).scale(scale).tostr().decode('utf-8')
         imageStr = imageStr.replace("encoding='ASCII'", "encoding='UTF-8'")
         imageStr = imageStr.encode('utf-8')
 
@@ -180,18 +181,6 @@ class SVGElement(QQuickPaintedItem):
 
 
     @pyqtProperty(float)
-    def heightFromSlope(self):
-        # Centimeters back to meters
-        return self._heightFromSlope / 100
-
-
-    @heightFromSlope.setter
-    def heightFromSlope(self, heightFromSlope):
-        # Meters to centimeters
-        self._heightFromSlope = heightFromSlope * 100
-
-
-    @pyqtProperty(float)
     def distanceFromZero(self):
         # Centimeters back to meters
         return self._distanceFromZero / 100
@@ -206,15 +195,21 @@ class SVGElement(QQuickPaintedItem):
     @pyqtProperty(float)
     def slopePercent(self):
         # Degrees back to percents, 45 deg is 100 %
-        return (self._slopeAngle / 45) * 100
+        return (self._levelA / 45) * 100
 
 
     @slopePercent.setter
     def slopePercent(self, slopePercent):
         # Percents to degrees, 100 % is 45 deg
-        self._slopeAngle = (slopePercent / 100) * 45
+        self._levelA = (slopePercent / 100) * 45
 
 
     @pyqtSlot()
     def reDraw(self):
         self.update()
+
+
+    @pyqtSlot()
+    def reLevel(self):
+        self._levelX = None
+        self._levelY = None
