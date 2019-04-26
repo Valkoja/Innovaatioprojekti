@@ -30,6 +30,7 @@ ColumnLayout {
 
         Component.onCompleted: {
             modelWrapper.changed.connect(reDraw)
+            modelWrapper.zeroChanged.connect(reLevel)
         }
     }
 }

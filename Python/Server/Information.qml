@@ -197,7 +197,7 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 8
             Layout.rightMargin: 8
-            text: "Get Slope"
+            text: "Get"
             onClicked: {
                 modelWrapper.getSlope()
             }
@@ -207,7 +207,7 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 8
             Layout.rightMargin: 8
-            text: "Set Slope"
+            text: "Set"
             property double initialSlope
             onClicked: {
                 initialSlope: modelWrapper.slope
@@ -223,7 +223,7 @@ ColumnLayout {
                     Item {
                         ColumnLayout {
                             Text {
-                                text: "Slope: " + setSlope.initialSlope
+                                text: "Current slope: " + setSlope.initialSlope
                                 elide: Text.ElideRight
                             }
                             TextField {
