@@ -8,6 +8,7 @@ class ModelWrapper(QObject):
         super().__init__()
         self.stateObject = stateObject
         self.stateObject.setUpdateCallback(self.update)
+        self.zeroTimestamp = 0
 
     def _main_boom(self):
         if 'main_boom' in self.stateObject.getState()['angles']:
@@ -117,7 +118,13 @@ class ModelWrapper(QObject):
     def update(self):
         self.changed.emit()
 
+        if self.zeroTimestamp < self.stateObject.geState()['zeroTimestamp']:
+            self.zeroTimestamp = self.stateObject.geState()['zeroTimestamp']
+            self.zeroChanged.emit()
+
     changed = pyqtSignal()
+    zeroChanged = pyqtSignal()
+
     mainBoomAngle = pyqtProperty(float, _main_boom, notify=changed)
     diggingArmAngle = pyqtProperty(float, _digging_arm, notify=changed)
     bucketAngle = pyqtProperty(float, _bucket, notify=changed)
@@ -141,8 +148,12 @@ class ModelWrapper(QObject):
         self.stateObject.consumeCommand('set_slope', slope)
 
     @pyqtSlot()
-    def getSlope(self,):
+    def getSlope(self):
         self.stateObject.consumeCommand('get_slope')
+
+    @pyqtSlot()
+    def setZero(self):
+        self.stateObject.consumeCommand('set_zero')
 
     @staticmethod
     def toEulerXAngle(w, x, y, z):
