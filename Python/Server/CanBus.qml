@@ -57,7 +57,7 @@ ColumnLayout {
         enabled: canBusHandler.state == "ready" ? true : false
         onClicked: {
             canBusHandler.handleOpenBusClicked()
-            modelWrapper.getZero()
+            modelWrapper.emitZero()
         }
     }
     Button {
