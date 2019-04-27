@@ -51,6 +51,9 @@ class CanAdapter():
         encoder = SDOEncoder()
         msg = encoder.encode_sdo(message, argument)
 
+        if self._bus == None:
+            return
+
         if self._bus.interface == 'socketcan':
             if not self._writeHandle:
                 try:
