@@ -2,9 +2,28 @@ import React from 'react';
 
 class Telemetry extends React.Component
 {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+        this.updateTick = this.updateTick.bind(this);
+    }
+
+    shouldComponentUpdate() {
+        // Prevent re-renders, updateTick will force updates
+        return false;
+    }
+
+    componentDidMount() {
+        let intervalID = setInterval(this.updateTick, 50);
+        this.setState({'intervalID': intervalID});
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.intervalID);
+    }
+
+    updateTick() {
+        this.forceUpdate();
+    }
 
     render() {
         return (

@@ -16,7 +16,7 @@ class Visuals extends React.Component
             'bucketCos': emptyArray.map(() => Math.cos(-150 * ( Math.PI / 180)))
         };
 
-        console.log(this.state.boomSin);
+        this.updateTick = this.updateTick.bind(this);
     }
 
     calculateX(aAngle, aLength) {
@@ -49,54 +49,54 @@ class Visuals extends React.Component
         return Math.round((a * 180 / Math.PI) * 10) / 10;
     }
 
-    componentDidUpdate(oldProps) {
-        if (oldProps.boomA !== this.props.boomA) {
-            let boomSin = [...this.state.boomSin];
-                boomSin.shift();
-                boomSin.push(Math.sin(this.props.boomA * ( Math.PI / 180)));
-
-            let boomCos = [...this.state.boomCos];
-                boomCos.shift();
-                boomCos.push(Math.cos(this.props.boomA * ( Math.PI / 180)));
-
-            this.setState({
-                'boomSin': boomSin,
-                'boomCos': boomCos
-            });
-        }
-
-        if (oldProps.armA !== this.props.armA) {
-            let armSin = [...this.state.armSin];
-                armSin.shift();
-                armSin.push(Math.sin(this.props.armA * ( Math.PI / 180)));
-
-            let armCos = [...this.state.armCos];
-                armCos.shift();
-                armCos.push(Math.cos(this.props.armA * ( Math.PI / 180)));
-
-            this.setState({
-                'armSin': armSin,
-                'armCos': armCos
-            });
-        }
-
-        if (oldProps.bucketA !== this.props.bucketA) {
-            let bucketSin = [...this.state.bucketSin];
-                bucketSin.shift();
-                bucketSin.push(Math.sin(this.props.bucketA * ( Math.PI / 180)));
-
-            let bucketCos = [...this.state.bucketCos];
-                bucketCos.shift();
-                bucketCos.push(Math.cos(this.props.bucketA * ( Math.PI / 180)));
-
-            this.setState({
-                'bucketSin': bucketSin,
-                'bucketCos': bucketCos
-            });
-        }
+    shouldComponentUpdate() {
+        // Prevent re-renders, updateTick will handle svg updates
+        return false;
     }
 
-    render() {
+    componentDidMount() {
+        let intervalID = setInterval(this.updateTick, 50);
+        this.setState({'intervalID': intervalID});
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.intervalID);
+    }
+
+    updateTick() {
+        let boomSin = [...this.state.boomSin];
+            boomSin.shift();
+            boomSin.push(Math.sin(this.props.boomA * ( Math.PI / 180)));
+
+        let boomCos = [...this.state.boomCos];
+            boomCos.shift();
+            boomCos.push(Math.cos(this.props.boomA * ( Math.PI / 180)));
+
+        let armSin = [...this.state.armSin];
+            armSin.shift();
+            armSin.push(Math.sin(this.props.armA * ( Math.PI / 180)));
+
+        let armCos = [...this.state.armCos];
+            armCos.shift();
+            armCos.push(Math.cos(this.props.armA * ( Math.PI / 180)));
+
+        let bucketSin = [...this.state.bucketSin];
+            bucketSin.shift();
+            bucketSin.push(Math.sin(this.props.bucketA * ( Math.PI / 180)));
+
+        let bucketCos = [...this.state.bucketCos];
+            bucketCos.shift();
+            bucketCos.push(Math.cos(this.props.bucketA * ( Math.PI / 180)));
+
+        this.setState({
+            'boomSin': boomSin,
+            'boomCos': boomCos,
+            'armSin': armSin,
+            'armCos': armCos,
+            'bucketSin': bucketSin,
+            'bucketCos': bucketCos
+        });
+
         let boomA = this.calculateA(this.state.boomSin, this.state.boomCos);
         let boomX = 900;
         let boomY = 900;
@@ -109,9 +109,12 @@ class Visuals extends React.Component
         let bucketX = armX + this.calculateX(armA, 176);
         let bucketY = armY + this.calculateY(armA, 176);
 
-        // let levelX = bucketX + this.calculateX(bucketA, 136) + this.props.distanceFromZero;
-        // let levelY = bucketY + this.calculateY(bucketA, 136) + this.props.heightFromZero;
-        
+        document.getElementById('SVGBoom').setAttribute('transform', 'translate(' + (boomX - 500) + ' ' + (boomY - 500) + ') rotate(' + boomA + ' 500 500)');
+        document.getElementById('SVGArm').setAttribute('transform', 'translate(' + (armX - 500) + ' ' + (armY - 500) + ') rotate(' + armA + ' 500 500)');
+        document.getElementById('SVGBucket').setAttribute('transform', 'translate(' + (bucketX - 500) + ' ' + (bucketY - 500) + ') rotate(' + bucketA + ' 500 500)');
+    }
+
+    render() {
         return (
             <div id='visuals'>
                 <svg
@@ -123,7 +126,6 @@ class Visuals extends React.Component
                     <g transform = 'scale(1.2) translate(-200 -200)'>
                         <path
                             id = 'SVGBoom'
-                            transform = {'translate(' + (boomX - 500) + ' ' + (boomY - 500) + ') rotate(' + boomA + ' 500 500)'}
                             d = 'M 112.06,494.03
                                 C 103.19,500.92 112.00,509.11 117.94,505.97
                                 124.83,502.34 121.78,491.03 112.06,494.03 Z
@@ -144,7 +146,6 @@ class Visuals extends React.Component
 
                         <path
                             id = 'SVGArm'
-                            transform = {'translate(' + (armX - 500) + ' ' + (armY - 500) + ') rotate(' + armA + ' 500 500)'}
                             d = 'M 321.45,518.18
                                 C 333.98,519.14 486.24,526.30 498.17,527.00
                                 511.56,527.44 517.50,521.62 521.43,516.74
@@ -162,7 +163,6 @@ class Visuals extends React.Component
 
                         <path
                             id = 'SVGBucket'
-                            transform = {'translate(' + (bucketX - 500) + ' ' + (bucketY - 500) + ') rotate(' + bucketA + ' 500 500)'}
                             d = 'M 515.25,485.38
                                 C 523.50,457.25 512.88,426.75 485.00,412.38
                                 443.25,393.25 412.38,413.88 398.75,437.88
@@ -176,19 +176,11 @@ class Visuals extends React.Component
                                 M 497.06,494.03
                                 C 488.19,500.92 497.00,509.11 502.94,505.97
                                 509.83,502.34 506.78,491.03 497.06,494.03 Z' />
-    
                     </g>
                 </svg>
             </div>
         );
     }
 }
-
-/*
-    <path
-        id = 'SVGLevel'
-        transform = {'rotate(' + this.props.levelA + ' 500 500) translate(' + (levelX - 500) + ' ' + (levelY - 500) + ')'}
-        d = 'M 0,1000 L 2000,1000 M 1000,980 L 1000,1020 Z' />
-*/
 
 export default Visuals;
