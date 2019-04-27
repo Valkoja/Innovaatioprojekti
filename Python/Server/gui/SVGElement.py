@@ -107,7 +107,7 @@ class SVGElement(QQuickPaintedItem):
         bucketSVG.rotate(bucketA, 500, 500)
         bucketSVG.move(bucketX - 500, bucketY - 500)
 
-        # Zero level, calculated without hysteresis for accuracy
+        # Zero level, calculated without hysteresis for accuracy and combining svg:s into one
         if self._heightFromZero is not None and self._distanceFromZero is not None:
             if self._levelX is None or self._levelY is None:
                 self._levelX = 900 + self.calculateX(self._boomAngle, 385) + self.calculateX(self._armAngle, 176) + self.calculateX(self._bucketAngle, 136) + self._distanceFromZero
@@ -116,8 +116,10 @@ class SVGElement(QQuickPaintedItem):
             levelSVG.rotate(self._levelA, 1000, 1000)
             levelSVG.move(self._levelX - 1000, self._levelY - 1000)
 
-        # Combine pieces into one
-        compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
+            # Ignore level if it is not set
+            compose = svgutils.compose.Figure('1000px', '1000px', levelSVG, boomSVG, armSVG, bucketSVG)
+        else:
+            compose = svgutils.compose.Figure('1000px', '1000px', boomSVG, armSVG, bucketSVG)
 
         # Set scale based on system we're running on due to DPI weirdness
         if platform.system() == 'Darwin':
@@ -213,3 +215,5 @@ class SVGElement(QQuickPaintedItem):
     def reLevel(self):
         self._levelX = None
         self._levelY = None
+        self._heightFromZero = None
+        self._distanceFromZero = None
