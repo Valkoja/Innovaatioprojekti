@@ -37,9 +37,7 @@ class ModelWrapper(QObject):
         if 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['main_boom_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                angle = self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
-                self.cache['main_boom_angle_from_quaternion'] = angle
-                return angle
+                self.cache['main_boom_angle_from_quaternion'] = self.toEulerXAngle(**components)
 
         return self.cache['main_boom_angle_from_quaternion']
 
@@ -47,9 +45,7 @@ class ModelWrapper(QObject):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                angle = self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
-                self.cache['digging_arm_angle_from_quaternion'] = angle
-                return angle
+                self.cache['digging_arm_angle_from_quaternion'] = self.toEulerXAngle(**components)
 
         return self.cache['digging_arm_angle_from_quaternion']
 
@@ -57,9 +53,7 @@ class ModelWrapper(QObject):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                angle = self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
-                self.cache['bucket_angle_from_quaternion'] = angle
-                return angle
+                self.cache['bucket_angle_from_quaternion'] = self.toEulerXAngle(**components)
 
         return self.cache['bucket_angle_from_quaternion']
 
