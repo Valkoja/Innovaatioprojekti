@@ -55,3 +55,6 @@ __pycache__/
 
 # Blender temp files
 *.blend1
+
+# Pyinstaller build
+dist/
