@@ -10,6 +10,7 @@ class ModelWrapper(QObject):
         self.stateObject.setUpdateCallback(self.update)
         self.zeroTimestamp = -1
         self.slopeTimestamp = -1
+        self.cache = dict()
 
     def _main_boom(self):
         if 'main_boom' in self.stateObject.getState()['angles']:
@@ -33,9 +34,10 @@ class ModelWrapper(QObject):
         if 'main_boom_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['main_boom_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+                self.cache['main_boom_quaternion'] = components
+                return self.toEulerXAngle(**components)
             else:
-                return 40
+                return self.toEulerXAngle(**self.cache['main_boom_quaternion'])
         else:
             return 40
 
@@ -43,9 +45,10 @@ class ModelWrapper(QObject):
         if 'digging_arm_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['digging_arm_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+                self.cache['digging_arm_orientation'] = components
+                return self.toEulerXAngle(**components)
             else:
-                return -60
+                return self.toEulerXAngle(**self.cache['digging_arm_orientation'])
         else:
             return -60
 
@@ -53,9 +56,10 @@ class ModelWrapper(QObject):
         if 'bucket_orientation' in self.stateObject.getState()['quaternions']:
             components = self.stateObject.getState()['quaternions']['bucket_orientation']
             if components['w'] and components['x'] and components['y'] and components['z']:
-                return self.toEulerXAngle(components['w'], components['x'], components['y'], components['z'])
+                self.cache['bucket_orientation'] = components
+                return self.toEulerXAngle(**components)
             else:
-                return -150
+                return self.toEulerXAngle(**self.cache['bucket_orientation'])
         else:
             return -150
 
