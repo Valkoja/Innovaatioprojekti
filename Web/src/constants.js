@@ -6,7 +6,7 @@ export const DISCONNECTED = 'DISCONNECTED';
 
 export const XSITEDATAHELLOMESSAGE = {
     type: "HELLO",
-    library: "Unity",
-    platform: 'BrowserNameHere',
+    library: "Browser",
+    platform: 'React',
     version: "0.1-alpha"
 };
