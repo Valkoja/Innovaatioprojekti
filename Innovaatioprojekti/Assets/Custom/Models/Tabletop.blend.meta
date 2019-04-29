@@ -29,6 +29,9 @@ ModelImporter:
     100046: Bone_Boom
     100048: Bone_Bucket
     100050: Mesh_Bucket
+    100052: Mesh_Base_1
+    100054: Mesh_Base_2
+    100056: Mesh_Base_3
     400000: Arm_Bone
     400002: Arm_Mesh
     400004: Base_Bone
@@ -55,8 +58,12 @@ ModelImporter:
     400046: Bone_Boom
     400048: Bone_Bucket
     400050: Mesh_Bucket
+    400052: Mesh_Base_1
+    400054: Mesh_Base_2
+    400056: Mesh_Base_3
     2100000: unnamed
     2100002: Aluminium
+    2100004: UV-Grid
     2300000: 0-Base
     2300002: 0-Measurements
     2300004: LP-Base
@@ -91,6 +98,9 @@ ModelImporter:
     4300022: Mesh_Boom
     4300024: Mesh_Arm
     4300026: Mesh_Bucket
+    4300028: Mesh_Base_3
+    4300030: Mesh_Base_2
+    4300032: Mesh_Base_1
     7400000: Default Take
     9500000: //RootNode
     13700000: Arm_Mesh
@@ -101,6 +111,9 @@ ModelImporter:
     13700010: Mesh_Arm
     13700012: Mesh_Boom
     13700014: Mesh_Bucket
+    13700016: Mesh_Base_1
+    13700018: Mesh_Base_2
+    13700020: Mesh_Base_3
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
