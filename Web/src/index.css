@@ -1,0 +1,105 @@
+* {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+    font-size: 18px;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#SVGBoom, #SVGArm, #SVGBucket, #SVGLevel {
+    fill: none;
+    stroke: black;
+    stroke-width: 1;
+}
+
+#dialog {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}   
+
+#dialog h1 {
+    margin: 4px;
+    padding: 2px;
+    font-size: 1.1em;
+}
+
+#dialog input {
+    margin: 4px;
+    padding: 2px;
+
+    border: 1px solid rgb(220, 220, 220);
+    text-align: center;
+    border-radius: 4px;
+}
+
+#dialog button {
+    margin: 4px;
+    padding: 3px 6px;
+
+    cursor: pointer;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 4px;
+    background-color: rgb(240, 240, 240);
+}
+
+#dialog button:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#header {
+    flex: 0 0 auto;
+}
+
+#header h1 {
+    padding-left: 8px;
+}
+
+#container {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+}
+
+#telemetry {
+    flex: 0 0 auto;
+}
+
+#telemetry table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+#telemetry th {
+    text-align: left;
+    padding-left: 8px;
+    border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+#telemetry td:first-child {
+    padding-left: 8px;
+}
+
+#telemetry td:last-child {
+    width: 80px;
+    text-align: right;
+}
+
+#visuals {
+    flex: 1 1 auto;
+}
+
+#visuals svg {
+    flex: 0 0 100%;
+    max-height: 50vh;
+}
