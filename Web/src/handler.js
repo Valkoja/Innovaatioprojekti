@@ -89,6 +89,9 @@ class Handler extends React.Component
                     }});
                 }
             };
+
+            // Confirm message received
+            this.websocket.sendMessage(JSON.stringify({'type': 'CONFIRM', 'id': jsonMsg.id, 'timestamp': jsonMsg.timestamp}));
         }
         catch(err) {
             alert(err);
